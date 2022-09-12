@@ -1,7 +1,7 @@
 use std::collections::{HashMap, HashSet};
 use unordered_pair::UnorderedPair;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 #[allow(dead_code)]
 pub struct Model<'a> {
     dag: HashMap<&'a str, HashSet<&'a str>>,
@@ -34,12 +34,20 @@ impl<'a> Model<'a> {
         return Model {dag: dag_map, confounded: confounded_set, vars: vars_set};
     }
 
-    pub fn ancestors (&self, x: &'a str) -> HashSet<&str> {
+    pub fn ancestors_block (&self, x: &'a str, block: Vec<&str>) -> HashSet<&str> {
 
         let mut a = HashSet::new();
         let mut acc = Vec::new();
 
-        acc.push(x);
+        let mut block_set = HashSet::new();
+        for blocked in block {
+            block_set.insert(blocked);
+        }
+
+        if !block_set.contains(x) {
+            acc.push(x);
+        }
+        
         loop {
             match acc.pop() {
                 None => break,
@@ -50,7 +58,9 @@ impl<'a> Model<'a> {
                             for parent in parents.iter() {
                                 if !a.contains(parent) {
                                     a.insert(*parent);
-                                    acc.push(*parent);
+                                    if !block_set.contains(*parent) {
+                                        acc.push(*parent);
+                                    }
                                 }
                             }
                         }
@@ -60,6 +70,10 @@ impl<'a> Model<'a> {
         }
 
         return a;
+    }
+
+    pub fn ancestors (&self, x: &'a str) -> HashSet<&str> {
+        return self.ancestors_block(x, Vec::new());
     }
 
     pub fn c_components (&self) -> Vec<HashSet<&str>> {
@@ -125,8 +139,29 @@ impl<'a> Model<'a> {
         return order;
     }
 
+    pub fn subgraph (&'a self, vars: HashSet<&'a str>) -> Model {
+        let mut dag = self.dag.clone();
+        let mut confounded = self.confounded.clone();
+
+        for (key, _) in self.dag.iter() {
+            if !vars.contains(*key) {
+                dag.remove(*key);
+            } else {
+                dag.entry(*key).and_modify(|e| {
+                    e.retain(|v| {
+                        return vars.contains(*v);
+                    });
+                });
+            }
+        }
+
+        for pair in self.confounded.iter() {
+            if !(vars.contains(pair.0) && vars.contains(pair.1)) {
+                confounded.remove(pair);
+            }
+        }
+
+        return Model {dag, confounded, vars};
+    }
+
 }
-
-// fn get_backdoor(graph: CausalGraph, treatment: String, outcome: String) -> Vec<String> {
-
-// }

@@ -3,7 +3,7 @@ use std::collections::HashSet;
 mod model;
 
 fn main() {
-    let model = model::Model::new(
+    let model = model::model::Model::new(
         &[
             ("x", &["z"]),
             ("y", &["x", "z"]),
