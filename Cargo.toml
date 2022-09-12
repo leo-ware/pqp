@@ -6,3 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+unordered-pair = "0.2.4"
+force_graph = "0.3.2"
+cute = "0.3.0"
