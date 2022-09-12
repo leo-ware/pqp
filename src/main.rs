@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 mod model;
 
 fn main() {
@@ -12,5 +14,5 @@ fn main() {
     // println!("ancestors of y {:#?}", model.ancestors("y"));
     // println!("ancestors of z {:#?}", model.ancestors("z"));
 
-    println!("{:#?}", model.topological_sort());
+    println!("{:#?}", model.subgraph(HashSet::from(["y", "x"])));
 }
