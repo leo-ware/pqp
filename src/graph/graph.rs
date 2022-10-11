@@ -4,48 +4,45 @@ use std::{
     rc::Rc,
 };
 
-use crate::utils::{set_union, make_set};
+use crate::set_utils::union;
 
 use super::{Node, Map, Set};
 
-pub trait Graph<'a> where Self: Sized + Debug {
-    fn from_elems(edges: Map<Node<'a>, Set<Node<'a>>>, nodes: Set<Node<'a>>) -> Self;
-    fn subgraph(&'a self, nodes: impl Iterator<Item=&'a str>) -> Self;
-    fn r#do(&'a self, nodes: impl Iterator<Item=&'a str>) -> Self;
+pub trait Graph {
+    fn subgraph(&self, nodes: &Set<Node>) -> Self;
+    fn r#do(&self, nodes: &Set<Node>) -> Self;
+    fn get_nodes(&self) -> &Set<Node>;
+}
+
+pub trait Constructable {
+    fn from_elems(edges: Map<Node, Set<Node>>, nodes: Set<Node>) -> Self;
 }
 
 #[derive(Debug)]
-pub struct DiGraph<'a> {
-    edges: Rc<Map<Node<'a>, Set<Node<'a>>>>,
-    nodes: Box<Set<&'a str>>,
-    orphans: Box<Set<&'a str>>,
+pub struct DiGraph {
+    edges: Rc<Map<Node, Set<Node>>>,
+    nodes: Box<Set<Node>>,
+    orphans: Box<Set<Node>>,
 }
 
-#[derive(Debug)]
-pub struct BiGraph<'a> {
-    edges: Rc<Map<Node<'a>, Set<Node<'a>>>>,
-    nodes: Box<Set<&'a str>>,
-    orphans: Box<Set<&'a str>>,
-}
-
-impl<'a> DiGraph<'a> {
-    pub fn parents (&self, x: &'a str) -> Set<&'a str> {
+impl DiGraph {
+    pub fn parents (&self, x: Node) -> Set<Node> {
         let empty = Set::new();
-        let elems = match self.edges.get(x) {
+        let elems = match self.edges.get(&x) {
             Some(kids) => kids,
             None => &empty,
         };
         let filtered = elems.into_iter()
-            .filter(|elem| self.nodes.contains(**elem))
+            .filter(|elem| self.nodes.contains(*elem))
             .map(|elem| *elem);
         return Set::from_iter(filtered);
     }
 
-    pub fn ancestors (&self, x: &'a str) -> Set<&'a str> {
+    pub fn ancestors (&self, x: Node) -> Set<Node> {
         self.ancestors_set(&Set::from([x]))
     }
 
-    pub fn ancestors_set (&self, x: &Set<&'a str>) -> Set<&'a str> {
+    pub fn ancestors_set (&self, x: &Set<Node>) -> Set<Node> {
         let mut acc = Set::new();
         let mut queue = Vec::new();
         queue.extend(x);
@@ -54,9 +51,9 @@ impl<'a> DiGraph<'a> {
             match queue.pop() {
                 Some(elem) => {
                     for parent in self.parents(elem) {
-                        if self.nodes.contains(parent) {
+                        if self.nodes.contains(&parent) {
                             acc.insert(parent);
-                            if !self.orphans.contains(parent) {
+                            if !self.orphans.contains(&parent) {
                                 queue.push(parent);
                             }
                         }
@@ -69,15 +66,15 @@ impl<'a> DiGraph<'a> {
         panic!("infinite loop detected");
     }
 
-    pub fn root_set(&self) -> Vec<&'a str> {
+    pub fn root_set(&self) -> Vec<Node> {
         return self.count_parents().iter()
             .filter(|(_, v)| **v == 0)
             .map(|(k, _)| *k)
             .collect();
     }
 
-    pub fn count_parents(&self) -> Map<&'a str, i32> {
-        let mut n_parents: Map<&str, i32> = Map::new();
+    pub fn count_parents(&self) -> Map<Node, i32> {
+        let mut n_parents: Map<Node, i32> = Map::new();
         for x in self.nodes.iter() {
             n_parents.insert(*x, 0);
         }
@@ -91,7 +88,7 @@ impl<'a> DiGraph<'a> {
         return n_parents;
     }
 
-    pub fn order(&self) -> Vec<&'a str> {
+    pub fn order(&self) -> Vec<Node> {
         let mut n_parents = self.count_parents();
         let mut lst = vec![];
         let mut queue = vec![];
@@ -107,7 +104,7 @@ impl<'a> DiGraph<'a> {
                 Some(x) => {
                     for p in self.parents(x) {
                         n_parents.entry(p).and_modify(|e| *e -= 1);
-                        if n_parents[p] == 0 {
+                        if n_parents[&p] == 0 {
                             queue.push(p);
                             lst.push(p);
                         }
@@ -122,59 +119,80 @@ impl<'a> DiGraph<'a> {
 
 }
 
-impl<'a> Graph<'a> for DiGraph<'a> {
-    fn from_elems(edges: Map<Node<'a>, Set<Node<'a>>>, nodes: Set<Node<'a>>) -> Self {
+impl Constructable for DiGraph {
+    fn from_elems(edges: Map<Node, Set<Node>>, nodes: Set<Node>) -> Self {
         DiGraph {
             edges: Rc::new(edges),
             nodes: Box::new(nodes),
             orphans: Box::new(Set::new())
         }
     }
+}
 
-    fn subgraph(&self, nodes: impl Iterator<Item=&'a str>) -> Self {
+impl Graph for DiGraph {
+    fn get_nodes(&self) -> &Set<Node> {
+        &*self.nodes
+        // yo mama so ugly
+    }
+
+    fn subgraph(&self, nodes: &Set<Node>) -> Self {
         DiGraph {
             edges: Rc::clone(&self.edges),
-            nodes: Box::new(make_set(nodes)),
+            nodes: Box::new(nodes.clone()),
             orphans: self.orphans.clone()
         }
     }
 
-    fn r#do(&self, nodes: impl Iterator<Item=&'a str>) -> Self {
+    fn r#do(&self, nodes: &Set<Node>) -> Self {
         DiGraph {
             edges: Rc::clone(&self.edges),
             nodes: self.nodes.clone(),
-            orphans: Box::new(set_union(&*self.orphans, &make_set(nodes))) }
+            orphans: Box::new(union(&*self.orphans, nodes))
+        }
     }
 }
 
-impl<'a> Graph<'a> for BiGraph<'a> {
-    fn from_elems(edges: Map<Node<'a>, Set<Node<'a>>>, nodes: Set<Node<'a>>) -> Self {
+#[derive(Debug)]
+pub struct BiGraph {
+    edges: Rc<Map<Node, Set<Node>>>,
+    nodes: Box<Set<Node>>,
+    orphans: Box<Set<Node>>,
+}
+
+impl Constructable for BiGraph {
+    fn from_elems(edges: Map<Node, Set<Node>>, nodes: Set<Node>) -> Self {
         BiGraph {
             edges: Rc::new(edges),
             nodes: Box::new(nodes),
             orphans: Box::new(Set::new())
         }
     }
+}
 
-    fn subgraph(&self, nodes: impl Iterator<Item=&'a str>) -> Self {
+impl Graph for BiGraph {
+    fn get_nodes(&self) -> &Set<Node> {
+        &self.nodes
+    }
+
+    fn subgraph(&self, nodes: &Set<Node>) -> Self {
         BiGraph {
             edges: self.edges.clone(),
-            nodes: Box::new(make_set(nodes)),
+            nodes: Box::new(nodes.clone()),
             orphans: self.orphans.clone()
         }
     }
 
-    fn r#do(&self, nodes: impl Iterator<Item=&'a str>) -> Self {
+    fn r#do(&self, nodes: &Set<Node>) -> Self {
         BiGraph {
             edges: self.edges.clone(),
             nodes: self.nodes.clone(),
-            orphans: Box::new(set_union(&*self.orphans, &make_set(nodes)))
+            orphans: Box::new(union(&*self.orphans, nodes))
         }
     }
 }
 
-impl<'a> BiGraph<'a> {
-    fn get_component (&self, node: Node<'a>) -> Set<Node<'a>> {
+impl BiGraph {
+    fn get_component (&self, node: Node) -> Set<Node> {
         let mut acc = Set::new();
         let mut queue = Vec::from([node]);
         loop {
@@ -182,7 +200,7 @@ impl<'a> BiGraph<'a> {
                 None => break,
                 Some(node) => {
                     if acc.insert(node) {
-                        match self.edges.get(node) {
+                        match self.edges.get(&node) {
                             Some(siblings) => queue.extend(siblings),
                             None => {}
                         }
@@ -193,13 +211,13 @@ impl<'a> BiGraph<'a> {
         return acc;
     }
 
-    pub fn c_components (&self) -> Vec<Set<Node<'a>>> {
-        let mut unvisited: Set<Node<'a>> = self.nodes.iter().map(|e| *e).collect();
+    pub fn c_components (&self) -> Vec<Set<Node>> {
+        let mut unvisited: Set<Node> = self.nodes.iter().map(|e| *e).collect();
         let mut components = Vec::new();
 
         for node in self.nodes.iter() {
             if unvisited.contains(node) {
-                let node_component = self.get_component(node);
+                let node_component = self.get_component(*node);
                 for sibling in node_component.iter() {
                     unvisited.remove(sibling);
                 }

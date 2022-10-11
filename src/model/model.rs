@@ -1,161 +1,158 @@
-use std::collections::{HashMap as Map, HashSet as Set};
 use cute::c;
-
 use crate::form::Form;
-use crate::utils::{set_difference, set_union};
-use crate::graph::graph::{GraphBuilder, DiGraph};
+use crate::defaults::{Set, Map};
+use crate::set_utils::{union, make_set, difference, intersection};
+use crate::graph::{GraphBuilder, DiGraph, BiGraph, Graph, Node};
 
-#[derive(Debug)]
-pub struct Model<'a> {
-    dag: GraphBuilder<'a>,
-    confounded: GraphBuilder<'a>,
-    vars: Set<&'a str>
+pub struct ModelBuilder {
+    dag: GraphBuilder,
+    confounded: GraphBuilder,
 }
 
-#[derive(Debug)]
-struct SubgraphModel<'a> {
-    dag: DiGraph<'a>,
-    confounded: DiGraph<'a>,
-    vars: &'a Set<&'a str>,
-}
+impl<'a> ModelBuilder {
+    fn new() -> ModelBuilder {
+        ModelBuilder { dag: GraphBuilder::new(), confounded: GraphBuilder::new() }
+    }
 
-impl<'a> Model<'a> {
-    fn from(dag: impl Iterator<Item=(&'a str, impl Iterator<Item=&'a str>)>, confounded: impl Iterator<Item=(&'a str, &'a str)>) -> Model<'a> {
-
-        // build dag
-        let mut dag_graph = GraphBuilder::new();
-        let mut vars = Set::new();
-        for (k, v) in dag {
-            vars.insert(k);
-            for x in v {
-                vars.insert(x);
-                dag_graph.insert(k, x);
-            }
-        }
-        let confounded_vec = c![x, for x in confounded];
-        for (a, b) in confounded_vec.iter() {
-            vars.extend([*a, *b]);
-        }
-        let dag_view = dag_graph.view();
-
-        // work out order
-        let dag_order = dag_view.order();
-        let vars_copy: Set<&'a str> = vars.iter().map(|e| *e).collect();
-        for x in dag_order.iter() {
-            vars.remove(*x);
-        }
-        let mut order: Vec<&str> = vars.iter().map(|e| *e).collect();
-        order.extend(dag_order);
-        let order_values: Map<&str, i32> = order.iter().enumerate().map(|(a, b)| (*b, a as i32)).collect();
-
-        // build confounded graph
-        let mut confounded_graph = GraphBuilder::new();
-        for (a, b) in confounded_vec {
-            vars.extend([a, b]);
-            if order_values[a] > order_values[b] {
-                confounded_graph.insert(b, a);
-            } else {
-                confounded_graph.insert(a, b);
+    pub fn from(dag: Vec<(Node, Vec<Node>)>, confounded: Vec<(Node, Node)>) -> ModelBuilder {
+        let mut builder = ModelBuilder::new();
+        for (from, to) in dag {
+            for target in to {
+                builder.dag.add_edge(from, target);
             }
         }
 
-        return Model {dag: dag_graph, confounded: confounded_graph, vars: vars_copy};
+        for (a, b) in confounded {
+            builder.confounded.add_edge(a, b);
+        }
+
+        return builder;
     }
 
-    fn subgraph_model(&'a self, nodes: &'a Set<&'a str>, intervene: &'a Set<&'a str>) -> SubgraphModel {
-        SubgraphModel::<'a> {
-            dag: self.dag.subgraph(nodes, intervene),
-            confounded: self.confounded.subgraph(nodes, intervene),
-            vars: nodes,
+    pub fn to_model (builder: Box<ModelBuilder>) -> Model {
+        let vars = union(&builder.dag.get_nodes(), &builder.confounded.get_nodes());
+        Model {
+            dag: GraphBuilder::to_digraph(builder.dag),
+            confounded: GraphBuilder::to_bigraph(builder.confounded),
+            vars
         }
     }
-
 }
 
-impl<'a> SubgraphModel<'a> {
 
-    fn subgraph_model(&'a self, nodes: &'a Set<&'a str>, intervene: &'a Set<&'a str>) -> SubgraphModel {
-        SubgraphModel::<'a> {
-            dag: self.dag.subgraph(nodes, intervene),
-            confounded: self.confounded.subgraph(nodes, intervene),
-            vars: nodes,
+#[derive(Debug)]
+pub struct Model {
+    pub dag: DiGraph,
+    pub confounded: BiGraph,
+    vars: Set<Node>
+}
+
+impl Graph for Model {
+    fn subgraph(&self, nodes: &Set<Node>) -> Self {
+        Model {
+            dag: self.dag.subgraph(nodes),
+            confounded: self.confounded.subgraph(nodes),
+            vars: nodes.clone()
         }
     }
 
-    fn intervene(&'a self, intervene: &'a Set<&'a str>) -> SubgraphModel {
-        SubgraphModel::<'a> {
-            dag: self.dag.intervene(intervene),
-            confounded: self.confounded.intervene(intervene),
-            vars: self.vars,
+    fn r#do(&self, nodes: &Set<Node>) -> Self {
+        Model {
+            dag: self.dag.r#do(nodes),
+            confounded: self.confounded.r#do(nodes),
+            vars: self.vars.clone()
         }
     }
 
-    fn c_components(&self) -> Vec<Set<&'a str>> {
-        return c![self.confounded.ancestors(root), for root in self.confounded.root_set()];
+    fn get_nodes(&self) -> &Set<Node> {
+        &self.vars
+    }
+}
+
+impl Model {
+    fn order(&self) -> Vec<Node> {
+        let res_set = difference(
+            self.confounded.get_nodes(), 
+            self.dag.get_nodes()
+        );
+        let mut res = Vec::new();
+        for r in res_set {
+            res.push(r);
+        }
+        res.extend(self.dag.order());
+        return res;
     }
 
-    fn id<'b>(&self, outcome: &'b Set<&'a str>, treatment: &'b Set<&'a str>) -> Form<'b> {
+    fn _id(&self, y: &Set<Node>, x: &Set<Node>, p: Form) -> Form {
+        let v = &self.vars;
+        
         // step 1
-        if treatment.len() == 0 {
-            return Form::Marginal(
-                set_difference(self.vars, outcome),
-                Box::new(Form::P(c![*v, for v in self.vars], None))
-            );
+        if x.len() == 0 {
+            return Form::marginal(difference(v, &y), p);
         }
 
         // step 2
-        let an_y = self.dag.ancestors_set(&outcome);
-        if *self.vars != an_y {
-            return Form::Marginal(
-                set_difference(self.vars, &outcome),
-                Box::new(self.id(treatment, &set_union(&treatment, &an_y)))
-            );
+        let ancestors_y = self.dag.ancestors_set(&y);
+        if self.vars != ancestors_y {
+            let subg = self.subgraph(&ancestors_y);
+            return subg
+                ._id(
+                    y,
+                    &intersection(x, &ancestors_y),
+                    Form::marginal(difference(v, &ancestors_y), p)
+                );
         }
 
         // step 3
-        let a_y_intervene = self.dag.intervene(treatment).ancestors_set(outcome);
-        let w = set_union(&set_union(self.vars, treatment), &a_y_intervene);
-        if w.len() != 1 {
-            return self.id(outcome, &set_union(&treatment, &w));
+        let a_y_intervene = self.dag
+            .r#do(x)
+            .ancestors_set(y);
+        let w = difference(&difference(v, x), &a_y_intervene);
+        if !w.is_empty() {
+            return self._id(y, &union(&x, &w), p);
         }
 
         // step 4
-        let c_components_intervene = self
-            .subgraph_model(&set_difference(&self.vars, &treatment), &Set::new())
+        let c_components_less_x = self
+            .subgraph(&difference(&self.vars, &x))
+            .confounded
             .c_components();
-        if c_components_intervene.len() > 1 {
-            return Form::Marginal(
-                set_difference(self.vars, &set_union(&treatment, &outcome)),
-                Box::new(Form::Product(c![self.id(&s, &set_difference(self.vars, &s)), for s in c_components_intervene]))
-            )
+        
+        if c_components_less_x.len() > 1 {
+            return Form::marginal(
+                difference(v, &union(&y, &x)),
+                Form::product(c![
+                    self._id(&s_i, &difference(v, &s_i), p.clone()),
+                    for s_i in c_components_less_x
+                ])
+            );
         }
 
         // step 5
-        let c_components = self.c_components();
+        let mut c_components = self.confounded.c_components();
         if c_components.len() == 1 {
             return Form::Fail;
         }
 
-        let s = match c_components.pop() {
-            Some(v) => v,
-            None => panic!("argggg!!"),
-        };
-        for comp in c_components_intervene {
-            if s.is_subset(&comp) {
+        // homestretch woot
+        let s = c_components.pop().expect("arggg");
+        for s_prime in c_components_less_x {
+            if s.is_subset(&s_prime) {
                 // step 6
-                if s.len() == comp.len() {
-                    return Form::Marginal(
-                        set_difference(&s, &self.vars),
-                        Box::new(Form::P(c![i, for i in s], None)),
-                    )
+                if s.len() == s_prime.len() {
+                    return Form::marginal(
+                        difference(&s, y),
+                        Form::factorize(self.order(), p)
+                    );
                 // step 7
                 } else {
-                    
+                    let w = &union(&x, &s_prime);
+                    return self.subgraph(&s_prime)
+                        ._id(y, &intersection(&x, &s_prime), Form::factorize(self.order(), p))
                 }
             }
         }
 
-        return ();
         panic!("id assumptions violated");
         
     }
