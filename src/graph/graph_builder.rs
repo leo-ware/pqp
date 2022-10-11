@@ -2,9 +2,10 @@ use std::fmt::Debug;
 use super::{
     Constructable,
     Node,
-    graph::{BiGraph, DiGraph},
+    BiGraph,
+    DiGraph,
     Map,
-    Set,
+    Set, Graph,
 };
 
 #[derive(Debug)]
@@ -19,6 +20,22 @@ impl GraphBuilder {
             edges: Map::new(),
             nodes: Set::new(),
         };
+    }
+
+    pub fn from_edges(edges: Vec<(Node, Node)>) -> GraphBuilder {
+        let mut gb = GraphBuilder::new();
+        for (a, b) in edges {
+            gb.add_edge(a, b);
+        }
+        return gb;
+    }
+
+    pub fn from_edges_nodes(edges: Vec<(Node, Node)>, nodes: Vec<Node>) -> GraphBuilder {
+        let mut gb = GraphBuilder::from_edges(edges);
+        for n in nodes {
+            gb.add_node(n);
+        }
+        return gb;
     }
 
     pub fn add_node(&mut self, node: Node) {
