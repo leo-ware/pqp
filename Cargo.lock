@@ -3,14 +3,14 @@
 version = 3
 
 [[package]]
-name = "capstone-code"
-version = "0.1.0"
-dependencies = [
- "cute",
-]
-
-[[package]]
 name = "cute"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "45e700c2d1c3feea9b695e79b2dfeeb93040556a58c556fae23f71b1e6b449fd"
+
+[[package]]
+name = "sherlock"
+version = "0.1.0"
+dependencies = [
+ "cute",
+]

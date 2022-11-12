@@ -3,7 +3,10 @@
 use crate::{
     model::{Model, ModelBuilder},
     graph::Graph,
-    defaults::Set, set_utils::make_set,
+    utils::{
+        defaults::Set,
+        set_utils::make_set,
+    }
 };
 
 #[test]
@@ -37,4 +40,18 @@ fn order() {
     let order = model.order();
     assert_eq!(order[3], d);
     assert_eq!(order[0], a);
+}
+
+#[test]
+fn test_nodes_added_graphs() {
+    let model = Model::from_elems(
+        vec![
+            (2, vec![0, 1]),
+            (1, vec![0]),
+        ],
+        vec![(1, 4)],
+    );
+
+    assert_eq!(model.get_nodes(), model.get_dag().get_nodes());
+    assert_eq!(model.get_nodes(), model.get_confounded().get_nodes());
 }

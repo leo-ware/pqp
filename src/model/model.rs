@@ -1,7 +1,7 @@
 use cute::c;
 use crate::form::Form;
-use crate::defaults::{Set, Map};
-use crate::set_utils::{union, make_set, difference, intersection};
+use crate::utils::defaults::{Set, Map};
+use crate::utils::set_utils::{union, make_set, difference, intersection};
 use crate::graph::{GraphBuilder, DiGraph, BiGraph, Graph, Node};
 
 pub struct ModelBuilder {
@@ -19,11 +19,16 @@ impl<'a> ModelBuilder {
         for (from, to) in dag {
             for target in to {
                 builder.dag.add_edge(from, target);
+
+                builder.confounded.add_node(target);
             }
+            builder.confounded.add_node(from);
         }
 
         for (a, b) in confounded {
             builder.confounded.add_edge(a, b);
+            builder.dag.add_node(a);
+            builder.dag.add_node(b);
         }
 
         return builder;
@@ -91,4 +96,13 @@ impl Model {
         res.extend(self.dag.order());
         return res;
     }
+
+    pub fn get_dag(&self) -> &DiGraph {
+        &self.dag
+    }
+
+    pub fn get_confounded(&self) -> &BiGraph {
+        &&self.confounded
+    }
+
 }

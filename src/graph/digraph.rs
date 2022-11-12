@@ -1,4 +1,4 @@
-use crate::set_utils::difference;
+use crate::utils::set_utils::difference;
 
 use super::{Graph, Constructable, Set, Map, Node, GraphBuilder};
 use std::rc::Rc;
@@ -35,6 +35,11 @@ impl DiGraph {
     }
 
     pub fn ancestors_set (&self, x: &Set<Node>) -> Set<Node> {
+        if !x.is_subset(&self.nodes) {
+            panic!("cannot find ancestors of {:?} in DiGraph {:?} because not all queried
+                nodes were found in the graph", x, self);
+        }
+
         let mut acc = Set::new();
         let mut queue = Vec::new();
         queue.extend(x);
@@ -54,7 +59,8 @@ impl DiGraph {
             }
         }
 
-        panic!("infinite loop detected");
+        panic!("infinite loop detected: cannot find ancestors of {:?} in DiGraph {:?}",
+            x, self);
     }
 
     pub fn root_set(&self) -> Vec<Node> {
@@ -135,7 +141,9 @@ impl Graph for DiGraph {
     fn r#do(&self, nodes: &Set<Node>) -> Self {
         let mut edges = Map::new();
         for (from, to) in self.edges.iter() {
-            edges.insert(*from, difference(to, nodes));
+            if !nodes.contains(from) {
+                edges.insert(*from, to.clone());
+            }
         }
 
         DiGraph {

@@ -1,6 +1,6 @@
 #![cfg(test)]
 
-use crate::{graph::Graph, set_utils::make_set};
+use crate::{graph::Graph, utils::set_utils::make_set, set, model};
 
 use super::{GraphBuilder, Set, DiGraph, BiGraph};
 
@@ -29,8 +29,8 @@ fn test_to_digraph () {
     gb.add_node(c);
     let dg = GraphBuilder::to_digraph(gb);
 
-    assert!(dg.root_set() == vec![a, c] || dg.root_set() == vec![c, a]);
-    assert_eq!(dg.ancestors(a), Set::from([b]));
+    assert_eq!(make_set(dg.root_set().into_iter()), set![a, c], "root set");
+    assert_eq!(dg.ancestors(a), Set::from([b]), "ancestors a");
     assert_eq!(dg.order().last(), Some(&b));
     assert_eq!(dg.order().len(), 3);
     assert_eq!(dg.count_parents()[&b], 1);
@@ -47,22 +47,32 @@ fn test_ancestors () {
         (b, d),
         (c, d),
     ]);
-    assert_eq!(graph.ancestors(a), Set::from([b, c, d]));
-    assert_eq!(graph.ancestors(b), Set::from([d]));
-    assert_eq!(graph.ancestors(c), Set::from([d]));
-    assert_eq!(graph.ancestors(d), Set::from([]));
+    assert_eq!(graph.ancestors(a), Set::from([b, c, d]), "ancestors a");
+    assert_eq!(graph.ancestors(b), Set::from([d]), "ancestors b");
+    assert_eq!(graph.ancestors(c), Set::from([d]), "ancestors d");
+    assert_eq!(graph.ancestors(d), Set::from([]), "ancestors c");
 
     let abd = graph.subgraph(&Set::from([a, b, d]));
-    assert_eq!(abd.ancestors(a), Set::from([b, d]));
-    assert_eq!(abd.ancestors(b), Set::from([d]));
+    assert_eq!(abd.ancestors(a), Set::from([b, d]), "subg ancestors a");
+    assert_eq!(abd.ancestors(b), Set::from([d]), "subg ancestors b");
     
     let intv = graph.r#do(&Set::from([b, c]));
-    assert_eq!(intv.ancestors(a), Set::from([]));
-    assert_eq!(intv.ancestors(b), Set::from([d]));
+    assert_eq!(intv.ancestors(a), Set::from([b, c]), "intv ancestors a");
+    assert_eq!(intv.ancestors(b), Set::new(), "intv ancestors b");
 }
 
 #[test]
 fn test_ancestors_set () {
+    /*
+    causal diagram
+
+    1 <--- 2 <------ 4 <--
+        |        |        |
+         -- 3 <--         |
+        |                 |
+    5 <------------------ 6
+
+    */
     let graph = DiGraph::from_edges(vec![
         (1, 2),
         (1, 3),
@@ -75,14 +85,27 @@ fn test_ancestors_set () {
     assert_eq!(graph.ancestors_set(&Set::from([])), Set::from([]));
     assert_eq!(graph.ancestors_set(&Set::from([2, 5])), Set::from([3, 4, 6]));
     assert_eq!(
-        graph.r#do(&Set::from([4])).ancestors_set(&Set::from([1])),
-        Set::from([2, 3])
+        graph.r#do(&set![4]).ancestors_set(&Set::from([1])),
+        Set::from([2, 3, 4])
     );
     assert_eq!(
-        graph.r#do(&Set::from([4])).ancestors_set(&Set::from([1, 5])),
-        Set::from([2, 3, 6])
+        graph.r#do(&set![4]).ancestors_set(&set![1, 5]),
+        Set::from([2, 3, 4, 6])
     );
 
+}
+
+#[test]
+fn test_ancestors_backdoor() {
+    let graph = DiGraph::from_edges(vec![
+        (1, 0),
+        (2, 1),
+        (2, 0),
+    ]);
+    assert_eq!(graph.ancestors(2), set!(0, 1));
+
+    let a_y_intervene_x = graph.r#do(&set![1]).ancestors(2);
+    assert_eq!(a_y_intervene_x, set![0, 1]);
 }
 
 #[test]
@@ -158,4 +181,19 @@ fn test_c_components () {
     let cs = component_products(graph.c_components());
     assert_eq!(cs, Set::from([a, b, c, d, e, f]));
 
+}
+
+#[test]
+fn test_c_components_backdoor() {
+    let model = model::examples::backdoor_model();
+
+    let c_components = model.confounded.c_components();
+    assert_eq!(c_components.len(), 3);
+    for component in c_components.iter() {
+        assert_eq!(component.len(), 1);
+    }
+    
+    let subgraph_c_components =  model.subgraph(&set![0, 2]).confounded.c_components();
+    assert_eq!(subgraph_c_components.len(), 2);
+    assert_ne!(subgraph_c_components[0], subgraph_c_components[1]);
 }

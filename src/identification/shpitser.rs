@@ -1,45 +1,59 @@
 use cute::c;
 use crate::{
-    defaults::{Set, Map},
     graph::{Node, Graph},
     form::Form,
-    set_utils::{union, intersection, difference, make_set},
     model::Model,
+    utils::{
+        defaults::{Set, Map},
+        set_utils::{union, intersection, difference, make_set},
+    }
 };
 
-pub fn id(model: &Model, y: &Set<Node>, x: &Set<Node>, p: Form) -> Form {
+pub fn id(model: &Model, y: &Set<Node>, x: &Set<Node>) -> Form {
+    _id(model, y, x, Form::prob(c![*i, for i in model.get_nodes()]))
+}
+
+fn _id(model: &Model, y: &Set<Node>, x: &Set<Node>, p: Form) -> Form {
     let v = model.get_nodes();
     
     // step 1
+    // in the case of no intervention, return the marginal
     if x.len() == 0 {
         return Form::marginal(difference(v, &y), p);
     }
 
     // step 2
-    let ancestors_y = model.dag.ancestors_set(&y);
-    if v != &ancestors_y {
-            // replace with length equality check?
-        let subg = model.subgraph(&ancestors_y);
-        return id(
-                &subg,
-                y,
-                &intersection(x, &ancestors_y),
-                Form::marginal(difference(v, &ancestors_y), p)
-            );
+    // restrict graph to y and ancestors of y
+    {
+        let ancestors_y_and_y = union(&model.dag.ancestors_set(&y), &y);
+        if v != &ancestors_y_and_y {
+                // replace with length equality check?
+            let subg = model.subgraph(&ancestors_y_and_y);
+            return _id(
+                    &subg,
+                    y,
+                    &intersection(x, &ancestors_y_and_y),
+                    Form::marginal(difference(v, &ancestors_y_and_y), p)
+                );
+        }
     }
 
     // step 3
-    let a_y_intervene = model.dag
-        .r#do(x)
-        .ancestors_set(y);
-    // simplify w? do we need to subtract x?
-    let w = difference(&difference(v, x), &a_y_intervene);
-    if !w.is_empty() {
-        return id(model, y, &union(&x, &w), p);
+    // force an action where this would have no effect on y
+    {
+        let a_y_do_x = model.dag
+            .r#do(x)
+            .ancestors_set(y);
+        // simplify w? do we need to subtract x?
+        let w = difference(v, &union(x, &union(&a_y_do_x, &y)));
+        if !w.is_empty() {
+            return _id(model, y, &union(&x, &w), p);
+        }
     }
 
     // step 4
-    let c_components_less_x = model
+    // c_component factorization of the problem
+    let mut c_components_less_x = model
         .subgraph(&difference(v, &x))
         .confounded
         .c_components();
@@ -49,36 +63,39 @@ pub fn id(model: &Model, y: &Set<Node>, x: &Set<Node>, p: Form) -> Form {
             difference(v, &union(&y, &x)),
                 // will this difference ever contain anything?
             Form::product(c![
-                id(model, &s_i, &difference(v, &s_i), p.clone()),
+                _id(model, &s_i, &difference(v, &s_i), p.clone()),
                 for s_i in c_components_less_x
             ])
         );
     }
 
     // step 5
-    let mut c_components = model.confounded.c_components();
+    // fail if a hedge is discovered
+    let c_components = model.confounded.c_components();
     if c_components.len() == 1 {
-        return Form::Fail;
+        return Form::Hedge;
     }
 
     // homestretch woot
-    let s = c_components.pop().expect("arggg");
-    for s_prime in c_components_less_x {
+    let s = c_components_less_x.pop()
+        .expect("no c_components found in derived model");
+    for s_prime in c_components {
         if s.is_subset(&s_prime) {
             // step 6
+            // if x is contained in isolated c_components, condition and win
             if s.len() == s_prime.len() {
                 return Form::marginal(
                     difference(&s, y),
                     Form::factorize(model.order(), p)
                 );
             // step 7
+            // partition x into confounded and uncounfounded
             } else {
-                // let w = &union(&x, &s_prime);
-                return id(
+                return _id(
                     &model.subgraph(&s_prime),
                     y,
                     &intersection(&x, &s_prime),
-                    Form::factorize(model.order(), p)
+                    Form::factorize_subset(model.order(), p, &s_prime)
                 );
             }
         }

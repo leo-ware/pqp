@@ -1,12 +1,11 @@
 use super::{Graph, Constructable, Set, Map, Node, GraphBuilder};
 use std::rc::Rc;
-use crate::set_utils::union;
+use crate::utils::set_utils::{union, difference};
 
 #[derive(Debug)]
 pub struct BiGraph {
     edges: Rc<Map<Node, Set<Node>>>,
     nodes: Box<Set<Node>>,
-    orphans: Box<Set<Node>>,
 }
 
 impl Constructable for BiGraph {
@@ -14,7 +13,6 @@ impl Constructable for BiGraph {
         BiGraph {
             edges: Rc::new(edges),
             nodes: Box::new(nodes),
-            orphans: Box::new(Set::new())
         }
     }
 }
@@ -28,15 +26,20 @@ impl Graph for BiGraph {
         BiGraph {
             edges: self.edges.clone(),
             nodes: Box::new(nodes.clone()),
-            orphans: self.orphans.clone()
         }
     }
 
     fn r#do(&self, nodes: &Set<Node>) -> Self {
+        let mut edges = Map::new();
+        for (from, to) in self.edges.iter() {
+            if !nodes.contains(from) {
+                edges.insert(*from, difference(to, nodes));
+            }
+        }
+
         BiGraph {
-            edges: self.edges.clone(),
+            edges: Rc::new(edges),
             nodes: self.nodes.clone(),
-            orphans: Box::new(union(&*self.orphans, nodes))
         }
     }
 }
