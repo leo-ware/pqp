@@ -1,8 +1,7 @@
 #![cfg(test)]
 
-use crate::{graph::Graph, utils::set_utils::make_set, set, model};
-
-use super::{GraphBuilder, Set, DiGraph, BiGraph};
+use crate::{model::{self, examples::frontdoor_model}, utils::set_utils::make_set, set};
+use super::{GraphBuilder, Set, DiGraph, BiGraph, Graph, node::{Node, make_nodes}};
 
 #[test]
 fn test_graph_builder () {
@@ -109,6 +108,12 @@ fn test_ancestors_backdoor() {
 }
 
 #[test]
+fn test_ancestors_frontdoor() {
+    let fd = frontdoor_model();
+    assert_eq!(fd.ancestors_set_inc(&set!(2, 0)), set!(2, 1, 0));
+}
+
+#[test]
 fn test_root_set () {
     let (a, b, c, d) = (1, 2, 3, 4);
 
@@ -196,4 +201,15 @@ fn test_c_components_backdoor() {
     let subgraph_c_components =  model.subgraph(&set![0, 2]).confounded.c_components();
     assert_eq!(subgraph_c_components.len(), 2);
     assert_ne!(subgraph_c_components[0], subgraph_c_components[1]);
+}
+
+#[test]
+fn test_random_nodes_len () {
+    let n0 = make_nodes(0);
+    let n1 = make_nodes(1);
+    let n15 = make_nodes(15);
+
+    assert_eq!(n0.len(), 0);
+    assert_eq!(n1.len(), 1);
+    assert_eq!(n15.len(), 15);
 }

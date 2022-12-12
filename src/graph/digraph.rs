@@ -1,4 +1,4 @@
-use crate::utils::set_utils::difference;
+use crate::{utils::set_utils::{difference, make_set}, set};
 
 use super::{Graph, Constructable, Set, Map, Node, GraphBuilder};
 use std::rc::Rc;
@@ -18,6 +18,16 @@ impl DiGraph {
         GraphBuilder::to_digraph(GraphBuilder::from_edges_nodes(edges, nodes))
     }
 
+    pub fn children(&self, x: &Node) -> Set<Node> {
+        let mut acc = set![];
+        for (k, v) in self.edges.iter() {
+            if self.nodes.contains(&k) && v.contains(x) {
+                acc.insert(*k);
+            }
+        }
+        return acc;
+    }
+
     pub fn parents (&self, x: Node) -> Set<Node> {
         let empty = Set::new();
         let elems = match self.edges.get(&x) {
@@ -34,13 +44,15 @@ impl DiGraph {
         self.ancestors_set(&Set::from([x]))
     }
 
+    // TODO: by default, x should be considered a subset of ancestors of x
+    // otherwise semantics too tricky when one element in set is ancestor of another
     pub fn ancestors_set (&self, x: &Set<Node>) -> Set<Node> {
         if !x.is_subset(&self.nodes) {
             panic!("cannot find ancestors of {:?} in DiGraph {:?} because not all queried
                 nodes were found in the graph", x, self);
         }
 
-        let mut acc = Set::new();
+        let mut acc = make_set(x.iter().cloned());
         let mut queue = Vec::new();
         queue.extend(x);
         
@@ -55,7 +67,13 @@ impl DiGraph {
                         }
                     }
                 },
-                None => return acc,
+                None => {
+                    // TODO this is awkward
+                    for val in x {
+                        acc.remove(val);
+                    }
+                    return acc;
+                },
             }
         }
 

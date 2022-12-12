@@ -17,6 +17,6 @@ pub fn frontdoor_model() -> Model {
             (2, vec![1]),
             (1, vec![0])
         ],
-        vec![]
+        vec![(2, 0)]
     )
 }

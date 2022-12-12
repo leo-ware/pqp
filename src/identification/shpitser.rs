@@ -86,7 +86,7 @@ fn _id(model: &Model, y: &Set<Node>, x: &Set<Node>, p: Form) -> Form {
             if s.len() == s_prime.len() {
                 return Form::marginal(
                     difference(&s, y),
-                    Form::factorize(model.order(), p)
+                    Form::factorize(model.order_vec(), p)
                 );
             // step 7
             // partition x into confounded and uncounfounded
@@ -95,7 +95,7 @@ fn _id(model: &Model, y: &Set<Node>, x: &Set<Node>, p: Form) -> Form {
                     &model.subgraph(&s_prime),
                     y,
                     &intersection(&x, &s_prime),
-                    Form::factorize_subset(model.order(), p, &s_prime)
+                    Form::factorize_subset(model.order_vec(), p, &s_prime)
                 );
             }
         }

@@ -53,7 +53,7 @@ impl BiGraph {
         GraphBuilder::to_bigraph(GraphBuilder::from_edges_nodes(edges, nodes))
     }
 
-    fn get_component (&self, node: Node) -> Set<Node> {
+    pub fn get_component (&self, node: Node) -> Set<Node> {
         let mut acc = Set::new();
         let mut queue = Vec::from([node]);
         loop {

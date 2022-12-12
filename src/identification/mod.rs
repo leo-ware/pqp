@@ -1,3 +1,3 @@
 mod shpitser;
 mod tests;
-use shpitser::id;
+pub use shpitser::id;
