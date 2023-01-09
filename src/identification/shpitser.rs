@@ -10,7 +10,7 @@ use crate::{
 };
 
 pub fn id(model: &Model, y: &Set<Node>, x: &Set<Node>) -> Form {
-    _id(model, y, x, Form::prob(c![*i, for i in model.get_nodes()]))
+    _id(model, y, x, Form::prob(c![*i, for i in model.get_nodes()])).simplify()
 }
 
 fn _id(model: &Model, y: &Set<Node>, x: &Set<Node>, p: Form) -> Form {
@@ -86,7 +86,7 @@ fn _id(model: &Model, y: &Set<Node>, x: &Set<Node>, p: Form) -> Form {
             if s.len() == s_prime.len() {
                 return Form::marginal(
                     difference(&s, y),
-                    Form::factorize(model.order_vec(), p)
+                    Form::factorize_subset(model.order_vec(), p, &s)
                 );
             // step 7
             // partition x into confounded and uncounfounded

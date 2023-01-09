@@ -1,4 +1,8 @@
 mod form;
-mod tests;
-// mod simplification;
-pub use form::Form;
+pub use form::{Form, one, HEDGE};
+mod simplify;
+use simplify::simplify;
+
+// tests
+mod test_simplify;
+mod test_form;
