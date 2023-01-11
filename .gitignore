@@ -1,3 +1,4 @@
 /target
 .vscode
 src/form/form.rs
+*.profraw
