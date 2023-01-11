@@ -60,7 +60,7 @@ impl BiGraph {
             match queue.pop() {
                 None => break,
                 Some(node) => {
-                    if acc.insert(node) {
+                    if self.nodes.contains(&node) && acc.insert(node) {
                         match self.edges.get(&node) {
                             Some(siblings) => queue.extend(siblings),
                             None => {}
@@ -73,7 +73,7 @@ impl BiGraph {
     }
 
     pub fn c_components (&self) -> Vec<Set<Node>> {
-        let mut unvisited: Set<Node> = self.nodes.iter().map(|e| *e).collect();
+        let mut unvisited: Set<Node> = self.nodes.iter().cloned().collect();
         let mut components = Vec::new();
 
         for node in self.nodes.iter() {
