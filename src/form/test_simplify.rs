@@ -106,6 +106,31 @@ fn test_simplify_quotient () {
         )
     );
     assert_eq!(simplify_quotient(&f), simple, "failed with nested quotients top/bottom");
+
+    // ensure it cancels identical terms
+    let f = Form::quotient(
+        Form::product(vec![
+            Form::prob(vec![0]),
+            Form::prob(vec![1]),
+        ]),
+        Form::prob(vec![1]),
+    );
+    let simple = Form::prob(vec![0]);
+    assert_eq!(simplify_quotient(&f), simple, "failed to cancel");
+
+    let f = Form::quotient(
+        Form::product(vec![
+            Form::prob(vec![0, 1, 2]),
+            Form::prob(vec![1, 2]),
+            Form::prob(vec![2]),
+        ]),
+        Form::product(vec![
+            Form::prob(vec![2, 1]),
+            Form::prob(vec![2]),
+        ])
+    );
+    let simple = Form::prob(vec![0, 1, 2]);
+    assert_eq!(simplify_quotient(&f), simple, "failed to cancel (#2)");
 }
 
 #[test]

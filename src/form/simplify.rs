@@ -118,8 +118,8 @@ pub fn simplify_quotient (f: &Form) -> Form {
             (*denom.to_owned(), one())
         };
 
-        let collapsed_numer = simplify_product(&Form::product(vec![top_numer, bottom_denom]));
-        let collapsed_denom = simplify_product(&Form::product(vec![top_denom, bottom_numer]));
+        let collapsed_numer = simplify_product(&Form::product(vec![top_numer, bottom_denom])).sorted();
+        let collapsed_denom = simplify_product(&Form::product(vec![top_denom, bottom_numer])).sorted();
 
         // cancel duplicates
         let mut numer_vec = match collapsed_numer {

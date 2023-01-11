@@ -140,6 +140,14 @@ impl Model {
         Order::from_vec(order_vec).expect("error creating order")
     }
 
+    /// Joint distribution of unobserved variables in the model, conditioned on observed.
+    pub fn p(&self) -> Form {
+        Form::cond_prob(
+            self.vars.iter().cloned().collect(),
+            self.cond_vars.iter().cloned().collect()
+        )
+    }
+
     pub fn get_dag(&self) -> &DiGraph {
         &self.dag
     }

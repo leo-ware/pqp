@@ -10,7 +10,7 @@ use crate::{
 };
 
 pub fn id(model: &Model, y: &Set<Node>, x: &Set<Node>) -> Form {
-    _id(model, y, x, Form::prob(c![*i, for i in model.get_nodes()])).simplify()
+    _id(model, y, x, Form::prob(c![*i, for i in model.get_nodes()]))
 }
 
 fn _id(model: &Model, y: &Set<Node>, x: &Set<Node>, p: Form) -> Form {
@@ -53,8 +53,9 @@ fn _id(model: &Model, y: &Set<Node>, x: &Set<Node>, p: Form) -> Form {
 
     // step 4
     // c_component factorization of the problem
-    let mut c_components_less_x = model
-        .subgraph(&difference(v, &x))
+
+    let less_x = model.subgraph(&difference(v, &x));
+    let mut c_components_less_x = less_x
         .confounded
         .c_components();
     

@@ -2,7 +2,7 @@ use super::{
     form::Form,
 };
 
-use crate::utils::defaults::{set, Set};
+use crate::{utils::defaults::{set, Set}, model::examples::frontdoor_model};
 
 #[test]
 fn test_sort () {
@@ -104,4 +104,19 @@ fn test_structural_eq () {
     );
     assert!(f1.structural_eq(&f2), "{:?} should equal {:?}", f1, f2);   
 
+}
+
+#[test]
+fn test_factorize_subset() {
+    let model = frontdoor_model();
+    let order = model.order_vec();
+    let p = model.p();
+
+    let f = Form::factorize_subset(order, p, &set![0, 2]);
+    let ans = Form::quotient(
+        Form::product(vec![Form::prob(vec![0]), Form::cond_prob(vec![0, 1, 2], vec![])]),
+        Form::prob(vec![0, 1])
+    );
+
+    assert_eq!(f.simplify(), ans.simplify());
 }

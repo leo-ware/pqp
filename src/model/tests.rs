@@ -12,7 +12,7 @@ use crate::{
     }, set
 };
 
-use super::order::Order;
+use super::{order::Order, examples::frontdoor_model};
 
 #[test]
 fn subgraphing() {
@@ -30,6 +30,42 @@ fn subgraphing() {
     assert_eq!(make_set(abd.order_vec().into_iter()), Set::from([a, b, d]));
     assert_eq!(abd.dag.ancestors(d), Set::new());
     assert_eq!(abd.dag.ancestors(a), Set::from([b, d]));
+}
+
+#[test]
+fn c_components_subgraph () {
+    let model = frontdoor_model();
+
+    fn vec_and_sort(cs: Vec<Set<i32>>) -> Vec<Vec<i32>> {
+        let mut new = vec![];
+        for c in cs {
+            let mut c_vec: Vec<i32> = c.into_iter().collect();
+            c_vec.sort();
+            new.push(c_vec);
+        }
+        new.sort();
+        return new;
+    }
+
+    let c_components = model.confounded.c_components();
+    assert_eq!(vec_and_sort(c_components), vec![
+        vec![0, 2],
+        vec![1],
+    ]);
+
+    let graph_sub_c_components = model.confounded.subgraph(&set![1, 2]).c_components();
+    assert_eq!(vec_and_sort(graph_sub_c_components), vec![
+        vec![1],
+        vec![2],
+    ], "test 1");
+
+    let sub_c_components = model.subgraph(&set![1, 2]).confounded.c_components();
+    assert_eq!(vec_and_sort(sub_c_components), vec![
+        vec![1],
+        vec![2],
+    ]);
+
+
 }
 
 #[test]
