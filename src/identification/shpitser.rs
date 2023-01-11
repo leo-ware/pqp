@@ -10,7 +10,23 @@ use crate::{
 };
 
 pub fn id(model: &Model, y: &Set<Node>, x: &Set<Node>) -> Form {
-    _id(model, y, x, Form::prob(c![*i, for i in model.get_nodes()]))
+    let observed = model.get_observed();
+    if observed.is_empty() {
+        return _id(model, y, x, model.p()).simplify();
+    } else {
+        let model_hidden = &model.hide(&observed);
+        let p_prime = _id(
+            &model_hidden,
+            &union(y, &observed),
+            x,
+            model_hidden.p()
+        );
+        let p = Form::quotient(
+            p_prime.to_owned(),
+            Form::marginal(y.to_owned(), p_prime)
+        );
+        return p.simplify();
+    };
 }
 
 fn _id(model: &Model, y: &Set<Node>, x: &Set<Node>, p: Form) -> Form {

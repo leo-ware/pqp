@@ -3,7 +3,7 @@ use crate::{utils::set_utils::{difference, make_set}, set};
 use super::{Graph, Constructable, Set, Map, Node, GraphBuilder};
 use std::rc::Rc;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct DiGraph {
     edges: Rc<Map<Node, Set<Node>>>,
     nodes: Box<Set<Node>>,

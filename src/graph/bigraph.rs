@@ -2,7 +2,7 @@ use super::{Graph, Constructable, Set, Map, Node, GraphBuilder};
 use std::rc::Rc;
 use crate::utils::set_utils::{union, difference};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct BiGraph {
     edges: Rc<Map<Node, Set<Node>>>,
     nodes: Box<Set<Node>>,

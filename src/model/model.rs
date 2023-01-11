@@ -91,15 +91,35 @@ impl Model {
         Model {dag, confounded, vars, cond_vars: set![]}
     }
 
-    // pub fn cond (&self, cond: &Set<Node>) -> Model {
-    //     todo!();
-    //     // Model {
-    //     //     dag: self.dag,
-    //     //     confounded: self.confounded,
-    //     //     vars: self.vars,
-    //     //     cond_vars: union(&self.cond_vars, &cond)
-    //     // }
-    // }
+    /// Sets variables as observed in the model.
+    pub fn cond (&self, cond: &Set<Node>) -> Model {
+        Model {
+            dag: self.dag.to_owned(),
+            confounded: self.confounded.to_owned(),
+            vars: self.vars.to_owned(),
+            cond_vars: union(&self.cond_vars, &cond)
+        }
+    }
+
+    /// Sets variables as not observed in the model. Inverse of `cond`.
+    pub fn hide(&self, observed: &Set<Node>) -> Model {
+        Model {
+            dag: self.dag.to_owned(),
+            confounded: self.confounded.to_owned(),
+            vars: self.vars.to_owned(),
+            cond_vars: difference(&self.cond_vars, &observed)
+        }
+    }
+
+    /// Returns the set of variables that are observed in the model.
+    pub fn get_observed(&self) -> Set<Node> {
+        self.cond_vars.to_owned()
+    }
+
+    /// Returns the set of variables that are not observed in the model.
+    pub fn get_unobserved(&self) -> Set<Node> {
+        difference(&self.vars, &self.cond_vars)
+    }
 
     // pub fn independent(&self, a: &Set<Node>, b: &Set<Node>) -> bool {
     //     todo!();
