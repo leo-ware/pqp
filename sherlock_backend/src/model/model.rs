@@ -4,9 +4,11 @@ use crate::set;
 use crate::utils::defaults::{Set, Map};
 use crate::utils::set_utils::{union, make_set, difference, intersection};
 use crate::graph::{GraphBuilder, DiGraph, BiGraph, Graph, Node};
+use crate::identification::id;
 
 use super::order::Order;
 
+#[derive(Debug, Clone)]
 pub struct ModelBuilder {
     dag: GraphBuilder,
     confounded: GraphBuilder,
@@ -15,6 +17,19 @@ pub struct ModelBuilder {
 impl<'a> ModelBuilder {
     pub fn new() -> ModelBuilder {
         ModelBuilder { dag: GraphBuilder::new(), confounded: GraphBuilder::new() }
+    }
+
+    pub fn add_node(&mut self, node: Node) {
+        self.dag.add_node(node);
+        self.confounded.add_node(node);
+    }
+
+    pub fn add_directed_edge(&mut self, from: Node, to: Node) {
+        self.dag.add_edge(from, to);
+    }
+
+    pub fn add_confounded_edge(&mut self, from: Node, to: Node) {
+        self.confounded.add_edge(from, to);
     }
 
     pub fn from_elems(dag: Vec<(Node, Vec<Node>)>, confounded: Vec<(Node, Node)>) -> ModelBuilder {
@@ -82,6 +97,10 @@ impl Graph for Model {
 }
 
 impl Model {
+    pub fn id(&self, y: &Set<Node>, x: &Set<Node>) -> Form {
+        id(&self, y, x)
+    }
+
     pub fn from_elems (dag: Vec<(Node, Vec<Node>)>, confounded: Vec<(Node, Node)>) -> Model {
         ModelBuilder::to_model(Box::new(ModelBuilder::from_elems(dag, confounded)))
     }

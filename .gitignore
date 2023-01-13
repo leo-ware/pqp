@@ -1,4 +1,2 @@
-/target
-.vscode
-src/form/form.rs
-*.profraw
+.DS_Store
+venv

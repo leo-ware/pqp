@@ -1,4 +1,4 @@
-mod form;
+pub mod form;
 pub use form::{Form, one, HEDGE};
 mod simplify;
 use simplify::simplify;

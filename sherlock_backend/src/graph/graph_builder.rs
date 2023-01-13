@@ -8,7 +8,7 @@ use super::{
     Set, Graph,
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct GraphBuilder {
     pub nodes: Set<Node>,
     pub edges: Map<Node, Set<Node>>
