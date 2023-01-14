@@ -2,9 +2,16 @@ from IPython.display import display, Math
 import json
 
 def parse_json(exp):
+    """Parses JSON returned from backend.id() into an Expression object.
+
+    Args:
+        exp (str or dict): The JSON string or parsed JSON object.
+    
+    Returns:
+        Expression: The parsed expression.
+    """
     if isinstance(exp, str):
         return parse_json(json.loads(exp))
-
 
     if exp["type"] == "Quotient":
         return Quotient(
@@ -31,11 +38,17 @@ def parse_json(exp):
         raise Exception("Unknown expression type: " + exp["type"])
 
 class Expression:
+    """Base class for all expressions."""
     def __repr__(self):
         return "%s(%r)" % (self.__class__, self.__dict__)
 
     def display(self):
+        """Renders an expression as Latex using IPython.display"""
         return display(Math(self.tex()))
+    
+    def tex(self):
+        """Returns the Latex representation of an expression."""
+        raise NotImplementedError()
 
 class Variable(Expression):
     def __init__(self, name):
@@ -102,6 +115,7 @@ class P(Expression):
         return "P(" + v + (f" \\mid {g}" if g else "") + ")"
 
 class Hedge(Expression):
+    """Represents a failure to identify the query"""
     def __str__(self):
         return "FAIL"
     
