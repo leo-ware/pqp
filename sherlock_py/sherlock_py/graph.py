@@ -1,4 +1,4 @@
-from expression import parse_json
+from sherlock_py.expression import parse_json
 import backend
 import json
 import networkx as nx
@@ -19,7 +19,7 @@ class Graph:
     Args:
         edges (list of DirectedEdge or BidirectedEdge): the edges in the graph
     """
-    def __init__(self, edges):
+    def __init__(self, edges=[]):
         self.bi_edges = []
         self.directed_edges = []
         for edge in edges:
@@ -158,11 +158,11 @@ class Variable:
         else:
             raise TypeError(f"Cannot compare {type(self)} with {type(other)}")
 
-def vars(names):
+def make_vars(names):
     """Creates a list of variables from a list of names
     
     Example:
-        >>> vars(["x", "y", "z"])
+        >>> make_vars(["x", "y", "z"])
         [Variable("x"), Variable("y"), Variable("z")]
     
     """

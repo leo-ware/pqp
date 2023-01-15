@@ -44,9 +44,9 @@ class Expression:
 
     def display(self):
         """Renders an expression as Latex using IPython.display"""
-        return display(Math(self.tex()))
+        return display(Math(self.to_latex()))
     
-    def tex(self):
+    def to_latex(self):
         """Returns the Latex representation of an expression."""
         raise NotImplementedError()
 
@@ -57,7 +57,7 @@ class Variable(Expression):
     def __str__(self):
         return self.name
     
-    def tex(self):
+    def to_latex(self):
         return self.name
 
 class Quotient(Expression):
@@ -68,8 +68,8 @@ class Quotient(Expression):
     def __str__(self):
         return "[%s / %s]" % (str(self.numer), str(self.denom))
     
-    def tex(self):
-        return "{" + self.numer.tex() + " \over " + self.denom.tex() + "}"
+    def to_latex(self):
+        return "{" + self.numer.to_latex() + " \over " + self.denom.to_latex() + "}"
 
 class Product(Expression):
     def __init__(self, expr):
@@ -78,8 +78,8 @@ class Product(Expression):
     def __str__(self):
         return " * ".join([str(e) for e in self.expr])
     
-    def tex(self):
-        return " ".join([e.tex() for e in self.expr])
+    def to_latex(self):
+        return " ".join([e.to_latex() for e in self.expr])
 
 class Marginal(Expression):
     def __init__(self, sub, expr):
@@ -89,10 +89,10 @@ class Marginal(Expression):
     def __str__(self):
         return "Σ_(%s) [ %s ]" % (", ".join(str(c) for c in self.sub), str(self.expr))
     
-    def tex(self):
+    def to_latex(self):
         return (
-            "\\sum_{" + ", ".join(c.tex() for c in self.sub) + "} \\big(" +
-            self.expr.tex()
+            "\\sum_{" + ", ".join(c.to_latex() for c in self.sub) + "} \\big(" +
+            self.expr.to_latex()
             + "\\big)")
 
 class P(Expression):
@@ -107,9 +107,9 @@ class P(Expression):
             return "1"
         return "P(" + v + (f"| {g}" if g else "") + ")"
     
-    def tex(self):
-        v = ", ".join(c.tex() for c in self.vars)
-        g = ", ".join(c.tex() for c in self.given)
+    def to_latex(self):
+        v = ", ".join(c.to_latex() for c in self.vars)
+        g = ", ".join(c.to_latex() for c in self.given)
         if not v:
             return "1"
         return "P(" + v + (f" \\mid {g}" if g else "") + ")"
@@ -119,5 +119,5 @@ class Hedge(Expression):
     def __str__(self):
         return "FAIL"
     
-    def tex(self):
-        return "FAIL"
+    def to_latex(self):
+        return "\\textbf{FAIL}"
