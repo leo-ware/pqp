@@ -13,7 +13,7 @@ jobs:
           pip install sphinx
       - name: Sphinx build
         run: |
-          sphinx-build doc _build
+          sphinx-build sherlock_py/docs/source/ _build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
