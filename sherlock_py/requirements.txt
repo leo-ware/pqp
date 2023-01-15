@@ -1,0 +1,5 @@
+maturin
+sphinx
+ipython
+pytest
+networkx

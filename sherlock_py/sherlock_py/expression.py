@@ -1,4 +1,3 @@
-from IPython.display import display, Math
 import json
 
 def parse_json(exp):
@@ -44,6 +43,7 @@ class Expression:
 
     def display(self):
         """Renders an expression as Latex using IPython.display"""
+        from IPython.display import display, Math
         return display(Math(self.to_latex()))
     
     def to_latex(self):

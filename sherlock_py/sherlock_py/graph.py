@@ -1,7 +1,6 @@
 from sherlock_py.expression import parse_json
 import backend
 import json
-import networkx as nx
 
 class Graph:
     """A causal graph
@@ -66,6 +65,8 @@ class Graph:
     
     def draw(self):
         """Draws the causal diagram using networkx"""
+        import networkx as nx
+
         layout_graph = nx.Graph()
         layout_graph.add_edges_from(self.bi_edge_tuples() + self.di_edge_tuples())
         layout = nx.spring_layout(layout_graph, scale=1, k=1/len(layout_graph.nodes)**0.5)
