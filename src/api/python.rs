@@ -18,7 +18,7 @@ fn id (d_edges: Vec<(String, String)>, b_edges: Vec<(String, String)>, x: Vec<St
 }
 
 #[pymodule]
-pub fn backend(_py: Python, m: &PyModule) -> PyResult<()> {
+pub fn sherlock_backend(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(hello_world, m)?)?;
     m.add_function(wrap_pyfunction!(id, m)?)?;
     Ok(())

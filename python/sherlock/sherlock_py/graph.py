@@ -1,5 +1,5 @@
 from sherlock_py.expression import parse_json
-import backend
+import sherlock_backend as backend
 import json
 
 class Graph:

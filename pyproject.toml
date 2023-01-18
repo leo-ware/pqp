@@ -1,0 +1,16 @@
+name = "sherlock"
+version = "0.1.0"
+description = "Subroutines for structural causal modeling"
+license = "MIT"
+authors = ["Leo Ware"]
+
+
+[build-system]
+requires = ["maturin>=0.14,<0.15"]
+build-backend = "maturin"
+
+[tool.maturin]
+python-source = "python"
+
+[package.metadata.maturin]
+name = "sherlock._sherlock"
