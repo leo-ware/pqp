@@ -23,12 +23,12 @@ jobs:
         #     args: --working-directory backend
       - name: Sphinx build
         run: sphinx-build python/sherlock/docs/source/ python/sherlock/docs/_build
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-        with:
-          publish_branch: gh-pages
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: python/sherlock/docs/_build
-          force_orphan: true
-          enable_jekyll: false
+      # - name: Deploy
+      #   uses: peaceiris/actions-gh-pages@v3
+      #   if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      #   with:
+      #     publish_branch: gh-pages
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: python/sherlock/docs/_build
+      #     force_orphan: true
+      #     enable_jekyll: false
