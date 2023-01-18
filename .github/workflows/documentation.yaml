@@ -12,18 +12,17 @@ jobs:
         run: python3 -m venv venv
       - name: Activate venv
         run: source venv/bin/activate
-      - name: install python dependencies
+      - name: source venv/bin/activate && install python dependencies
         run: pip install -q maturin sphinx
       - name: Build rust
-        run: maturin develop
+        run: source venv/bin/activate && maturin develop
         # - uses: dtolnay/rust-toolchain@stable
         # - uses: PyO3/maturin-action@v1
         #   with:
         #     command: build
         #     args: --working-directory backend
       - name: Sphinx build
-        run: |
-          sphinx-build python/sherlock/docs/source/ python/sherlock/docs/_build
+        run: sphinx-build python/sherlock/docs/source/ python/sherlock/docs/_build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
