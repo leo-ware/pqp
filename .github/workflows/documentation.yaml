@@ -17,7 +17,7 @@ jobs:
       - name: Build rust
         run: source venv/bin/activate && maturin develop
       - name: Sphinx build
-        run: sphinx-build python/sherlock/docs/source/ _build
+        run: sphinx-build python/pqp/docs/source/ _build
       - name: deploy
         uses: s0/git-publish-subdir-action@develop
         env:

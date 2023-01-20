@@ -26,3 +26,6 @@ livehtml:
 
 autodoc:
 	sphinx-apidoc -f -o "$(SOURCEDIR)" "$(PACKAGEDIR)"
+
+build:
+	sphinx-build "$(SOURCEDIR)" "$(BUILDDIR)
