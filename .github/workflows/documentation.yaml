@@ -10,10 +10,8 @@ jobs:
           python-version: '3.10'
       - name: create doc venv
         run: bash create_doc_env.sh
-      - name: Activate venv
-        run: source venv/bin/activate
       - name: Sphinx build
-        run: sphinx-build python/pqp/docs/source/ _build
+        run: source venv/bin/activate && sphinx-build python/pqp/docs/source/ _build
       - name: deploy
         uses: s0/git-publish-subdir-action@develop
         env:
