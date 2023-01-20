@@ -2,11 +2,11 @@ Quickstart
 ================
 
 The following is a quickstart guide to get you up and running with
-``sherlock_py``.  For more detailed information, see the documentation.
+``pqp``.  For more detailed information, see the documentation.
 
 Overview
 -----
-``sherlock_py`` is a Python wrapper for the Rust Library ``sherlock``.  The underlying library 
+``pqp`` is a Python wrapper for the Rust Library ``pqp``.  The underlying library 
 provides performant causal identification using Shpitser's IDC algorithm. The Python wrapper
 provides an interface to the underlying library which is designed for easy use within a Jupyter
 notebook.
@@ -20,11 +20,11 @@ More features are planned for release soon!
 
 Installation
 ------------
-Install ``sherlock_py`` using ``pip``
+Install ``pqp`` using ``pip``
 
 .. code-block:: bash
 
-    pip install sherlock_py
+    pip install pqp
 
 Usage
 ------
@@ -33,7 +33,7 @@ To get started, we can first use the ``vars`` function to create a list of varia
 
 .. code-block:: python
 
-    from sherlock_py import vars
+    from pqp import vars
     x, y, z = vars("xyz")
 
 We can then assemble these variables into a causal diagram using the ``Graph`` class. Here we will
@@ -45,7 +45,7 @@ confounding.
 
 .. code-block:: python
 
-    from sherlock_py import Graph
+    from pqp import Graph
     g = Graph([
         z <= x,
         y <= z,

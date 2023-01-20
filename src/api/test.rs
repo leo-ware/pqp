@@ -1,9 +1,18 @@
-// #![cfg(test)]
+#![cfg(test)]
 
-// use super::wrapper::FormWrapper;
-// use crate::{
-//     utils::defaults::{set, Set},
-// };
+use super::wrapper::{FormWrapper, ModelWrapper};
+use crate::{
+    utils::defaults::{set, Set},
+};
+
+#[test]
+fn test_wrapper_bowgraph() {
+    let mut m = ModelWrapper::new();
+    m.add_effect("x", "y");
+    m.add_confounding("x", "y");
+    let res = m.id(set!["y".to_string()], set!["x".to_string()], set![]);
+    assert_eq!(res.estimand_json, "{type: Hedge}");
+}
 
 // #[test]
 // fn test_foo() {

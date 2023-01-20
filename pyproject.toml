@@ -1,4 +1,4 @@
-name = "sherlock"
+name = "pqp"
 version = "0.1.0"
 description = "Subroutines for structural causal modeling"
 license = "MIT"

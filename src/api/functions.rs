@@ -10,9 +10,12 @@ pub fn id(d_edges: Vec<(String, String)>, b_edges: Vec<(String, String)>, x: Vec
         model_wrapper.add_confounding(&from, &to);
     }
 
-    return model_wrapper.id(
+    let foo = model_wrapper.id(
         y.iter().cloned().collect(),
         x.iter().cloned().collect(),
         z.iter().cloned().collect()
-    )
+    );
+
+    println!("functions, id result: {:?}", foo);
+    return foo;
 }

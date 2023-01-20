@@ -5,15 +5,22 @@
 
 import os
 import sys
+import toml
+import datetime
 sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
-# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+# DO NOT EDIT!!! This information is automatically generated from pyproject.toml
 
-project = 'sherlock_py'
-copyright = '2023, Leo Ware'
-author = 'Leo Ware'
-release = '0.1.0'
+with open("../../../../pyproject.toml") as f:
+    pyproject = toml.load(f)
+
+project = pyproject["name"]
+author = pyproject["authors"][0]
+release = pyproject["version"]
+copyright = f'{datetime.datetime.now().year}, {author}'
+
+print(project, author, release, copyright)
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -23,11 +30,12 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.githubpages',
+    'sphinx_automodapi.automodapi'
 ]
 
 templates_path = ['_templates']
 exclude_patterns = []
-
+numpydoc_show_class_members = False
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -35,3 +43,7 @@ exclude_patterns = []
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
+
+html_sidebars = {
+    "**": ["sbt-sidebar-nav.html"]
+}

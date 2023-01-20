@@ -1,5 +1,5 @@
-from sherlock_py.expression import parse_json
-import sherlock_backend as backend
+from pqp.expression import parse_json
+import pqp_backend as backend
 import json
 
 class Graph:
@@ -83,10 +83,10 @@ class Graph:
         nx.draw_networkx_labels(layout_graph, layout)
     
     def __repr__(self):
-        return f"Graph({self.edges})"
+        return f"Graph({self.bi_edges + self.directed_edges})"
     
     def __str__(self):
-        return f"Graph({self.edges})"
+        return f"<Graph n_edges={len(self.bi_edges + self.directed_edges)}>"
 
 class DirectedEdge:
     """A directed edge between two variables, represents a causal relationship

@@ -120,8 +120,15 @@ impl ModelWrapper {
         let x_n: Set<Node> = x.iter().map(|s| self.vars[s]).collect();
         let z_n: Set<Node> = z.iter().map(|s| self.vars[s]).collect();
 
-        let model = ModelBuilder::to_model(Box::new(self.model_builder.to_owned()));
-        let p = model.cond(&z_n).id(&y_n, &x_n);
+        let model = ModelBuilder::to_model(Box::new(self.model_builder.to_owned())).cond(&z_n);
+        let p = model.id(&y_n, &x_n);
+
+        println!("Hi, I'm the model wrapper");
+        println!("Model: {:?}", model);
+        println!("P: {:?}", p);
+        println!("x: {:?} {:?}", x, x_n);
+        println!("y: {:?} {:?}", y, y_n);
+        println!("z: {:?} {:?}", z, z_n);
 
         // string formatting of query
         let mut query = "P(".to_string();
@@ -142,6 +149,7 @@ impl ModelWrapper {
     }
 }
 
+#[derive(Debug)]
 pub struct IDResult {
     pub estimand_json: String,
     pub query_string: String,

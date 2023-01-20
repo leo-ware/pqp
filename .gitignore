@@ -4,7 +4,7 @@ venv
 */.pytest_cache
 */__pycache__
 .DS_Store
-
+.pytest_cache
 
 /target
 *.profraw

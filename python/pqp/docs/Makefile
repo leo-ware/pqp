@@ -7,7 +7,7 @@ SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
 BUILDDIR      = build
-PACKAGEDIR	  = ../sherlock_py
+PACKAGEDIR	  = ../pqp
 
 # Put it first so that "make" without argument is like "make help".
 help:
