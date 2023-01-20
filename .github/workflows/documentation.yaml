@@ -8,14 +8,10 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      - name: create venv
-        run: python3 -m venv venv
+      - name: create doc venv
+        run: bash create_doc_env.sh
       - name: Activate venv
         run: source venv/bin/activate
-      - name: source venv/bin/activate && install python dependencies
-        run: pip install -q maturin sphinx
-      - name: Build rust
-        run: source venv/bin/activate && maturin develop
       - name: Sphinx build
         run: sphinx-build python/pqp/docs/source/ _build
       - name: deploy
