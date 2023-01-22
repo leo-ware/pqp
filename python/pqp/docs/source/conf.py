@@ -45,7 +45,7 @@ html_theme = 'alabaster'
 html_static_path = ['_static']
 
 html_sidebars = {
-    "**": ["sbt-sidebar-nav.html"]
+    # "**": ["sbt-sidebar-nav.html"]
 }
 
 html_favicon = 'favicon.ico'

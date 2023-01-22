@@ -1,0 +1,4 @@
+sphinx
+maturin
+sphinx-autobuild
+toml
