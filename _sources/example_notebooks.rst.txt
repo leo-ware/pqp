@@ -1,2 +1,2 @@
-Example Notebooks
-==================
+.. Example Notebooks
+.. ==================
