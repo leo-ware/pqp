@@ -9,11 +9,10 @@ class Graph:
         >>> x = Variable("X")
         >>> y = Variable("Y")
         >>> g = Graph([
-        ...     x <= y,
-        ...     x & y,
+        ...     y <= x,
         ... ])
-        >>> g.idc([x], [y])
-        FAIL
+        >>> g.idc([y], [x])
+        P(y | x)
     
     Args:
         edges (list of DirectedEdge or BidirectedEdge): the edges in the graph

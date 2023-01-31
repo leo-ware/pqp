@@ -48,6 +48,8 @@ def make_vars(names):
     Example:
         >>> make_vars(["x", "y", "z"])
         [Variable("x"), Variable("y"), Variable("z")]
+        >>> x, y, z = make_vars("xyz")
+        [Variable("x"), Variable("y"), Variable("z")]
     
     """
     return [Variable(name) for name in names]

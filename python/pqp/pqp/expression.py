@@ -39,7 +39,26 @@ def parse_json(exp):
         raise Exception("Unknown expression type: " + exp["type"])
 
 class Expression:
-    """Base class for all expressions."""
+    """Base class for all expressions.
+    
+    The primary use of Expression is to represent the results of identification. However,
+    Expressions can be constructed from Variables and other Expressions. Using the
+    infix `/` and `*` operators.
+
+    Examples:
+        >>> from pqp.variable import make_vars
+        >>> x, y = make_vars("xy")
+        >>> x / y
+        Quotient(Variable(x), Variable(y))
+        >>> x * y
+        Product([Variable(x), Variable(y)])
+    
+    Expressions can be represented in a number of different ways.
+        - `__repr__` returns an unambiguous representation of the expression
+        - `__str__` returns a human-readable (ascii, symbolic) representation
+        - `to_latex` returns a Latex representation of the expression
+    
+    """
 
     def display(self):
         """Renders an expression as Latex using IPython.display"""
@@ -50,7 +69,7 @@ class Expression:
         """Returns the Latex representation of an expression."""
         raise NotImplementedError()
     
-    def __div__(self, other):
+    def __truediv__(self, other):
         if isinstance(other, Expression):
             return Quotient(self, other)
         else:
