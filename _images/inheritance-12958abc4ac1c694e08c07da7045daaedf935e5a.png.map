@@ -1,0 +1,8 @@
+<map id="inheritance4703d1d14f" name="inheritance4703d1d14f">
+<area shape="rect" id="node1" href="../api/pqp.expression.Expression.html#pqp.expression.Expression" target="_top" title="Base class for all expressions." alt="" coords="5,104,92,129"/>
+<area shape="rect" id="node2" href="../api/pqp.expression.Hedge.html#pqp.expression.Hedge" target="_top" title="Represents a failure to identify the query" alt="" coords="140,5,212,31"/>
+<area shape="rect" id="node3" href="../api/pqp.expression.Marginal.html#pqp.expression.Marginal" target="_top" title="Marginal" alt="" coords="140,55,212,80"/>
+<area shape="rect" id="node4" href="../api/pqp.expression.P.html#pqp.expression.P" target="_top" title="P" alt="" coords="140,104,212,129"/>
+<area shape="rect" id="node5" href="../api/pqp.expression.Product.html#pqp.expression.Product" target="_top" title="Product" alt="" coords="140,153,212,179"/>
+<area shape="rect" id="node6" href="../api/pqp.expression.Quotient.html#pqp.expression.Quotient" target="_top" title="Quotient" alt="" coords="140,203,212,228"/>
+</map>
