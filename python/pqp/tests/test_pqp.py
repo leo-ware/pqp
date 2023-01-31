@@ -1,4 +1,5 @@
-from pqp.graph import Graph, make_vars
+from pqp.graph import Graph
+from pqp.variable import make_vars
 from pqp.utils import recursive_sort
 
 
@@ -30,4 +31,3 @@ def test_id():
     print(estimand.to_latex())
     
     assert estimand != None
-    assert False

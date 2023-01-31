@@ -1,5 +1,4 @@
-from pqp.expression import *
-from pqp.graph import *
+from pqp.expression import Expression
 
 class Variable(Expression):
     """A variable in the causal model
@@ -27,12 +26,14 @@ class Variable(Expression):
         return self.name
     
     def __le__(self, other):
+        from pqp.graph import DirectedEdge
         if isinstance(other, Variable):
             return DirectedEdge(other, self)
         else:
             raise TypeError(f"Cannot compare {type(self)} with {type(other)}")
     
     def __and__(self, other):
+        from pqp.graph import BidirectedEdge
         if isinstance(other, Variable):
             return BidirectedEdge(self, other)
         else:
