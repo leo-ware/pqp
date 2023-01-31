@@ -12,13 +12,7 @@ fn hello_world () {
 }
 
 #[pyfunction]
-fn id (d_edges: Vec<(String, String)>, b_edges: Vec<(String, String)>, x: Vec<String>, y: Vec<String>, z: Vec<String>) -> PyResult<String> {
-    println!("hi im rust");
-    println!("d_edges: {:?}", d_edges);
-    println!("b_edges: {:?}", b_edges);
-    println!("x: {:?}", x);
-    println!("y: {:?}", y);
-    println!("z: {:?}", z);
+fn id (d_edges: Vec<(String, String)>, b_edges: Vec<(String, String)>, y: Vec<String>, x: Vec<String>, z: Vec<String>) -> PyResult<String> {
     
     let result = functions::id(d_edges, b_edges, x, y, z).estimand_json.replace("\\", "");
     Ok(result)

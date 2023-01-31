@@ -30,6 +30,7 @@ pub fn id(model: &Model, y: &Set<Node>, x: &Set<Node>) -> Form {
 }
 
 fn _id(model: &Model, y: &Set<Node>, x: &Set<Node>, p: Form) -> Form {
+
     let v = model.get_nodes();
     
     // step 1

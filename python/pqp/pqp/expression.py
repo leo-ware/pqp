@@ -9,6 +9,8 @@ def parse_json(exp):
     Returns:
         Expression: The parsed expression.
     """
+    from pqp.variable import Variable
+
     if isinstance(exp, str):
         return parse_json(json.loads(exp))
 
@@ -38,8 +40,6 @@ def parse_json(exp):
 
 class Expression:
     """Base class for all expressions."""
-    def __repr__(self):
-        return "%s(%r)" % (self.__class__, self.__dict__)
 
     def display(self):
         """Renders an expression as Latex using IPython.display"""
@@ -49,21 +49,26 @@ class Expression:
     def to_latex(self):
         """Returns the Latex representation of an expression."""
         raise NotImplementedError()
-
-class Variable(Expression):
-    def __init__(self, name):
-        self.name = name
     
-    def __str__(self):
-        return self.name
+    def __div__(self, other):
+        if isinstance(other, Expression):
+            return Quotient(self, other)
+        else:
+            raise TypeError("Cannot divide by non-expression")
     
-    def to_latex(self):
-        return self.name
+    def __mul__(self, other):
+        if isinstance(other, Expression):
+            return Product([self, other])
+        else:
+            raise TypeError("Cannot multiply by non-expression")
 
 class Quotient(Expression):
     def __init__(self, numer, denom):
         self.numer = numer
         self.denom = denom
+    
+    def __repr__(self):
+        return f"Quotient({repr(self.numer)}, {repr(self.denom)})"
     
     def __str__(self):
         return "[%s / %s]" % (str(self.numer), str(self.denom))
@@ -75,6 +80,9 @@ class Product(Expression):
     def __init__(self, expr):
         self.expr = expr
     
+    def __repr__(self):
+        return f"Product({[repr(e) for e in self.expr]})"
+    
     def __str__(self):
         return " * ".join([str(e) for e in self.expr])
     
@@ -85,6 +93,9 @@ class Marginal(Expression):
     def __init__(self, sub, expr):
         self.sub = sub
         self.expr = expr
+    
+    def __repr__(self):
+        return f"Marginal({self.sub}, {repr(self.expr)})"
     
     def __str__(self):
         return "Σ_(%s) [ %s ]" % (", ".join(str(c) for c in self.sub), str(self.expr))
@@ -106,6 +117,12 @@ class P(Expression):
         if not v:
             return "1"
         return "P(" + v + (f"| {g}" if g else "") + ")"
+    
+    def __repr__(self):
+        if self.given:
+            return f"P({self.vars} | {self.given})"
+        else:
+            return f"P({self.vars})"
     
     def to_latex(self):
         v = ", ".join(c.to_latex() for c in self.vars)
