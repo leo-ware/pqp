@@ -1,5 +1,6 @@
 sphinx
 maturin
 sphinx-autobuild
+sphinx_automodapi
 toml
 pytest
