@@ -1,0 +1,5 @@
+sphinx
+maturin
+sphinx-autobuild
+toml
+pytest
