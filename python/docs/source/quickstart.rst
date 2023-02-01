@@ -33,8 +33,8 @@ To get started, we can first use the ``vars`` function to create a list of varia
 
 .. code-block:: python
 
-    from pqp import vars
-    x, y, z = vars("xyz")
+    from pqp.variable import make_vars
+    x, y, z = make_vars("xyz")
 
 We can then assemble these variables into a causal diagram using the ``Graph`` class. Here we will
 build the famous front-door model.
@@ -45,11 +45,11 @@ confounding.
 
 .. code-block:: python
 
-    from pqp import Graph
+    from pqp.graph import Graph
     g = Graph([
+        x & y,
         z <= x,
         y <= z,
-        x & y
     ])
 
 We can use the ``.draw()`` method to visualize the causal diagram.
@@ -69,7 +69,7 @@ For example, to identify the causal relationship between ``x`` and ``y``, we can
     estimand = g.idc([y], [x])
     print(estimand)
 
-    # Σ_(z) [ [Σ_(y) [ [P(x, z, y) * P(y) / P(z, y)] ] * P(z, y) / P(y)] ]
+    # Σ_(z) [ [Σ_(x) [ [P(x) * P(x, z, y) / P(x, z)] ] * P(x, z) / P(x)] ]
 
 The ``.idc()`` method returns an ``Expression`` object representing the abstract estimator. The
 ``Expression`` object contains a number of methods for inspecting the estimator.
@@ -78,8 +78,8 @@ The ``.idc()`` method returns an ``Expression`` object representing the abstract
     str(estimand)
     # Σ_(z) [ [Σ_(y) [ [P(x, z, y) * P(y) / P(z, y)] ] * P(z, y) / P(y)] ]
 
-    estimand.tex()
-    # '\\sum_{z} \\big({\\sum_{y} \\big({P(x, z, y) P(y) \\over P(z, y)}\\big) P(z, y) \\over P(y)}\\big)'
+    estimand.to_latex()
+    # \sum_{z} \big({\sum_{x} \big({P(x) P(x, z, y) \over P(x, z)}\big) P(x, z) \over P(x)}\big)
 
 Inside an IPython notebook, we can also use the ``.display()`` method to display the estimator
 as a LaTeX equation.
@@ -88,4 +88,4 @@ as a LaTeX equation.
 
     estimand.display()
 
-.. image:: imgs/frontdoor_estimator.png
+.. image:: imgs/frontdoor_new.png

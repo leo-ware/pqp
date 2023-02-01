@@ -1,6 +1,6 @@
 use super::wrapper::{ModelWrapper, IDResult};
 
-pub fn id(d_edges: Vec<(String, String)>, b_edges: Vec<(String, String)>, x: Vec<String>, y: Vec<String>, z: Vec<String>) -> IDResult {
+pub fn id(d_edges: Vec<(String, String)>, b_edges: Vec<(String, String)>, y: Vec<String>, x: Vec<String>, z: Vec<String>) -> IDResult {
     let mut model_wrapper = ModelWrapper::new();
 
     for (from, to) in d_edges {
@@ -16,6 +16,5 @@ pub fn id(d_edges: Vec<(String, String)>, b_edges: Vec<(String, String)>, x: Vec
         z.iter().cloned().collect()
     );
 
-    println!("functions, id result: {:?}", foo);
     return foo;
 }

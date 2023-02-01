@@ -1,6 +1,6 @@
 make_vars
 =========
 
-.. currentmodule:: pqp.graph
+.. currentmodule:: pqp.variable
 
 .. autofunction:: make_vars

@@ -1,7 +1,7 @@
 Variable
 ========
 
-.. currentmodule:: pqp.expression
+.. currentmodule:: pqp.variable
 
 .. autoclass:: Variable
    :show-inheritance:

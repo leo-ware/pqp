@@ -106,7 +106,8 @@ impl ModelWrapper {
     pub fn add_effect(&mut self, cause: &str, effect: &str) {
         let cause_n = self.get_or_add_var(cause);
         let effect_n = self.get_or_add_var(effect);
-        self.model_builder.add_directed_edge(cause_n, effect_n);
+        // TODO: this seems backwards (!!??) but it works
+        self.model_builder.add_directed_edge(effect_n, cause_n);
     }
 
     pub fn add_confounding(&mut self, cause: &str, effect: &str) {
@@ -116,19 +117,21 @@ impl ModelWrapper {
     }
 
     pub fn id(&self, y: Set<String>, x: Set<String>, z: Set<String>) -> IDResult {
-        let y_n: Set<Node> = y.iter().map(|s| self.vars[s]).collect();
-        let x_n: Set<Node> = x.iter().map(|s| self.vars[s]).collect();
-        let z_n: Set<Node> = z.iter().map(|s| self.vars[s]).collect();
+
+        let retrieve = |s: &String| {
+            if self.vars.contains_key(s) {
+                self.vars[s]
+            } else {
+                panic!("Variable {} not found", s);
+            }
+        };
+
+        let y_n: Set<Node> = y.iter().map(retrieve).collect();
+        let x_n: Set<Node> = x.iter().map(retrieve).collect();
+        let z_n: Set<Node> = z.iter().map(retrieve).collect();
 
         let model = ModelBuilder::to_model(Box::new(self.model_builder.to_owned())).cond(&z_n);
         let p = model.id(&y_n, &x_n);
-
-        println!("Hi, I'm the model wrapper");
-        println!("Model: {:?}", model);
-        println!("P: {:?}", p);
-        println!("x: {:?} {:?}", x, x_n);
-        println!("y: {:?} {:?}", y, y_n);
-        println!("z: {:?} {:?}", z, z_n);
 
         // string formatting of query
         let mut query = "P(".to_string();
