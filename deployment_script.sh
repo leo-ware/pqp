@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-cd "python/pqp/docs/build" || (echo "fail" && exit)
+cd "python/docs/build" || (echo "fail" && exit)
 git init
 git add .
 git commit -m "deploy"

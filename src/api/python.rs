@@ -19,7 +19,7 @@ fn id (d_edges: Vec<(String, String)>, b_edges: Vec<(String, String)>, y: Vec<St
 }
 
 #[pymodule]
-pub fn pqp_backend(_py: Python, m: &PyModule) -> PyResult<()> {
+pub fn pqp(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(hello_world, m)?)?;
     m.add_function(wrap_pyfunction!(id, m)?)?;
     Ok(())

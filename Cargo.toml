@@ -1,9 +1,10 @@
 [package]
-name = "pqp_backend"
+name = "pqp"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
+name = "pqp"
 crate-type = ["cdylib"]
 
 [dependencies]

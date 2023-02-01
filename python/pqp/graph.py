@@ -1,5 +1,5 @@
 from pqp.expression import parse_json
-import pqp_backend as backend
+from pqp.pqp import id
 import json
 
 class Graph:
@@ -53,7 +53,8 @@ class Graph:
         Returns:
             Expression: the expression for the interventional distribution
         """
-        res = backend.id(
+        # from pqp.pqp import id
+        res = id(
             self.di_edge_tuples(),
             self.bi_edge_tuples(),
             [str(v) for v in x],

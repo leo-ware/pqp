@@ -2,4 +2,4 @@ sphinx
 maturin
 sphinx-autobuild
 toml
-pytests
+pytest
