@@ -35,6 +35,3 @@ build-backend = "maturin"
 
 [tool.maturin]
 python-source = "python"
-
-[package.metadata.maturin]
-name = "sherlock._sherlock"
