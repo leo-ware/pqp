@@ -22,6 +22,9 @@ class Variable(Expression):
     def __repr__(self):
         return f"Variable({self.name})"
     
+    def __eq__(self, other):
+        return isinstance(other, Variable) and self.name == other.name
+    
     def __str__(self):
         return self.name
     
