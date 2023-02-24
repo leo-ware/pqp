@@ -1,6 +1,5 @@
-use crate::{utils::set_utils::{difference, make_set}, set};
-
-use super::{Graph, Constructable, Set, Map, Node, GraphBuilder};
+use crate::{utils::set_utils::{difference, make_set}, set, model::serialize::{Serializable, write_graph, recover_graph}};
+use super::{Graph, ConcreteGraph, Set, Map, Node, GraphBuilder};
 use std::rc::Rc;
 
 #[derive(Debug, Clone)]
@@ -18,6 +17,7 @@ impl DiGraph {
         GraphBuilder::to_digraph(GraphBuilder::from_edges_nodes(edges, nodes))
     }
 
+    // less efficient than parents
     pub fn children(&self, x: &Node) -> Set<Node> {
         let mut acc = set![];
         for (k, v) in self.edges.iter() {
@@ -27,7 +27,8 @@ impl DiGraph {
         }
         return acc;
     }
-
+    
+    // more efficient than children
     pub fn parents (&self, x: Node) -> Set<Node> {
         let empty = Set::new();
         let elems = match self.edges.get(&x) {
@@ -134,12 +135,16 @@ impl DiGraph {
 
 }
 
-impl Constructable for DiGraph {
+impl ConcreteGraph for DiGraph {
     fn from_elems(edges: Map<Node, Set<Node>>, nodes: Set<Node>) -> Self {
         DiGraph {
             edges: Rc::new(edges),
             nodes: Box::new(nodes),
         }
+    }
+
+    fn get_edges(&self) -> &Map<Node, Set<Node>> {
+        &*self.edges
     }
 }
 
@@ -168,5 +173,39 @@ impl Graph for DiGraph {
             edges: Rc::new(edges),
             nodes: self.nodes.clone(),
         }
+    }
+}
+
+impl Serializable for DiGraph {
+    fn to_serde(&self) -> serde_json::Value {
+        write_graph(self)
+    }
+
+    fn from_serde(val: serde_json::Value) -> Result<Self, String> {
+        if let Some((edges, nodes)) = recover_graph(val) {
+            Ok(DiGraph::from_elems(edges, nodes))
+        } else {
+            Err("problem recovering DiGraph".to_string())
+        }
+    }
+}
+
+impl PartialEq for DiGraph {
+    fn eq(&self, other: &DiGraph) -> bool {
+        if self.nodes != other.nodes {
+            return false;
+        }
+
+        if self.nodes.len() == 0 {
+            return true;
+        }
+
+        for k in self.nodes.iter() {
+            if self.parents(*k) != other.parents(*k) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

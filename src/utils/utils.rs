@@ -1,3 +1,6 @@
+use serde_json::{Value, Number};
+use crate::graph::Node;
+
 
 /// Remove duplicates from two sorted vectors simultaneously
 /// Elements may appear more than once, in this case only the first occurence is removed
@@ -19,4 +22,8 @@ pub fn remove_duplicates_sorted<T: Ord + Eq + Clone>(v1: &Vec<T>, v2: &Vec<T>) -
     }
 
     return (a.to_vec(), b.to_vec());
+}
+
+pub fn serdify_node(num: &Node) -> Value {
+    Value::Number(Number::from(num.to_owned()))
 }

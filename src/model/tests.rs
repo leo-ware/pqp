@@ -12,7 +12,7 @@ use crate::{
     }, set
 };
 
-use super::{order::Order, examples::frontdoor_model};
+use super::{order::Order, examples::{frontdoor_model, backdoor_model}, serialize::Serializable};
 
 #[test]
 fn subgraphing() {
@@ -145,4 +145,15 @@ fn test_order_predecessors_set() {
     
     // assert_eq!(order.set_predecessors(&set![15, order_vec[1]]), Some(vec![order_vec[0]]),
     //     "set_predecessors should return when at least one query is good");
+}
+
+#[test]
+fn test_into_out_serde () {
+    let model = backdoor_model();
+    let recovered = Model::from_serde(model.to_serde());
+    assert_eq!(Ok(model), recovered);
+
+    let model = frontdoor_model();
+    let recovered = Model::from_serde(model.to_serde());
+    assert_eq!(Ok(model), recovered);
 }

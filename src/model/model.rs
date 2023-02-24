@@ -1,10 +1,17 @@
 use cute::c;
-use crate::form::Form;
-use crate::set;
-use crate::utils::defaults::{Set, Map};
-use crate::utils::set_utils::{union, make_set, difference, intersection};
-use crate::graph::{GraphBuilder, DiGraph, BiGraph, Graph, Node};
-use crate::identification::id;
+use serde_json::{Value, Map as SerdeMap};
+
+use crate::{
+    form::Form,
+    set,
+    utils::{
+        defaults::{Set, Map},
+        set_utils::{union, make_set, difference, intersection},
+    },
+    graph::{GraphBuilder, DiGraph, BiGraph, Graph, Node},
+    identification::id,
+    model::serialize::Serializable,
+};
 
 use super::order::Order;
 
@@ -96,6 +103,57 @@ impl Graph for Model {
     }
 }
 
+impl Serializable for Model {
+    fn to_serde(&self) -> serde_json::Value {
+        let mut rep = SerdeMap::new();
+        rep.insert("dag".to_string(), self.dag.to_serde());
+        rep.insert("confounded".to_string(), self.confounded.to_serde());
+        rep.insert("cond_vars".to_string(), Value::Array(
+            self.cond_vars.iter().map(|x| x.to_serde()).collect()
+        ));
+        rep.insert("vars".to_string(), Value::Array(
+            self.vars.iter().map(|x| x.to_serde()).collect()
+        ));
+        return serde_json::Value::Object(rep);
+    }
+
+    fn from_serde(v: Value) -> Result<Self, String> {
+        let dag = DiGraph::from_serde(v["dag"].to_owned())?;
+        let confounded = BiGraph::from_serde(v["confounded"].to_owned())?;
+
+        let cond_vars_result: Vec<Result<i32, String>> = v["cond_vars"]
+            .as_array()
+            .ok_or_else(|| "unable to recover cond_vars on model".to_string())?
+            .iter()
+            .map(|x| Node::from_serde(x.to_owned()))
+            .collect();
+        let mut cond_vars = Set::new();
+        for result in cond_vars_result {
+            cond_vars.insert(result?);
+        }
+
+        let vars_result: Vec<Result<i32, String>> = v["vars"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|x| Node::from_serde(x.to_owned()))
+            .collect();
+        let mut vars = Set::new();
+        for result in vars_result {
+            vars.insert(result?);
+        }
+        
+        Ok(Model {dag, confounded, cond_vars, vars})
+    }
+}
+
+impl PartialEq for Model {
+    fn eq(&self, other: &Self) -> bool {
+        self.vars == other.vars && self.cond_vars == other.cond_vars &&
+        self.dag == other.dag && self.confounded == other.confounded
+    }
+}
+
 impl Model {
     pub fn id(&self, y: &Set<Node>, x: &Set<Node>) -> Form {
         id(&self, y, x)
@@ -139,27 +197,6 @@ impl Model {
     pub fn get_unobserved(&self) -> Set<Node> {
         difference(&self.vars, &self.cond_vars)
     }
-
-    // pub fn independent(&self, a: &Set<Node>, b: &Set<Node>) -> bool {
-    //     todo!();
-
-    //     // let target: Set<Node> = b.iter().cloned().filter(|node| self.vars.contains(node)).collect();
-    //     // let mut confounded: Vec<Node> = a.iter().cloned().filter(|node| self.vars.contains(node)).collect();
-    //     // let mut visited: Set<Node> = set!();
-
-    //     // let add_confounded = |node| {
-    //     //     if visited.insert(node) {
-    //     //         confounded.push(node);
-    //     //     }
-    //     // };
-
-    //     // while !confounded.is_empty() && !visited.len() == self.vars.len() {
-
-
-    //     // }
-
-    //     // return true;
-    // }
 
     pub fn order_vec(&self) -> Vec<Node> {
         let res_set = difference(

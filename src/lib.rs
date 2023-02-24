@@ -6,6 +6,7 @@ mod form;
 mod graph;
 mod model;
 mod identification;
+mod simulation;
 
 mod api;
 use api::python::pqp;

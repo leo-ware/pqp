@@ -1,6 +1,6 @@
 use std::fmt::Debug;
 use super::{
-    Constructable,
+    ConcreteGraph,
     Node,
     BiGraph,
     DiGraph,

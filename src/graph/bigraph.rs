@@ -1,6 +1,10 @@
-use super::{Graph, Constructable, Set, Map, Node, GraphBuilder};
-use std::rc::Rc;
-use crate::utils::set_utils::{union, difference};
+use super::{Graph, ConcreteGraph, Set, Map, Node, GraphBuilder};
+use std::{
+    rc::Rc,
+    collections::BTreeMap,
+};
+use crate::{utils::set_utils::{union, difference}, model::serialize::{Serializable, recover_graph, write_graph}};
+use serde::{Serialize, Deserialize};
 
 #[derive(Debug, Clone)]
 pub struct BiGraph {
@@ -8,12 +12,16 @@ pub struct BiGraph {
     nodes: Box<Set<Node>>,
 }
 
-impl Constructable for BiGraph {
+impl ConcreteGraph for BiGraph {
     fn from_elems(edges: Map<Node, Set<Node>>, nodes: Set<Node>) -> Self {
         BiGraph {
             edges: Rc::new(edges),
             nodes: Box::new(nodes),
         }
+    }
+
+    fn get_edges(&self) -> &Map<Node, Set<Node>> {
+        &*self.edges
     }
 }
 
@@ -41,6 +49,42 @@ impl Graph for BiGraph {
             edges: Rc::new(edges),
             nodes: self.nodes.clone(),
         }
+    }
+}
+
+impl Serializable for BiGraph {
+    fn to_serde(&self) -> serde_json::Value {
+        write_graph(self)
+    }
+
+    fn from_serde(v: serde_json::Value) -> Result<Self, String> {
+        if let Some((edges, nodes)) = recover_graph(v) {
+            Ok(BiGraph::from_elems(edges, nodes))
+        } else {
+            Err("problem recovering BiGraph".to_string())
+        }
+    }
+}
+
+impl PartialEq for BiGraph {
+    fn eq(&self, other: &Self) -> bool {
+        if self.nodes != other.nodes {
+            return false;
+        }
+
+        if self.nodes.len() == 0 {
+            return true;
+        }
+
+        for c_comp in self.c_components().into_iter() {
+            let elem = c_comp.iter().next().unwrap();
+            let other_c_comp = other.get_component(*elem);
+            if c_comp != other_c_comp {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 

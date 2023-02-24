@@ -6,7 +6,7 @@ mod digraph;
 mod node;
 
 pub use graph_builder::GraphBuilder;
-pub use graph::{Graph, Constructable};
+pub use graph::{Graph, ConcreteGraph};
 pub use digraph::DiGraph;
 pub use bigraph::BiGraph;
 pub use node::{Node, make_nodes};
