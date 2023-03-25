@@ -1,0 +1,2 @@
+from pqp.parametric.distribution import Distribution
+from pqp.parametric.categorical_distribution import CategoricalDistribution

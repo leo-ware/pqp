@@ -68,7 +68,7 @@ impl ModelWrapper {
         }
     }
 
-    fn form_sub(&self, form: Form) -> FormWrapper {
+    pub fn form_sub(&self, form: Form) -> FormWrapper {
         let reversed: Map<i32, String> = self.vars.iter()
             .map(|(k, v)| (*v, k.clone()))
             .collect();
@@ -122,7 +122,7 @@ impl ModelWrapper {
             if self.vars.contains_key(s) {
                 self.vars[s]
             } else {
-                panic!("Variable {} not found", s);
+                panic!("Variable {} not found in graph", s);
             }
         };
 

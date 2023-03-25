@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added 
 - Created CHANGELOG
+- New features with infix operators
 
 ### Changes
 - Links in pyproject.toml updated to new repo name

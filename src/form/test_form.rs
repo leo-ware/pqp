@@ -2,7 +2,7 @@ use super::{
     form::Form,
 };
 
-use crate::{utils::defaults::{set, Set}, model::examples::frontdoor_model};
+use crate::{utils::defaults::{set, Set}, model::examples::frontdoor_model, identification::id_no_simplify, api::wrapper::ModelWrapper};
 
 #[test]
 fn test_sort () {
@@ -119,4 +119,23 @@ fn test_factorize_subset() {
     );
 
     assert_eq!(f.simplify(), ans.simplify());
+}
+
+#[test]
+fn demonstrate_simplify() {
+    let m = frontdoor_model();
+    let f_raw = id_no_simplify(&m, &set![2], &set![0]);
+    let f = m.id(&set![2], &set![0]);
+
+    let mut foo = ModelWrapper::new();
+    foo.add_effect("X", "Z");
+    foo.add_effect("Z", "Y");
+    foo.add_confounding("X", "Y");
+
+    let f_json = ModelWrapper::form_sub(&foo, f).to_json();
+    let f_raw_json = ModelWrapper::form_sub(&foo, f_raw).to_json();
+
+    println!("f_raw = {:?}", f_raw_json);
+    println!("f = {:?}", f_json);
+    assert!(false);
 }

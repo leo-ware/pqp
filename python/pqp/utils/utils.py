@@ -8,3 +8,11 @@ def recursive_sort(d):
         return tuple(sorted(recursive_sort(v) for v in d))
     else:
         return d
+
+class attrdict(dict):
+    def __getattr__(self, key):
+        return self[key]
+
+class staticproperty(staticmethod):
+    def __get__(self, *_):         
+        return self.__func__()
