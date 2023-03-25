@@ -46,3 +46,12 @@ def test_assign_marginal_namespacing():
     exp = Expectation(y, P(x) * Expectation(x, P([x], given=z)))
     after = Expectation(y, P(x.val == 3) * Expectation(x, P([x], given=z)))
     assert exp.assign(x, 3) == after
+
+def test_free_variables():
+    x, y, z, m = make_vars(["x", "y", "z", "m"])
+    assert P(x).free_variables() == {x}
+    assert P([x], given=[y]).free_variables() == {x, y}
+    assert (P(x) * P(y)).free_variables() == {x, y}
+    assert (P(x) * P(y)).assign(x, 3).free_variables() == {y}
+    assert (P(x) * Marginal(y, P(x) * P(y))).free_variables() == {x}
+    assert (P(x) * Marginal(y, P(x) * P(y))).assign(x, 3).free_variables() == set()

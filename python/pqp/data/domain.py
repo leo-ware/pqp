@@ -15,9 +15,6 @@ class Domain(ABC):
         """Returns whether a value is in the domain"""
         raise NotImplementedError
     
-    def __repr__(self):
-        return f"<{self.__class__} cardinality={self.get_cardinality()}>"
-    
     def validate(self, values):
         """Validates that a list of values is in the domain
 
@@ -72,6 +69,9 @@ class IntegerDomain(DiscreteDomain):
     def get_cardinality(self):
         return self.max - self.min + 1
     
+    def __repr__(self):
+        return f"IntegerDomain([{self.min}, {self.max}])"
+    
     def __contains__(self, value):
         return self.check_int(value) and self.min <= value <= self.max
 
@@ -96,10 +96,19 @@ class CategoricalDomain(DiscreteDomain):
     
     def __contains__(self, value):
         return value in self.values
+    
+    def __repr__(self):
+        if len(repr(self.values)) > 10:
+            return f"CategoricalDomain(cardinality={self.get_cardinality()})"
+        else:
+            return f"CategoricalDomain({repr(self.values)})"
 
 class BinaryDomain(CategoricalDomain):
     def __init__(self):
         super().__init__([0, 1])
+    
+    def __repr__(self):
+        return "BinaryDomain()"
 
 class ContinuousDomain(Domain):
     def get_cardinality(self):
@@ -118,6 +127,9 @@ class RealDomain(ContinuousDomain):
             raise ValueError("Continuous domains must specify values")
         self.min = np.min(values)
         self.max = np.max(values)
+    
+    def __repr__(self):
+        return f"RealDomain([{self.min}, {self.max}])"
     
     def __contains__(self, value):
         return self.min <= value <= self.max

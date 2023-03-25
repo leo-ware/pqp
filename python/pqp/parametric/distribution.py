@@ -16,7 +16,7 @@ class Distribution(ABC):
         """Approximated the value of an expression
 
         Args:
-            estimand (AbstractExpression): The expression to approximate
+            expr (AbstractExpression): The expression to approximate
             assignments (dict): dict of variable assignments (optional)
         
         Returns:
@@ -27,7 +27,16 @@ class Distribution(ABC):
         
         if assignments is not None:
             expr = expr.assign(assignments)
+        
+        free = expr.free_variables()
+        observed = self.get_observed()
+        if not free.issubset(observed):
+            raise ValueError("cannot estimand an equation with variables not in"
+                f" observed {free - obeserved}")
+        
+        return self._approx(expr)
 
+    def _approx(self, expr):
         if isinstance(expr, P):
             res = self.approx_p(expr)
         elif isinstance(expr, Marginal):
@@ -42,8 +51,8 @@ class Distribution(ABC):
             res = self.approx_expectation(expr)
         else:
             raise ValueError("Unsupported expression type: {}".format(type(expr)))
-        
         return res
+        
     
     @abstractmethod
     def approx_p(self, expr):

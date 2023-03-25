@@ -10,7 +10,7 @@ from pqp.parametric.distribution import Distribution
 from pqp.data.data import Data
 
 class CategoricalDistribution(Distribution):
-    def __init__(self, data, observed=None, prior=0):
+    def __init__(self, data, observed=None, prior=0, coerce=True):
         """Initialize a categorical distribution
 
         This distribution models the data using a categorical likelihood function
@@ -27,16 +27,23 @@ class CategoricalDistribution(Distribution):
             data (Data): The data to use for the distribution
             observed (list): The variables which are considered observed, defaults to all
             prior (float): The prior strength, defaults to 0
+            coerce (bool): If True, coerce the data to a Data object, defaults to True
         """
 
         if not isinstance(data, Data):
-            raise TypeError(f"data must be a Data object, not {type(data)}")
+            if coerce:
+                data = Data(data)
+            else:
+                raise TypeError(f"data must be a Data object, not {type(data)}")
         
         for name, var in data.vars.items():
             if var.domain is None:
                 raise ValueError(f"{var} has no domain")
             if not isinstance(var.domain, DiscreteDomain):
-                raise ValueError(f"{var} has domain {domain} which is not discrete")
+                if coerce:
+                    data.quantize(var)
+                else:
+                    raise ValueError(f"{var} has domain {domain} which is not discrete")
         
         self.data = data
         self.observed_names = set(observed or data.vars.keys())
@@ -48,6 +55,9 @@ class CategoricalDistribution(Distribution):
         self.prior = prior / self.domain_size(self.observed_names)
         # combined count of actual observations and virtual, prior "observations"
         self.prior_posterior_obs = prior + self.data.n
+    
+    def get_observed(self):
+        return set(self.data.vars[v] for v in self.observed_names)
     
     def domain_size(self, var_names):
         return np.prod([self.domain_of(col).get_cardinality() for col in var_names])
@@ -117,7 +127,7 @@ class CategoricalDistribution(Distribution):
             expr = expr.expr if len(expr.sub) == 1 else Marginal(expr.sub[1:], expr.expr)
             try:
                 for val in self.domain_of(summation_var).get_values():
-                    acc += self.approx(expr.assign(summation_var, val))
+                    acc += self._approx(expr.assign(summation_var, val))
             except KeyError:
                 raise ValueError(f"summation variable '{summation_var}' not found")
         return acc
@@ -125,21 +135,21 @@ class CategoricalDistribution(Distribution):
     def approx_product(self, expr: Product):
         acc = 1
         for e in expr.expr:
-            acc *= self.approx(e)
+            acc *= self._approx(e)
         return acc
     
     def approx_quotient(self, expr: Quotient):
-        return self.approx(expr.numer) / self.approx(expr.denom)
+        return self._approx(expr.numer) / self._approx(expr.denom)
     
     def approx_difference(self, expr: Difference):
-        return self.approx(expr.a) - self.approx(expr.b)
+        return self._approx(expr.a) - self._approx(expr.b)
     
     def approx_expectation(self, expr: Expectation):
         summation_var = expr.sub
         acc = 0
         prob_acc = 0
         for val in self.domain_of(summation_var).get_values():
-            prob = self.approx(expr.expr.assign(summation_var, val))
+            prob = self._approx(expr.expr.assign(summation_var, val))
             prob_acc += prob
             acc += prob * val
         

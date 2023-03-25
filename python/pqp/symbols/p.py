@@ -100,12 +100,8 @@ class P(AbstractExpression):
     def r_adapt_map(self, func):
         A, B = func(self)
         if B is not None:
-            return A(P(
-                [v.r_adapt_map(B) for v in self.vars],
-                [g.r_adapt_map(B) for g in self.given],
-            ))
+            return A(self.copy())
         else:
-            print("else branch", A, B)
             return A(self)
     
     def get_vars(self):
@@ -204,3 +200,13 @@ class P(AbstractExpression):
                 given.append(v)
         
         return P(self.vars, given)
+    
+    def _free_variables(self):
+        """Get the set of variables which are free in this P"""
+        free = set()
+        for g in self.vars + self.given:
+            if isinstance(g, Variable):
+                free.add(g)
+            elif isinstance(g, InterventionEvent) and isinstance(g.v, Variable):
+                free.add(g.v)
+        return free

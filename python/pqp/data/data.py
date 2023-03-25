@@ -1,7 +1,8 @@
 import pandas as pd
+
 from pqp.utils import attrdict
 from pqp.symbols.variable import Variable
-from pqp.data.domain import make_domain, Domain
+from pqp.data.domain import make_domain, Domain, CategoricalDomain
 from pqp.utils.exceptions import InferredDomainWarning, UnitDomainWarning
 
 class Data:
@@ -132,10 +133,19 @@ class Data:
     def n(self):
         return self.df.shape[0]
     
-    def domain_of(var):
+    def domain_of(self, var):
         if isinstance(var, Variable):
             var = var.name
         try:
             return self.vars[var].domain
         except KeyError:
             raise ValueError(f'{repr(var)} not found in vars')
+    
+    def domains(self):
+        return {var: var.domain for var in self.vars.values()}
+    
+    def quantize(self, var, n_bins=2):
+        if isinstance(var, Variable):
+            var = var.name
+        self.df[var] = pd.cut(self.df[var], n_bins)
+        self.vars[var] = Variable(var, domain=CategoricalDomain(self.df[var]))

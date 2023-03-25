@@ -78,6 +78,23 @@ class AbstractExpression(AbstractMath, ABC):
         """
         raise NotImplementedError()
     
+    def free_variables(self):
+        """Returns the set of free variables in an expression."""
+        free = set()
+        def func_from_prohibited(prohibited):
+            def func(exp):
+                if exp.__class__.__name__ == "P":
+                    for v in exp._free_variables() - prohibited:
+                        free.add(v)
+                    return lambda x: x, None
+                elif isinstance(exp, _NamespaceModifier):
+                    return lambda x: x, func_from_prohibited(prohibited | exp._modified_set())
+                else:
+                    return lambda x: x, func_from_prohibited(prohibited)
+            return func
+        self.r_adapt_map(func_from_prohibited(set()))
+        return free
+    
     def assign(self, var, val=None):
         """Assigns a value to a variable in an expression.
 
@@ -336,7 +353,11 @@ class Difference(AbstractExpression):
 class _NamespaceModifier(ABC):    
     @abstractmethod
     def _in_modified(self, var):
-        return var in self.reassign_vars
+        raise NotImplementedError()
+    
+    @abstractmethod
+    def _modified_set(self):
+        raise NotImplementedError()
 
 
 class Marginal(AbstractExpression, _NamespaceModifier):
@@ -362,6 +383,9 @@ class Marginal(AbstractExpression, _NamespaceModifier):
     
     def _in_modified(self, var):
         return var in self.sub
+    
+    def _modified_set(self):
+        return set(self.sub)
     
     def sorted(self):
         return Marginal(sorted(self.sub), self.expr.sorted())
@@ -418,6 +442,9 @@ class Expectation(AbstractExpression, _NamespaceModifier):
     
     def _in_modified(self, var):
         return var == self.sub
+    
+    def _modified_set(self):
+        return {self.sub}
     
     def syntactic_eq(self, other):
         return (
