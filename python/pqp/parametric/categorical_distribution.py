@@ -5,6 +5,7 @@ from pqp.symbols.p import P
 from pqp.symbols.variable import Variable
 from pqp.data.domain import DiscreteDomain
 from pqp.utils import attrdict
+from pqp.utils.exceptions import NumericalError
 from pqp.parametric.distribution import Distribution
 from pqp.data.data import Data
 
@@ -143,6 +144,6 @@ class CategoricalDistribution(Distribution):
             acc += prob * val
         
         if abs(prob_acc - 1) > 0.1:
-            raise Exception(f"Probabilities do not sum to 1 (prob_acc = {prob_acc})")
+            raise NumericalError(f"Probabilities do not sum to 1 (prob_acc = {prob_acc})")
 
         return acc

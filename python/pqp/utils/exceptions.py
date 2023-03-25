@@ -15,6 +15,10 @@ class DomainValidationError(Exception):
     """Exception raised when domain is used with invalid values"""
     pass
 
+class NumericalError(Exception):
+    """Exception raised when numerical methods fail"""
+    pass
+
 # class HedgeError(Exception):
 #     """Indicates that identification has failed"""
 #     pass

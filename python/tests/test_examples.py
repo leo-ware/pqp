@@ -3,29 +3,88 @@ import pandas as pd
 
 from pqp.estimation.model import Model
 from pqp.causal.graph import Graph
-from pqp.causal.estimands import ATE
+from pqp.causal.estimands import ATE, CATE
 from pqp.data.data import Data
 from pqp.parametric.categorical_distribution import CategoricalDistribution, Distribution
 from pqp.symbols import *
 
-# def test_direct_effect_estimation():
-#     x, y = make_vars("xy")
-#     data = Data(pd.DataFrame({
-#         "x": [0, 0, 1, 1],
-#         "y": [0, 1, 0, 1],
-#     }))
+def test_direct_effect_estimation():
+    x, y = make_vars("xy")
+    data = Data(pd.DataFrame({
+        "x": [0, 0, 1, 1],
+        "y": [0, 1, 0, 1],
+    }))
 
-#     parametric_model = CategoricalDistribution(data)
-#     causal_model = Graph([y <= x])
-#     causal_estimand = ATE(y, treatment_condition={x: 1}, control_condition={x: 0})
+    parametric_model = CategoricalDistribution(data)
+    causal_model = Graph([y <= x])
+    causal_estimand = ATE(y, treatment_condition={x: 1}, control_condition={x: 0})
 
-#     identified_estimand = causal_model.identify(causal_estimand)
-#     print(identified_estimand)
-#     effect = parametric_model.approx(identified_estimand)
-#     print(effect)
+    identified_estimand = causal_model.identify(causal_estimand)
+    assert identified_estimand == (
+        Expectation(y, P([x, y])/P(x)).assign(x, 1) -
+        Expectation(y, P([x, y])/P(x)).assign(x, 0)
+        )
+    effect = parametric_model.approx(identified_estimand)
+    assert effect == 0
 
-#     assert False
 
+def test_direct_effect_estimation_again():
+    x, y = make_vars("xy")
+    data = Data(pd.DataFrame({
+        "x": [0, 1, 1, 1],
+        "y": [0, 1, 0, 1],
+    }))
+
+    parametric_model = CategoricalDistribution(data)
+    causal_model = Graph([y <= x])
+    causal_estimand = ATE(y, treatment_condition={x: 1}, control_condition={x: 0})
+
+    identified_estimand = causal_model.identify(causal_estimand)
+    assert identified_estimand == (
+        Expectation(y, P([x, y])/P(x)).assign(x, 1) -
+        Expectation(y, P([x, y])/P(x)).assign(x, 0)
+        )
+    effect = parametric_model.approx(identified_estimand)
+    assert effect == 2/3
+
+def test_bd_estimation():
+    x, y, z = make_vars("xyz")
+    data = Data(pd.DataFrame({
+        "x": [0, 1, 0, 1],
+        "y": [0, 1, 1, 2],
+        "z": [0, 0, 1, 1],
+    }))
+
+    parametric_model = CategoricalDistribution(data, prior=0.1)
+    causal_model = Graph([
+        y <= [x, z],
+        x <= z,
+        ])
+    
+    causal_estimand = ATE(y, treatment_condition={x: 1}, control_condition={x: 0})
+    identified_estimand = causal_model.identify(causal_estimand)
+    effect = parametric_model.approx(identified_estimand)
+    assert abs(effect - 1) < 0.05
+
+    causal_estimand = ATE(y, treatment_condition={z: 1}, control_condition={z: 0})
+    identified_estimand = causal_model.identify(causal_estimand)
+    effect = parametric_model.approx(identified_estimand)
+    assert abs(effect - 1) < 0.05
+
+    causal_estimand = ATE(z, treatment_condition={y: 1}, control_condition={y: 0})
+    identified_estimand = causal_model.identify(causal_estimand)
+    effect = parametric_model.approx(identified_estimand)
+    assert abs(effect) < 0.05
+
+    causal_estimand = ATE(x, treatment_condition={z: 1}, control_condition={z: 0})
+    identified_estimand = causal_model.identify(causal_estimand)
+    effect = parametric_model.approx(identified_estimand)
+    assert abs(effect) < 0.05
+
+    causal_estimand = CATE(y, treatment_condition={z: 1}, control_condition={z: 0}, subpopulation={x: 1})
+    identified_estimand = causal_model.identify(causal_estimand)
+    effect = parametric_model.approx(identified_estimand)
+    assert abs(effect - 1) < 0.05
 
 
 # def test_fd_estimation():

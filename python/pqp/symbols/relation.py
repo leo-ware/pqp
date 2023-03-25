@@ -126,19 +126,31 @@ class AbstractExpression(AbstractMath, ABC):
         Note that intervention will not propogate downwards through a sum over a variable.
         
         Args:
-            var (Variable): The variable to intervene on
+            var (Variable or list): The variable(s) to intervene on
         
         Returns:
             AbstractExpression: a new expression where the intervention has occured
         """
+        if not isinstance(var, Variable):
+            try:
+                iter(var)
+            except TypeError:
+                raise ValueError("var must be a Variable or iterable of Variables")
+            
+            ans = self
+            for v in var:
+                ans = ans.intervene(v)
+            return ans
+        
         from pqp.symbols.p import P
         def func(exp):
             if isinstance(exp, P):
                 return lambda exp: exp._intervene(var), None
-            elif isinstance(exp, Marginal) and var in exp.sub:
+            elif isinstance(exp, _NamespaceModifier) and exp._in_modified(var):
                 return lambda x: x.copy(), None
             else:
                 return lambda x: x, func
+        
         return self.r_adapt_map(func)
 
 class Value(AbstractExpression):
