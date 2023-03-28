@@ -4,7 +4,7 @@ import pandas as pd
 from pqp.identification.graph import Graph
 from pqp.identification.estimands import ATE, CATE
 from pqp.data.data import Data
-from pqp.estimation.categorical_distribution import CategoricalDistribution, Distribution
+from pqp.estimation import Estimator, MultinomialEstimator
 from pqp.symbols import *
 
 def test_direct_effect_estimation():
@@ -14,7 +14,7 @@ def test_direct_effect_estimation():
         "y": [0, 1, 0, 1],
     }))
 
-    parametric_model = CategoricalDistribution(data)
+    parametric_model = MultinomialEstimator(data)
     causal_model = Graph([y <= x])
     causal_estimand = ATE(y, treatment_condition={x: 1}, control_condition={x: 0})
 
@@ -34,7 +34,7 @@ def test_direct_effect_estimation_again():
         "y": [0, 1, 0, 1],
     }))
 
-    parametric_model = CategoricalDistribution(data)
+    parametric_model = MultinomialEstimator(data)
     causal_model = Graph([y <= x])
     causal_estimand = ATE(y, treatment_condition={x: 1}, control_condition={x: 0})
 
@@ -54,7 +54,7 @@ def test_bd_estimation():
         "z": [0, 0, 1, 1],
     }))
 
-    parametric_model = CategoricalDistribution(data, prior=0.1)
+    parametric_model = MultinomialEstimator(data, prior=0.1)
     causal_model = Graph([
         y <= [x, z],
         x <= z,
@@ -109,7 +109,7 @@ def test_bd_estimation():
 #     v = data.vars
 
 #     naive_model = Model(
-#         CategoricalDistribution(data, prior=0, observed=["outcome", "treatment"]),
+#         MultinomialEstimator(data, prior=0, observed=["outcome", "treatment"]),
 #         Graph([v.outcome <= v.treatment])
 #         )
 #     naive_ate = naive_model.ate(
@@ -120,7 +120,7 @@ def test_bd_estimation():
 #     assert naive_ate == 0.7
 
 #     # god_model = Model(
-#     #     CategoricalDistribution(data, prior=0.1),
+#     #     MultinomialEstimator(data, prior=0.1),
 #     #     Graph([
 #     #         v.outcome <= [v.pathway, v.severity],
 #     #         v.pathway <= v.treatment,
@@ -139,7 +139,7 @@ def test_bd_estimation():
 #     # assert god_ate == -0.3
 
 #     # smart_model = Model(
-#     #     CategoricalDistribution(data, prior=0.1, observed=["outcome", "pathway", "treatment"]),
+#     #     MultinomialEstimator(data, prior=0.1, observed=["outcome", "pathway", "treatment"]),
 #     #     Graph([
 #     #         v.outcome <= v.pathway,
 #     #         v.pathway <= v.treatment,

@@ -1,18 +1,13 @@
 from abc import ABC, abstractmethod
 from pqp.symbols import *
-from pqp.refutation import entrypoint, Result
+from pqp.refutation import entrypoint, Result, Step
 
 
-class Distribution(ABC):
-    @abstractmethod
-    def __init__(self):
-        """Initialize a distribution
-        Args:
-            data (Data): The data to use for the distribution
-            observed (list): The variables which are considered observed, defaults to all
-        """
-        pass
-    
+class Estimator(Result, ABC):
+    def __init__(self, op):
+        step = Step(f"Fit {self.__class__.__name__}")
+        super().__init__(op, step)
+
     @abstractmethod
     def estimate(self):
         pass

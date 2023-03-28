@@ -4,8 +4,9 @@ from pqp.utils import attrdict
 from pqp.symbols.variable import Variable
 from pqp.data.domain import make_domain, Domain, CategoricalDomain
 from pqp.utils.exceptions import InferredDomainWarning, UnitDomainWarning
+from pqp.refutation import Result, Operation, Step
 
-class Data:
+class Data(Result):
     def __init__(self, df, vars=None, validate_domain=True, **kwargs):
         """Class representing datasets, wraps a pandas DataFrame and contains some metadata
 
@@ -45,6 +46,9 @@ class Data:
             df (pandas.DataFrame): the dataset
             vars (dict): a dict mapping variable names to `Variable` objects
         """
+        self.step = Step("Data Processing")
+        self.operation = Operation(self.__init__, [df], {"vars": vars, "validate_domain": validate_domain, **kwargs})
+
         self._silence_inferred_domain_warning = kwargs.get("silence_inferred_domain_warning", True)
         self._silence_unit_domain_warning = kwargs.get("silence_unit_domain_warning", False)
 
@@ -56,13 +60,13 @@ class Data:
         if vars is None:
             vars = [Variable(name, domain=self._make_domain(name, 'infer', self.df[name])) for name in list(self.df.columns)]
 
-        self.vars = self.interpret_vars_arg(vars)
-        self.confirm_vars_match_df_cols()
-        self.confirm_vars_have_domains()
-        self.record_assumptions()
+        self.vars = self._interpret_vars_arg(vars)
+        self._confirm_vars_match_df_cols()
+        self._confirm_vars_have_domains()
+        self._record_assumptions()
 
         if validate_domain:
-            self.validate_domain()
+            self._validate_domain()
     
     def _make_domain(self, name, domain_type, values=None):
         if not self._silence_inferred_domain_warning:
@@ -72,7 +76,7 @@ class Data:
             raise UnitDomainWarning(f'Domain for variable "{name}" has cardinality <= {domain.get_cardinality()}')
         return domain
     
-    def interpret_vars_arg(self, vars):
+    def _interpret_vars_arg(self, vars):
         # this is gonna take in whatever terrible argument form the user used and
         # return an attrdict mapping column names to Variable objects
         if isinstance(vars, dict):
@@ -106,12 +110,11 @@ class Data:
         
         return attrdict(var_index)
     
-    def record_assumptions(self):
-        # for name, var in self.vars.items():
-        #     self.assume(f"{name} is on {var.domain}", desc=var.domain.describe_assumptions())
-        pass
+    def _record_assumptions(self):
+        for name, var in self.vars.items():
+            self.step.assume(f"{name} is on {var.domain}")
     
-    def confirm_vars_match_df_cols(self):
+    def _confirm_vars_match_df_cols(self):
         # confirm every variable in self.vars has a corresponding column in self.df
         cols = set(self.df.columns)
         for name, var in self.vars.items():
@@ -124,12 +127,12 @@ class Data:
             domain = self._make_domain(name, "infer", values=self.df[name])
             self.vars[name] = Variable(name, domain=domain)
     
-    def confirm_vars_have_domains(self):
+    def _confirm_vars_have_domains(self):
         for name, var in self.vars.items():
             if var.domain == None:
                 var.domain = self._make_domain(name, "infer", values=self.df[name])
     
-    def validate_domain(self):
+    def _validate_domain(self):
         for name, var in self.vars.items():
             if var.domain == None:
                 raise ValueError(f'Variable "{var}" has no domain')
@@ -147,19 +150,12 @@ class Data:
         except KeyError:
             raise ValueError(f'{repr(var)} not found in vars')
     
-    def domains(self):
+    def _domains(self):
         return {var: var.domain for var in self.vars.values()}
     
     def quantize(self, var, n_bins=2):
+        self.step.write(f'Quantizing {var} into {n_bins} bins')
         if isinstance(var, Variable):
-            var = var.name
-        
-        # computation = self.new_subcomputation(f"Quantization of {var} into {n_bins} bins")
-        # computation.assume(
-        #     name=f"new domain for {var}",
-        #     desc=f"We discretize {var} into {n_bins} bins. After quantization, w" +
-        #     self.vars[var].domain.describe_assumptions()[1:]
-        #     )
-        
+            var = var.name        
         self.df[var] = pd.cut(self.df[var], n_bins)
         self.vars[var] = Variable(var, domain=CategoricalDomain(self.df[var]))

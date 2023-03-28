@@ -4,11 +4,14 @@ from pqp.symbols import *
 from pqp.data.domain import DiscreteDomain
 from pqp.utils import attrdict
 from pqp.utils.exceptions import NumericalError
-from pqp.estimation.distribution import Distribution
+from pqp.estimation.estimator import Estimator
 from pqp.data.data import Data
-from pqp.refutation import entrypoint, Result
+from pqp.refutation import entrypoint, Result, Operation
 
-class CategoricalDistribution(Distribution):
+def _new_multinomial(*args, **kwargs):
+    return MultinomialEstimator(*args, **kwargs)
+
+class MultinomialEstimator(Estimator):
     def __init__(self, data, observed=None, prior=0, coerce=True):
         """Initialize a categorical distribution
 
@@ -28,23 +31,25 @@ class CategoricalDistribution(Distribution):
             prior (float): The prior strength, defaults to 0
             coerce (bool): If True, coerce the data to a Data object, defaults to True
         """
-        super().__init__()
+        op = Operation(_new_multinomial, [], {"data": data, "observed": observed, "prior": prior, "coerce": coerce})
+        super().__init__(op)
 
         if not isinstance(data, Data):
             if coerce:
                 data = Data(data)
+                self.operation.kwargs["data"] = data
             else:
-                raise TypeError(f"data must be a Data object, not {type(data)}")
+                raise TypeError(f"data must be a Data object if coerce is False, not {type(data)}")
         
         for name, var in data.vars.items():
             if var.domain is None:
                 raise ValueError(f"{var} has no domain")
             if not isinstance(var.domain, DiscreteDomain):
-                raise ValueError(f"{var} has domain {var.domain} which is not discrete")
-                # if coerce:
-                #     data.quantize(var)
-                # else:
-                #     raise ValueError(f"{var} has domain {domain} which is not discrete")
+                if coerce:
+                    data.quantize(var)
+                else:
+                    raise ValueError(f"{var} has domain {domain} which is not discrete,"
+                        " pass a discrete domain or set coerce=True to quantize the data")
         
         self.data = data
         self.observed_names = set(observed or data.vars.keys())
@@ -77,12 +82,14 @@ class CategoricalDistribution(Distribution):
             if isinstance(g, EqualityEvent):
                 context[g.var.name] = g.val
             elif isinstance(g, Variable):
-                ValueError(f"CategoricalDistribution cannot evaluate expression containing the free variable {repr(g)}")
+                ValueError("MultinomialEstimator cannot evaluate expression "
+                f"containing the free variable {repr(g)}")
             elif isinstance(g, InterventionEvent):
-                ValueError(f"CategoricalDistribution cannot approximate the do-expression {repr(g)},"
+                ValueError(f"MultinomialEstimator cannot approximate the do-expression {repr(g)},"
                     " you must first identify the expression")
             elif isinstance(g, Event):
-                NotImplementedError(f"CategoricalDistribution cannot evaluate Event of type {type(g)}")
+                NotImplementedError(f"MultinomialEstimator"
+             " cannot evaluate Event of type {type(g)}")
             else:
                 raise TypeError(f"Values behind the conditioning bar must be Variable or Event, not {type(g)}")
         

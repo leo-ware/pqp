@@ -1,2 +1,2 @@
-from pqp.estimation.distribution import Distribution
-from pqp.estimation.categorical_distribution import CategoricalDistribution
+from pqp.estimation.estimator import Estimator
+from pqp.estimation.multinomial_estimator import MultinomialEstimator

@@ -1,13 +1,13 @@
 import pandas as pd
 from pqp.identification.graph import Graph
-from pqp.estimation.categorical_distribution import CategoricalDistribution
+from pqp.estimation import MultinomialEstimator
 from pqp.data.data import Data
 from pqp.symbols import *
 
 def test_approx_p_no_prior():
     df = pd.DataFrame({"x": [0, 1, 1], "y": [0, 1, 0]})
     data = Data(df, {"x": "binary", "y": "binary"})
-    dist = CategoricalDistribution(data, prior=0)
+    dist = MultinomialEstimator(data, prior=0)
 
     y1_given_x1 = dist.estimate(P([data.vars.y.val == 1], given=[data.vars.x.val == 1]))
     assert y1_given_x1.value == 0.5
@@ -18,7 +18,7 @@ def test_approx_p_no_prior():
 def test_approx_p_prior():
     df = pd.DataFrame({"x": [0, 1, 1], "y": [0, 1, 0]})
     data = Data(df)
-    dist = CategoricalDistribution(data, prior=1)
+    dist = MultinomialEstimator(data, prior=1)
 
     y1_given_x1 = dist.estimate(
         P([data.vars.y], given=[data.vars.x]),
@@ -40,7 +40,7 @@ def test_approx_p_prior():
 
 def test_assignments_args():
     data = Data(pd.DataFrame({"x": [0, 1, 1], "y": [0, 1, 0]}))
-    dist = CategoricalDistribution(data)
+    dist = MultinomialEstimator(data)
 
     x = data.vars.x
     y = data.vars.y
@@ -65,7 +65,7 @@ def test_assignments_args():
 def test_approx_prior():
     df = pd.DataFrame({"x": [0, 1, 1], "y": [0, 1, 1], "z": [0, 0, 1]})
     data = Data(df, {"x": "binary", "y": "binary", "z": "binary"})
-    dist = CategoricalDistribution(data, prior=1)
+    dist = MultinomialEstimator(data, prior=1)
 
     context = {"x": 1, "z": 0}
     assert (
@@ -79,7 +79,7 @@ def test_approx_prior_more():
     data = Data(df, {"x": "binary", "y": "binary", "z": "binary"})
     assert data.vars['x'].domain.get_cardinality() == 2
 
-    dist = CategoricalDistribution(data, prior=1)
+    dist = MultinomialEstimator(data, prior=1)
 
     joint = P([data.vars.x, data.vars.y, data.vars.z])
     zeros = {"x": 0, "y": 0, "z": 0}
@@ -101,7 +101,7 @@ def test_approx_prior_more():
 def test_approx_nested():
     df = pd.DataFrame({"x": [0, 0, 1, 1], "y": [0, 1, 0, 1]})
     data = Data(df, {"x": "binary", "y": "binary"})
-    dist = CategoricalDistribution(data, prior=0)
+    dist = MultinomialEstimator(data, prior=0)
 
     y1 = dist.estimate(
         Marginal([data.vars.x], P([data.vars.y, data.vars.x])),
