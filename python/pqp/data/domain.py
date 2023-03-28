@@ -15,6 +15,11 @@ class Domain(ABC):
         """Returns whether a value is in the domain"""
         raise NotImplementedError
     
+    @abstractmethod
+    def describe_assumptions(self):
+        """Describes any assumptions made about the domain"""
+        pass
+    
     def validate(self, values):
         """Validates that a list of values is in the domain
 
@@ -60,6 +65,11 @@ class IntegerDomain(DiscreteDomain):
         self.min = np.min(values)
         self.max = np.max(values)
     
+    def describe_assumptions(self):
+        return (
+            "We assume the variable is an integer in the range [{self.min}, {self.max}] inclusive"
+        )
+    
     def get_values(self):
         return list(range(self.min, self.max + 1))
     
@@ -88,6 +98,21 @@ class CategoricalDomain(DiscreteDomain):
             raise ValueError("Discrete domains must specify values")
         self.values = set(values)
     
+    def describe_assumptions(self):
+        values_strings = [str(val) for val in self.values]
+        max_len = max([len(val) for val in values_strings])
+        if max_len > 10:
+            val_desc = ""
+            for v in values_strings:
+                val_desc += f"\n\t- {v}"
+        else:
+            val_desc = "{" + ", ".join(values_strings) + "}"
+
+        return (
+            "We assume the variable is a categorical variable which can take"
+            "on these values {val_desc}"
+        )
+    
     def get_values(self):
         return list(self.values)
     
@@ -109,6 +134,9 @@ class BinaryDomain(CategoricalDomain):
     
     def __repr__(self):
         return "BinaryDomain()"
+    
+    def describe_assumptions(self):
+        return "We assume the variable is binary"
 
 class ContinuousDomain(Domain):
     def get_cardinality(self):
@@ -127,6 +155,11 @@ class RealDomain(ContinuousDomain):
             raise ValueError("Continuous domains must specify values")
         self.min = np.min(values)
         self.max = np.max(values)
+    
+    def describe_assumptions(self):
+        return (
+            "We assume the variable is a real number in the range [{self.min}, {self.max}] inclusive"
+        )
     
     def __repr__(self):
         return f"RealDomain([{self.min}, {self.max}])"

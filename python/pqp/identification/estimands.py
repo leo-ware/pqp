@@ -1,7 +1,10 @@
 from pqp.symbols import *
 from abc import ABC, abstractmethod
 
-class CausalEstimand:
+class AbstractCausalEstimand:
+    def __init__(self):
+        self.name = "causal estimand"
+    
     @abstractmethod
     def __repr__(self):
         raise NotImplementedError()
@@ -10,8 +13,22 @@ class CausalEstimand:
     def expression(self):
         raise NotImplementedError()
 
-class ATE(CausalEstimand):
+class CausalEstimand(AbstractCausalEstimand):
+    def __init__(self, exp):
+        super().__init__()
+        self.exp = exp
+    
+    def __repr__(self):
+        return f"CausalEstimand({repr(self.exp)[:12]})"
+    
+    def expression(self):
+        return self.exp
+
+class ATE(AbstractCausalEstimand):
     def __init__(self, outcome, treatment_condition, control_condition):
+        super().__init__()
+        self.name = "average treatment effect"
+
         if not isinstance(outcome, Variable):
             raise TypeError(f"outcome must be a Variable, not {type(outcome)}")
 
@@ -57,6 +74,7 @@ class ATE(CausalEstimand):
 class CATE(ATE):
     def __init__(self, outcome, treatment_condition, control_condition, subpopulation):
         super().__init__(outcome, treatment_condition, control_condition)
+        self.name = "conditional average treatment effect"
         self.subpopulation = self._validate_condition(subpopulation, "subpopulation")
     
     def control_vars(self):

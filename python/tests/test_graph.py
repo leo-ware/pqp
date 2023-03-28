@@ -1,5 +1,5 @@
 from pqp.symbols import *
-from pqp.causal.graph import Graph
+from pqp.identification.graph import Graph
 from pqp.utils import recursive_sort
 
 
@@ -24,8 +24,8 @@ def test_identify():
         y <= [z, x],
         m <= y,
     ])
-    assert g.identify(P(y, given=do(x))) == g.idc([y], [x])
-    assert g.identify(P(y, given=do(m))) == P(y)
-    assert g.identify(P(x, given=[do(m), do(y)])) == P(x)
-    assert g.identify(P(x) - P(y, given=do(x))) == P(x) - g.identify(P(y, given=[do(x)]))
-    assert g.identify(Expectation(x, P(x, given=[do(y)]))) == Expectation(x, P(x))
+    assert g.identify(P(y, given=do(x))).identified_estimand == g._idc([y], [x])
+    assert g.identify(P(y, given=do(m))).identified_estimand == P(y)
+    assert g.identify(P(x, given=[do(m), do(y)])).identified_estimand == P(x)
+    assert g.identify(P(x) - P(y, given=do(x))).identified_estimand == P(x) - g.identify(P(y, given=[do(x)])).identified_estimand
+    assert g.identify(Expectation(x, P(x, given=[do(y)]))).identified_estimand == Expectation(x, P(x))

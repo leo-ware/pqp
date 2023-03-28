@@ -1,6 +1,6 @@
 from pqp.symbols import *
 from pqp.data.domain import make_domain, CategoricalDomain, RealDomain, BinaryDomain, infer_domain_type
-from pqp.causal.graph import DirectedEdge, BidirectedEdge
+from pqp.identification.graph import DirectedEdge, BidirectedEdge
 
 import pytest
 import numpy as np

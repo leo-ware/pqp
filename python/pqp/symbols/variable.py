@@ -60,7 +60,7 @@ class Variable(AbstractMath):
         return hash(self.name)
     
     def __le__(self, other):
-        from pqp.causal.graph import DirectedEdge, BidirectedEdge
+        from pqp.identification.graph import DirectedEdge, BidirectedEdge
         if isinstance(other, Variable):
             return DirectedEdge(other, self)
         elif isinstance(other, DirectedEdge):
@@ -73,7 +73,7 @@ class Variable(AbstractMath):
             raise TypeError(f"Cannot compare {type(self)} with {type(other)}")
     
     def __and__(self, other):
-        from pqp.causal.graph import BidirectedEdge, DirectedEdge
+        from pqp.identification.graph import BidirectedEdge, DirectedEdge
         if isinstance(other, Variable):
             return BidirectedEdge(self, other)
         elif isinstance(other, BidirectedEdge):

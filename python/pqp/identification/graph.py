@@ -1,7 +1,7 @@
-from pqp.symbols import Variable, Expectation, parse_json, P, EqualityEvent, InterventionEvent
-from pqp.causal.estimands import ATE, CATE, CausalEstimand
-from pqp.pqp import id
-
+from pqp.symbols import Variable, Expectation, parse_json, P, EqualityEvent, InterventionEvent, do
+from pqp.identification.estimands import ATE, CATE, AbstractCausalEstimand, CausalEstimand
+from pqp.refutation import entrypoint
+from pqp.pqp import id as rust_id
 import json
 from itertools import chain
 
@@ -54,7 +54,7 @@ class Graph:
     def di_edge_tuples(self):
         return [(str(edge.start), str(edge.end)) for edge in self.directed_edges]
     
-    def idc(self, y, x, z=[]):
+    def _idc(self, y, x, z=[], step=None):
         """Identification of conditional interventional distribution.
 
         Args:
@@ -65,6 +65,7 @@ class Graph:
         Returns:
             Expression: the expression for the interventional distribution
         """
+        
         def purify_vars(vs):
             for v in vs:
                 if isinstance(v, Variable):
@@ -78,16 +79,27 @@ class Graph:
         x = list(purify_vars(x))
         z = list(purify_vars(z))
 
-        res = id(
+        res = rust_id(
             self.di_edge_tuples(),
             self.bi_edge_tuples(),
             [str(v) for v in x],
             [str(v) for v in y],
             [str(v) for v in z],
         )
-        return parse_json(json.loads(res))
+        res_exp = parse_json(json.loads(res))
+        
+        if step:
+            step = step.substep("IDC")
+            step.write("Input:")
+            step.write(P(y, given=z + [do(v) for v in x]))
+            step.write("Output:")
+            step.write(res_exp)
+            step.result("identified_expression", str(res_exp))
+        
+        return res_exp
     
-    def identify(self, estimand):
+    @entrypoint("Identification")
+    def identify(self, estimand, step):
         """Uses IDC to identify an arbitrary estimand
 
         Finds the interventional distributions in a causal estimand and replaces
@@ -99,8 +111,23 @@ class Graph:
         Returns:
             Expression: the identified estimand, containing no do-operators
         """
-        if isinstance(estimand, CausalEstimand):
+        if isinstance(estimand, AbstractCausalEstimand):
+            causal_estimand = estimand
             estimand = estimand.expression()
+        else:
+            causal_estimand = CausalEstimand(exp=estimand)
+        
+        step.write(f"We will identify the {causal_estimand.name} using IDC.")
+        step.assume("Noncontradictory evidence")
+        step.assume("Acyclicity")
+        step.assume("Positivty")
+
+        _idc_cache = {}
+        def idc_caller(y, x, z=[]):
+            key = (tuple(y), tuple(x), tuple(z))
+            if key not in _idc_cache:
+                _idc_cache[key] = self._idc(y, x, z, step=step)
+            return _idc_cache[key]
 
         def id(exp):
             if isinstance(exp, P):
@@ -111,7 +138,12 @@ class Graph:
                 if len(intervene) == 0:
                     return exp.copy()
                 
-                transformed = self.idc(list(measured.keys()), list(intervene.keys()), list(condition.keys()))
+                transformed = idc_caller(
+                    y=list(measured.keys()),
+                    x=list(intervene.keys()),
+                    z=list(condition.keys()),
+                    )
+                
                 for var, val in chain(condition.items(), intervene.items(), measured.items()):
                     transformed = transformed.assign(var, val)
                 
@@ -119,8 +151,8 @@ class Graph:
             else:
                 return exp.copy()
         
-        res = estimand.r_map(id)
-        return res
+        ans = estimand.r_map(id)
+        step.result("identified_estimand", ans)
     
     def identify_ate(self, outcome, treatment_condition, control_condition):
         """Identifies the average treatment effect
@@ -173,6 +205,7 @@ class Graph:
     
     def __str__(self):
         return f"<Graph n_edges={len(self.bi_edges + self.directed_edges)}>"
+
 
 class DirectedEdge:
     """A directed edge between two variables, represents a causal relationship

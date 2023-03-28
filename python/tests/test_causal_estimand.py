@@ -1,4 +1,4 @@
-from pqp.causal.estimands import ATE, CATE
+from pqp.identification.estimands import ATE, CATE
 from pqp.symbols import *
 
 def test_expression():

@@ -1,11 +1,10 @@
 import numpy as np
 import pandas as pd
 
-from pqp.estimation.model import Model
-from pqp.causal.graph import Graph
-from pqp.causal.estimands import ATE, CATE
+from pqp.identification.graph import Graph
+from pqp.identification.estimands import ATE, CATE
 from pqp.data.data import Data
-from pqp.parametric.categorical_distribution import CategoricalDistribution, Distribution
+from pqp.estimation.categorical_distribution import CategoricalDistribution, Distribution
 from pqp.symbols import *
 
 def test_direct_effect_estimation():
@@ -19,13 +18,13 @@ def test_direct_effect_estimation():
     causal_model = Graph([y <= x])
     causal_estimand = ATE(y, treatment_condition={x: 1}, control_condition={x: 0})
 
-    identified_estimand = causal_model.identify(causal_estimand)
+    identified_estimand = causal_model.identify(causal_estimand).identified_estimand
     assert identified_estimand == (
         Expectation(y, P([x, y])/P(x)).assign(x, 1) -
         Expectation(y, P([x, y])/P(x)).assign(x, 0)
         )
-    effect = parametric_model.approx(identified_estimand)
-    assert effect == 0
+    effect = parametric_model.estimate(identified_estimand)
+    assert effect.value == 0
 
 
 def test_direct_effect_estimation_again():
@@ -39,13 +38,13 @@ def test_direct_effect_estimation_again():
     causal_model = Graph([y <= x])
     causal_estimand = ATE(y, treatment_condition={x: 1}, control_condition={x: 0})
 
-    identified_estimand = causal_model.identify(causal_estimand)
+    identified_estimand = causal_model.identify(causal_estimand).identified_estimand
     assert identified_estimand == (
         Expectation(y, P([x, y])/P(x)).assign(x, 1) -
         Expectation(y, P([x, y])/P(x)).assign(x, 0)
         )
-    effect = parametric_model.approx(identified_estimand)
-    assert effect == 2/3
+    effect = parametric_model.estimate(identified_estimand)
+    assert effect.value == 2/3
 
 def test_bd_estimation():
     x, y, z = make_vars("xyz")
@@ -62,29 +61,29 @@ def test_bd_estimation():
         ])
     
     causal_estimand = ATE(y, treatment_condition={x: 1}, control_condition={x: 0})
-    identified_estimand = causal_model.identify(causal_estimand)
-    effect = parametric_model.approx(identified_estimand)
-    assert abs(effect - 1) < 0.05
+    identified_estimand = causal_model.identify(causal_estimand).identified_estimand
+    effect = parametric_model.estimate(identified_estimand)
+    assert abs(effect.value - 1) < 0.05
 
     causal_estimand = ATE(y, treatment_condition={z: 1}, control_condition={z: 0})
-    identified_estimand = causal_model.identify(causal_estimand)
-    effect = parametric_model.approx(identified_estimand)
-    assert abs(effect - 1) < 0.05
+    identified_estimand = causal_model.identify(causal_estimand).identified_estimand
+    effect = parametric_model.estimate(identified_estimand)
+    assert abs(effect.value - 1) < 0.05
 
     causal_estimand = ATE(z, treatment_condition={y: 1}, control_condition={y: 0})
-    identified_estimand = causal_model.identify(causal_estimand)
-    effect = parametric_model.approx(identified_estimand)
-    assert abs(effect) < 0.05
+    identified_estimand = causal_model.identify(causal_estimand).identified_estimand
+    effect = parametric_model.estimate(identified_estimand)
+    assert abs(effect.value) < 0.05
 
     causal_estimand = ATE(x, treatment_condition={z: 1}, control_condition={z: 0})
-    identified_estimand = causal_model.identify(causal_estimand)
-    effect = parametric_model.approx(identified_estimand)
-    assert abs(effect) < 0.05
+    identified_estimand = causal_model.identify(causal_estimand).identified_estimand
+    effect = parametric_model.estimate(identified_estimand)
+    assert abs(effect.value) < 0.05
 
     causal_estimand = CATE(y, treatment_condition={z: 1}, control_condition={z: 0}, subpopulation={x: 1})
-    identified_estimand = causal_model.identify(causal_estimand)
-    effect = parametric_model.approx(identified_estimand)
-    assert abs(effect - 1) < 0.05
+    identified_estimand = causal_model.identify(causal_estimand).identified_estimand
+    effect = parametric_model.estimate(identified_estimand)
+    assert abs(effect.value - 1) < 0.05
 
 
 # def test_fd_estimation():

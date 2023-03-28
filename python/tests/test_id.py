@@ -1,7 +1,7 @@
 from pqp.utils import recursive_sort
 from pqp.symbols import *
 from pqp.symbols.parse import parse_json
-from pqp.causal.graph import Graph
+from pqp.identification.graph import Graph
 
 def test_fd():
     x, y, z = make_vars("xyz")
@@ -10,7 +10,7 @@ def test_fd():
         y <= z,
         x & y
     ])
-    estimand = g.idc([y], [x])
+    estimand = g._idc([y], [x])
     ans = Marginal(z, (Marginal(x, P([x])*P([x, y, z])/P([x, z])) * P([x, z]))/P([x]))
     assert estimand == ans
 
@@ -21,7 +21,7 @@ def test_bd():
         y <= z,
         y <= x
     ])
-    estimand = g.idc([y], [x])
+    estimand = g._idc([y], [x])
     ans = Marginal(z, (P([z])*P([x, y, z]))/P([x, z]))
     assert estimand == ans
 

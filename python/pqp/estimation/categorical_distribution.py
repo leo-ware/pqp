@@ -1,13 +1,12 @@
 import numpy as np
 
-from pqp.symbols.relation import *
-from pqp.symbols.p import P
-from pqp.symbols.variable import Variable
+from pqp.symbols import *
 from pqp.data.domain import DiscreteDomain
 from pqp.utils import attrdict
 from pqp.utils.exceptions import NumericalError
-from pqp.parametric.distribution import Distribution
+from pqp.estimation.distribution import Distribution
 from pqp.data.data import Data
+from pqp.refutation import entrypoint, Result
 
 class CategoricalDistribution(Distribution):
     def __init__(self, data, observed=None, prior=0, coerce=True):
@@ -29,6 +28,7 @@ class CategoricalDistribution(Distribution):
             prior (float): The prior strength, defaults to 0
             coerce (bool): If True, coerce the data to a Data object, defaults to True
         """
+        super().__init__()
 
         if not isinstance(data, Data):
             if coerce:
@@ -40,10 +40,11 @@ class CategoricalDistribution(Distribution):
             if var.domain is None:
                 raise ValueError(f"{var} has no domain")
             if not isinstance(var.domain, DiscreteDomain):
-                if coerce:
-                    data.quantize(var)
-                else:
-                    raise ValueError(f"{var} has domain {domain} which is not discrete")
+                raise ValueError(f"{var} has domain {var.domain} which is not discrete")
+                # if coerce:
+                #     data.quantize(var)
+                # else:
+                #     raise ValueError(f"{var} has domain {domain} which is not discrete")
         
         self.data = data
         self.observed_names = set(observed or data.vars.keys())
@@ -157,3 +158,26 @@ class CategoricalDistribution(Distribution):
             raise NumericalError(f"Probabilities do not sum to 1 (prob_acc = {prob_acc})")
 
         return acc
+    
+    @entrypoint("Estimation")
+    def estimate(self, estimand, assignments=None, step=None):
+        if assignments is None:
+            assignments = {}
+        if step is None:
+            raise ValueError("step must be provided")
+
+        flag = False
+        if isinstance(estimand, Result):
+            try:
+                estimand = estimand.identified_estimand
+            except AttributeError:
+                flag = True
+        if flag or not isinstance(estimand, AbstractExpression):
+            raise ValueError("estimand must be Result from identification or expression")
+
+        step.write("Performing brute force estimation using a multinomial likelihood " +
+            "and dirichlet prior.")
+        step.assume("Multinomial likelihood")
+        step.assume("Dirichlet prior")
+        approx = self.approx(estimand, assignments=assignments)
+        step.result("value", approx)

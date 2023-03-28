@@ -59,6 +59,7 @@ class Data:
         self.vars = self.interpret_vars_arg(vars)
         self.confirm_vars_match_df_cols()
         self.confirm_vars_have_domains()
+        self.record_assumptions()
 
         if validate_domain:
             self.validate_domain()
@@ -105,6 +106,11 @@ class Data:
         
         return attrdict(var_index)
     
+    def record_assumptions(self):
+        # for name, var in self.vars.items():
+        #     self.assume(f"{name} is on {var.domain}", desc=var.domain.describe_assumptions())
+        pass
+    
     def confirm_vars_match_df_cols(self):
         # confirm every variable in self.vars has a corresponding column in self.df
         cols = set(self.df.columns)
@@ -147,5 +153,13 @@ class Data:
     def quantize(self, var, n_bins=2):
         if isinstance(var, Variable):
             var = var.name
+        
+        # computation = self.new_subcomputation(f"Quantization of {var} into {n_bins} bins")
+        # computation.assume(
+        #     name=f"new domain for {var}",
+        #     desc=f"We discretize {var} into {n_bins} bins. After quantization, w" +
+        #     self.vars[var].domain.describe_assumptions()[1:]
+        #     )
+        
         self.df[var] = pd.cut(self.df[var], n_bins)
         self.vars[var] = Variable(var, domain=CategoricalDomain(self.df[var]))
