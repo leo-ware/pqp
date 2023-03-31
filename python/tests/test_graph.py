@@ -11,11 +11,11 @@ def test_create_graph():
         y <= z,
         x & y
     ])
-    assert recursive_sort(g.bi_edge_tuples()) == recursive_sort([("x", "y")])
-    assert recursive_sort(g.di_edge_tuples()) == recursive_sort([("x", "z"), ("y", "z")])
+    assert recursive_sort(g._bi_edge_tuples()) == recursive_sort([("x", "y")])
+    assert recursive_sort(g._di_edge_tuples()) == recursive_sort([("x", "z"), ("y", "z")])
 
     g.add_edge(x & z)
-    assert recursive_sort(g.bi_edge_tuples()) == recursive_sort([("x", "y"), ("x", "z")])
+    assert recursive_sort(g._bi_edge_tuples()) == recursive_sort([("x", "y"), ("x", "z")])
 
 def test_identify():
     x, y, z, m = make_vars("xyzm")

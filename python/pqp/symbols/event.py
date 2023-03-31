@@ -4,6 +4,7 @@ from pqp.symbols.abstract_math import AbstractMath
 from abc import ABC, abstractmethod
 
 class Event(AbstractMath, ABC):
+    """Abstract base class for events"""
     @property
     @abstractmethod
     def get_var(self):
@@ -11,12 +12,17 @@ class Event(AbstractMath, ABC):
         pass
 
 class StatisticalEvent(Event):
+    """Abstract base class for events which are statistical events
+    
+    StatisticalEvents represent constraints on the possible values of a Variable, including 
+    taking on a specific value. They go in probability expressions.
+    """
     pass
 
 class InterventionEvent(Event):
     """Represents intervening on a variable"""
     def __init__(self, v):
-        if (not isinstance(v, Event) and not isinstance(v, Variable)) or isinstance(v, InterventionEvent):
+        if not isinstance(v, StatisticalEvent) and not isinstance(v, Variable):
             raise TypeError(f"v must be a Variable or Event, not {type(v)}")
         self.v = v
     
@@ -53,6 +59,9 @@ def do(v):
 class EqualityEvent(StatisticalEvent):
     """Represents setting a variable to a value
 
+    Attributes:
+        var (Variable): The variable to set
+        val (object): The value to set the variable to (cannot be a Variable)
     """
     def __init__(self, var, val):
         if not isinstance(var, Variable):

@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 from pqp.utils import attrdict
 from pqp.symbols.variable import Variable
@@ -154,8 +155,11 @@ class Data(Result):
         return {var: var.domain for var in self.vars.values()}
     
     def quantize(self, var, n_bins=2):
-        self.step.write(f'Quantizing {var} into {n_bins} bins')
+        step = self.step.substep(f'Quantizing {var} into {n_bins} bins')
         if isinstance(var, Variable):
             var = var.name        
-        self.df[var] = pd.cut(self.df[var], n_bins)
+        quantized = pd.cut(self.df[var], n_bins)
+        for el in np.unique(quantized):
+            step.write(f"Mapping elements on ({el.left}, {el.right}] to {el.mid}")
+        self.df[var] = np.array([i.mid for i in quantized])
         self.vars[var] = Variable(var, domain=CategoricalDomain(self.df[var]))

@@ -1,23 +1,6 @@
 Quickstart
 ================
 
-The following is a quickstart guide to get you up and running with
-``pqp``.  For more detailed information, see the documentation.
-
-Overview
------
-``pqp`` is a Python wrapper for the Rust Library ``pqp``.  The underlying library 
-provides performant causal identification using Shpitser's IDC algorithm. The Python wrapper
-provides an interface to the underlying library which is designed for easy use within a Jupyter
-notebook.
-
-It also provides a few additional features.
-
-- An intuitive API for constructing causal diagrams
-- A simple visualization tool for causal diagrams
-
-More features are planned for release soon!
-
 Installation
 ------------
 Install ``pqp`` using ``pip``
@@ -29,12 +12,38 @@ Install ``pqp`` using ``pip``
 Usage
 ------
 
-To get started, we can first use the ``vars`` function to create a list of variables.
+To characterize a causal effect, we need to specify three things:
+
+#. **Causal Assumptions**: a graph representing the causal structural relationships between variables
+#. **Parametric Assumptions**: a parametric model of the joint distribution of the data
+#. **Causal Estimand**: an algebraic expression representing the causal effect of interest
+
+Setup
+++++++
+
+To get started, we will spoof some data to run our analysis on.
 
 .. code-block:: python
 
-    from pqp.variable import make_vars
+    import pandas as pd
+
+    df = pd.DataFrame({
+        "x": [0, 0, 0, 1, 1, 0],
+        "z": [0, 1, 0, 1, 1, 0],
+        "y": [0, 1, 0, 1, 1, 0],
+    })
+
+We can use the ``make_vars`` function to create a list of variables.
+
+.. code-block:: python
+
+    from pqp.symbols import make_vars
     x, y, z = make_vars("xyz")
+
+Note that the names of these variables match the column names in the data frame.
+
+Causal Assumptions
++++++++++++++++++++
 
 We can then assemble these variables into a causal diagram using the ``Graph`` class. Here we will
 build the famous front-door model.
@@ -45,7 +54,7 @@ confounding.
 
 .. code-block:: python
 
-    from pqp.graph import Graph
+    from pqp.identification import Graph
     g = Graph([
         x & y,
         z <= x,
@@ -61,31 +70,70 @@ We can use the ``.draw()`` method to visualize the causal diagram.
 .. image:: imgs/frontdoor_viz.png
     :width: 400px
 
-To identify the causal relationships in the causal diagram, we can use the ``.idc()`` method.
+
+Parametric Assumptions
++++++++++++++++++++++++
+
+For the purposes of this article, we will assume that the data is drawn from a multinomial
+distribution. We can use the ``MultinomialEstimator`` class to specify the parametric assumptions.
+
+.. code-block:: python
+
+    from pqp.estimation import MultinomialEstimator
+    estimator = MultinomialEstimator(df, prior=1)
+
+The ``prior`` argument specifies the prior strength of the model.  The default is
+zero, in which case the model fits through maximum likelihood. We are using a nonzero
+value here because if you don't specify a prior, the model will not always give positive
+probability estimates to events, which can cause problems when estimating causal effects.
+
+If you don't specify a prior, don't worry though. If the estimator runs into a problem,
+it will throw an exception and tell you what to do.
+
+Causal Estimand
+++++++++++++++++
+
+For this example, we will estimate the average treatment effect of ``x`` on ``y``. First, 
+we need to define the treatment and control conditions.
+
+.. code-block:: python
+
+    treatment_condition = [x.val == 1]
+    control_condition = [x.val == 0]
+
+Then, we can use the ``ATE`` class to define the causal estimand.
+
+.. code-block:: python
+
+    from pqp.estimation import ATE
+    causal_estimand = ATE(y, treatment_condition, control_condition)
+    
+    #inspect the expression
+    causal_estimand.expression().display()
+
+.. image:: imgs/qs_causal_estimand.png
+    :width: 500px
+
+Identification and Estimation
++++++++++++++++++++++++++++++++
+
+Now, we can first use the causal assumptions to identify the causal estimand, and then we can use the
+parametric assumptions to estimate the causal effect.
+
+To identify the causal relationships in the causal diagram, we can use the ``.identify()`` method.
 For example, to identify the causal relationship between ``x`` and ``y``, we can use the following:
 
 .. code-block:: python
 
-    estimand = g.idc([y], [x])
-    print(estimand)
-
-    # Σ_(z) [ [Σ_(x) [ [P(x) * P(x, z, y) / P(x, z)] ] * P(x, z) / P(x)] ]
-
-The ``.idc()`` method returns an ``Expression`` object representing the abstract estimator. The
-``Expression`` object contains a number of methods for inspecting the estimator.
-
-.. code-block:: python
-    str(estimand)
-    # Σ_(z) [ [Σ_(y) [ [P(x, z, y) * P(y) / P(z, y)] ] * P(z, y) / P(y)] ]
-
-    estimand.to_latex()
-    # \sum_{z} \big({\sum_{x} \big({P(x) P(x, z, y) \over P(x, z)}\big) P(x, z) \over P(x)}\big)
-
-Inside an IPython notebook, we can also use the ``.display()`` method to display the estimator
-as a LaTeX equation.
-
-.. code-block:: python
-
+    estimand = g.identify(causal_estimand).identified_estimand
     estimand.display()
 
-.. image:: imgs/frontdoor_new.png
+.. image:: imgs/qs_stat_estimand.png
+    :width: 600px
+
+We can then use the ``.estimate()`` method to estimate the causal effect.
+
+.. code-block:: python
+
+    estimator.estimate(estimand)
+    # => EstimationResult(value=0.4433808167141502)

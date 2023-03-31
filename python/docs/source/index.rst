@@ -6,7 +6,7 @@ Welcome to ``pqp``'s documentation!
 
 The underlying Rust library, ``pqp``, was designed for performant causal identification, with a focus on correctness. ``pqp`` leverages this capability by providing performant identification routines that can handle large graphs. The package is intended to be a tool for academic research and data analysis, and we hope it can aid in the advancement of knowledge in the field of causality.
 
-**Please Note:** This package is in development, and the API is subject to change. Additionally, not all features may work as advertised. We welcome any feedback or suggestions for improvement.
+.. **Please Note:** This package is in development, and the API is subject to change. Additionally, not all features may work as advertised. We welcome any feedback or suggestions for improvement.
 
 
 Getting Started
@@ -21,12 +21,15 @@ Modules
 -------
 
 .. toctree::
-   :maxdepth: 2
+    :maxdepth: 1
 
-   module_maps/expression
-   module_maps/graph
-   module_maps/variable
-
+    module_maps/data
+    module_maps/estimation
+    module_maps/identification
+    module_maps/refutation
+    module_maps/symbols
+    module_maps/utils
+    module_maps/exceptions
 
 Site Navigation
 ~~~~~~~~~~~~~~~~~~

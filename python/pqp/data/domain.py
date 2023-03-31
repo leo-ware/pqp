@@ -2,20 +2,21 @@ from pqp.utils.exceptions import DomainValidationError
 
 import pandas as pd
 import numpy as np
-from abc import ABC, abstractmethod
+import abc
 
-class Domain(ABC):
-    @abstractmethod
+class Domain(abc.ABC):
+    """Manages the possible values that a Variable can take on"""
+    @abc.abstractmethod
     def get_cardinality(self):
         """The number of possible values a variable can take on"""
         raise NotImplementedError
     
-    @abstractmethod
+    @abc.abstractmethod
     def __contains__(self, value):
         """Returns whether a value is in the domain"""
         raise NotImplementedError
     
-    @abstractmethod
+    @abc.abstractmethod
     def describe_assumptions(self):
         """Describes any assumptions made about the domain"""
         pass
@@ -44,15 +45,16 @@ class Domain(ABC):
             if not val in self:
                 raise DomainValidationError(f"Value {val} is not in domain {self}")
 
-class DiscreteDomain(Domain, ABC):
-    @abstractmethod
+class DiscreteDomain(Domain, abc.ABC):
+    """Abstract base class for discrete domains"""
+    @abc.abstractmethod
     def get_values(self):
         """Returns a list of all possible values in the domain"""
         raise NotImplementedError
 
 class IntegerDomain(DiscreteDomain):
     def __init__(self, values):
-        """Represents a domain for which a variable is an integer in a range
+        """Domain for which a variable is an integer in an (inclusive) range
 
         Args:
             values (list): a list of integers, max and min of which are bounds of the range
@@ -86,6 +88,7 @@ class IntegerDomain(DiscreteDomain):
         return self.check_int(value) and self.min <= value <= self.max
 
 class CategoricalDomain(DiscreteDomain):
+    """Domain of a categorical variable"""
     def __init__(self, values):
         """Represents a categorical domain for a variable, specified by a list of values
 
@@ -129,6 +132,7 @@ class CategoricalDomain(DiscreteDomain):
             return f"CategoricalDomain({repr(self.values)})"
 
 class BinaryDomain(CategoricalDomain):
+    """Domain for a binary variable"""
     def __init__(self):
         super().__init__([0, 1])
     
@@ -139,11 +143,12 @@ class BinaryDomain(CategoricalDomain):
         return "We assume the variable is binary"
 
 class ContinuousDomain(Domain):
+    """Abstract base class for continuous domains"""
     def get_cardinality(self):
         return float("inf")
 
 class RealDomain(ContinuousDomain):
-    """Represents a continuous domain for a variable, delimited by min and max values
+    """A continuous domain for a variable, delimited by min and max values
 
     Args:
         values (list): the min and max of this list are taken as the min and max of the domain

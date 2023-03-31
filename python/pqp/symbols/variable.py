@@ -1,5 +1,4 @@
 from pqp.symbols.abstract_math import AbstractMath
-from pqp.data.domain import Domain
 from pqp.utils.exceptions import DomainValidationError
 
 import numpy as np
@@ -34,6 +33,8 @@ class Variable(AbstractMath):
         name (str): the name of the variable
     """
     def __init__(self, name, domain=None):
+        from pqp.data.domain import Domain
+        
         if type(name) != str:
             raise TypeError(f"name must be a string, not {type(name)}")
         

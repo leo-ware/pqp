@@ -2,6 +2,7 @@ from pqp.symbols import *
 from abc import ABC, abstractmethod
 
 class AbstractCausalEstimand:
+    """Abstract base class for causal estimands"""
     def __init__(self):
         self.name = "causal estimand"
     
@@ -11,9 +12,15 @@ class AbstractCausalEstimand:
     
     @abstractmethod
     def expression(self):
+        """Derive the expression for the causal estimand
+        
+        Returns:
+            AbstractExpression: the expression for the causal estimand
+        """
         raise NotImplementedError()
 
 class CausalEstimand(AbstractCausalEstimand):
+    """Subclass of AbstractCausalEstimand which carries its expression as a literal"""
     def __init__(self, exp):
         super().__init__()
         self.exp = exp
@@ -25,6 +32,29 @@ class CausalEstimand(AbstractCausalEstimand):
         return self.exp
 
 class ATE(AbstractCausalEstimand):
+    """Causal estimand for the average treatment effect
+
+    To define the average treatment effect, it's necessary to specify what is meant
+    by "treatment" and "control" in this context. You can do this by passing either
+    a dict or a list of StatisticalEvent objects to each of the treatment_condition
+    and control_condition arguments. If a dict is passed, the keys must be Variable
+    or string, and the values must not be Variable. If a list is passed, it must 
+    contain only instances of StatisticalEvent.
+
+    Example:
+        >>> # treatment condition is x = 1, control condition is x = 0 in both of these
+        >>> ATE(outcome, treatment_condition={"x": 1}, control_condition={"x": 0})
+        >>> ATE(outcome, treatment_condition=[EqualityEvent("x", 1)], control_condition=[EqualityEvent("x", 0)])
+        >>>
+        >>> # treatment condition is x = 1 and y = "red", control condition is x = 0 and y = "blue"
+        >>> ATE(outcome, treatment_condition={"x": 1, y: "red"}, control_condition={"x": 0, y: "blue"})
+        
+    
+    Args:
+        outcome (Variable): the outcome variable
+        treatment_condition (dict or list): the treatment condition
+        control_condition (dict or list): the control condition
+    """
     def __init__(self, outcome, treatment_condition, control_condition):
         super().__init__()
         self.name = "average treatment effect"
@@ -61,27 +91,65 @@ class ATE(AbstractCausalEstimand):
         
         return condition
     
-    def treatment_vars(self):
-        return [v.get_var() for v in self.treatment_condition + self.control_condition]
+    def _treatment_vars(self):
+        return list(set(v.get_var() for v in self.treatment_condition + self.control_condition))
     
     def __repr__(self):
-        return f"<ATE treatment_vars={self.treatment_vars()}, outcome={self.outcome}>"
+        return f"<ATE treatment_vars={self._treatment_vars()}, outcome={self.outcome}>"
     
     def expression(self):
         return Expectation(self.outcome, P(self.outcome, given=[do(c) for c in self.treatment_condition])) -\
             Expectation(self.outcome, P(self.outcome, given=[do(c) for c in self.control_condition]))
 
 class CATE(ATE):
+    """Causal estimand for the conditional average treatment effect
+
+    To define the conditional average treatment effect, it's necessary to specify 
+    what is meant by treatment and control in this context, and you need to specify the
+    subpopulation in which to measure the effect. You can 
+    do this by passing either a dict or a list of StatisticalEvent objects to 
+    each of the treatment_condition and control_condition arguments. If a dict 
+    is passed, the keys must be Variable or string, and the values must not 
+    be Variable. If a list is passed, it must contain only instances of 
+    StatisticalEvent.
+
+    Example:
+        >>> # treatment condition is x = 1, control condition is x = 0 in both of these
+        >>  # in both, we are measuring the effect in the subpopulation where z = 1
+        >>> CATE(outcome, treatment_condition={"x": 1}, control_condition={"x": 0}, subpopulation={"z": 1})
+        >>> CATE(
+        ...     outcome,
+        ...     treatment_condition=[EqualityEvent("x", 1)],
+        ...     control_condition=[EqualityEvent("x", 0)],
+        ...     subpopulation=[EqualityEvent("z", 1)]
+        ... )
+        >>>
+        >>> # treatment condition is x = 1 and y = "red", control condition is x = 0 and y = "blue"
+        >>> # we are measuring the effect in the subpopulation where z = 1
+        >>> CATE(
+        ...     outcome,
+        ...     treatment_condition={"x": 1, y: "red"},
+        ...     control_condition={"x": 0, y: "blue"},
+        ...     subpopulation={"z": 1}
+        ... )
+        
+    
+    Args:
+        outcome (Variable): the outcome variable
+        treatment_condition (dict or list): the treatment condition
+        control_condition (dict or list): the control condition
+        subpopulation (dict or list): the subpopulation in which to measure the effect
+    """
     def __init__(self, outcome, treatment_condition, control_condition, subpopulation):
         super().__init__(outcome, treatment_condition, control_condition)
         self.name = "conditional average treatment effect"
         self.subpopulation = self._validate_condition(subpopulation, "subpopulation")
     
-    def control_vars(self):
+    def _control_vars(self):
         return [v.get_var() for v in self.subpopulation]
     
     def __repr__(self):
-        return f"<CATE treatment_vars={self.treatment_vars()}, outcome={self.outcome}, control_vars={self.control_vars()}>"
+        return f"<CATE treatment_vars={self._treatment_vars()}, outcome={self.outcome}, control_vars={self._control_vars()}>"
 
     def expression(self):
         tc = [do(c) for c in self.treatment_condition]

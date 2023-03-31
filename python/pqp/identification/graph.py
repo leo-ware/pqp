@@ -1,20 +1,51 @@
 from pqp.symbols import Variable, Expectation, parse_json, P, EqualityEvent, InterventionEvent, do
 from pqp.identification.estimands import ATE, CATE, AbstractCausalEstimand, CausalEstimand
-from pqp.refutation import entrypoint
+from pqp.refutation import entrypoint, Result
 from pqp.pqp import id as rust_id
 import json
 from itertools import chain
 
+class IdentificationResult(Result):
+    """Stores the result of identification
+
+    Attributes:
+        identified_estimand (AbstractExpression): the identified causal estimand
+    """
+    _keys = ["identified_estimand"]
+
+
 class Graph:
     """A causal graph
+
+    The best way to create a `Graph` is using the `<=` and `&` infix operators. When you use
+    these operators between `Variable`s, they create a `DirectedEdge` or `BidirectedEdge` respectively.
+
+    Example: The Front-Door Model
+        >>> x, y, m = make_vars("xym")
+        >>> g = Graph([
+        ...     m <= x,
+        ...     y <= m,
+        ...     y & x,
+        ... ])
     
+    Example: The Back-Door Model
+        >>> x, y, z = make_vars("xyz")
+        >>> g = Graph([
+        ...     y <= [x, z],
+        ...     x <= z,
+        ... ])
+
+    You can use the `identify` method to identify a causal estimand. The estimand can either
+    be passed as an expression or as an instance of `AbstractCausalEstimand`, such as `ATE` or
+    `CATE`.
+
     Example:
         >>> x = Variable("X")
         >>> y = Variable("Y")
         >>> g = Graph([
         ...     y <= x,
         ... ])
-        >>> g.idc([y], [x])
+        >>> g.identify(ATE([y], [x]))
         P(y | x)
     
     Args:
@@ -26,6 +57,11 @@ class Graph:
         self.add_edges(edges)
     
     def add_edges(self, edges):
+        """Add multiple edges to the graph
+        
+        Args:
+            edges (list of DirectedEdge or BidirectedEdge): the edges to add
+        """
         while edges:
             edge = edges.pop()
             if isinstance(edge, BidirectedEdge) or isinstance(edge, DirectedEdge):
@@ -48,10 +84,10 @@ class Graph:
         else:
             raise TypeError(f"Cannot add edge of type {type(edge)}")
     
-    def bi_edge_tuples(self):
+    def _bi_edge_tuples(self):
         return [(str(edge.a), str(edge.b)) for edge in self.bi_edges]
     
-    def di_edge_tuples(self):
+    def _di_edge_tuples(self):
         return [(str(edge.start), str(edge.end)) for edge in self.directed_edges]
     
     def _idc(self, y, x, z=[], step=None):
@@ -63,7 +99,7 @@ class Graph:
             z (list of Variable): conditioning variables (optional)
         
         Returns:
-            Expression: the expression for the interventional distribution
+            AbstractExpression: the expression for the interventional distribution
         """
         
         def purify_vars(vs):
@@ -80,8 +116,8 @@ class Graph:
         z = list(purify_vars(z))
 
         res = rust_id(
-            self.di_edge_tuples(),
-            self.bi_edge_tuples(),
+            self._di_edge_tuples(),
+            self._bi_edge_tuples(),
             [str(v) for v in x],
             [str(v) for v in y],
             [str(v) for v in z],
@@ -94,11 +130,11 @@ class Graph:
             step.write(P(y, given=z + [do(v) for v in x]))
             step.write("Output:")
             step.write(res_exp)
-            step.result("identified_expression", str(res_exp))
+            # step.result("identified_expression", str(res_exp))
         
         return res_exp
     
-    @entrypoint("Identification")
+    @entrypoint("Identification", result_class=IdentificationResult)
     def identify(self, estimand, step):
         """Uses IDC to identify an arbitrary estimand
 
@@ -109,7 +145,7 @@ class Graph:
             estimand (Expression): the estimand to identify
         
         Returns:
-            Expression: the identified estimand, containing no do-operators
+            AbstractExpression: the identified estimand, containing no do-operators
         """
         if isinstance(estimand, AbstractCausalEstimand):
             causal_estimand = estimand
@@ -163,7 +199,7 @@ class Graph:
             control_condition (dict): the control condition
         
         Returns:
-            Expression: the identified average treatment effect
+            AbstractExpression: the identified average treatment effect
         """
         return self.identify(ATE(outcome, treatment_condition, control_condition).expression())
     
@@ -177,7 +213,7 @@ class Graph:
             subpopulation (dict): the subpopulation condition
         
         Returns:
-            Expression: the identified conditional average treatment effect
+            AbstractExpression: the identified conditional average treatment effect
         """
         return self.identify(CATE(outcome, treatment_condition, control_condition, subpopulation).expression())
     
@@ -186,16 +222,16 @@ class Graph:
         import networkx as nx
 
         layout_graph = nx.Graph()
-        layout_graph.add_edges_from(self.bi_edge_tuples() + self.di_edge_tuples())
+        layout_graph.add_edges_from(self._bi_edge_tuples() + self._di_edge_tuples())
         layout = nx.spring_layout(layout_graph, scale=1, k=1/len(layout_graph.nodes)**0.5)
         nx.draw_networkx_nodes(layout_graph, layout, node_size=500)
 
         digraph = nx.DiGraph()
-        digraph.add_edges_from(self.di_edge_tuples())
+        digraph.add_edges_from(self._di_edge_tuples())
         nx.draw_networkx_edges(digraph, layout)
 
         bigraph = nx.Graph()
-        bigraph.add_edges_from(self.bi_edge_tuples())
+        bigraph.add_edges_from(self._bi_edge_tuples())
         nx.draw_networkx_edges(bigraph, layout, style="dashed")
 
         nx.draw_networkx_labels(layout_graph, layout)
