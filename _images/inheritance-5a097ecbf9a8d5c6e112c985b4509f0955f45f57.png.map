@@ -1,0 +1,7 @@
+<map id="inheritance809733e9a6" name="inheritance809733e9a6">
+<area shape="rect" id="node1" href="../pqp.utils.html#pqp.utils.exceptions.DomainValidationError" target="_top" title="Exception raised when domain is used with invalid values" alt="" coords="9,203,160,228"/>
+<area shape="rect" id="node2" href="../pqp.utils.html#pqp.utils.exceptions.InferredDomainWarning" target="_top" title="Warning raised when the domain of a variable is inferred from provided examples" alt="" coords="5,153,164,179"/>
+<area shape="rect" id="node3" href="../pqp.utils.html#pqp.utils.exceptions.NumericalError" target="_top" title="Exception raised when numerical methods fail" alt="" coords="30,104,139,129"/>
+<area shape="rect" id="node4" href="../pqp.utils.html#pqp.utils.exceptions.PositivityException" target="_top" title="Exception raised when a nonpositive distribution is used" alt="" coords="17,55,152,80"/>
+<area shape="rect" id="node5" href="../pqp.utils.html#pqp.utils.exceptions.UnitDomainWarning" target="_top" title="Warning raised when the domain of a variable has cardinality &lt;= 1" alt="" coords="15,5,154,31"/>
+</map>
