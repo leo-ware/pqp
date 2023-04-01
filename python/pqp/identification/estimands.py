@@ -1,5 +1,6 @@
 from pqp.symbols import *
 from abc import ABC, abstractmethod
+from pqp.data.domain import BinaryDomain
 
 class AbstractCausalEstimand:
     """Abstract base class for causal estimands"""
@@ -55,17 +56,26 @@ class ATE(AbstractCausalEstimand):
         treatment_condition (dict or list): the treatment condition
         control_condition (dict or list): the control condition
     """
-    def __init__(self, outcome, treatment_condition, control_condition):
+    def __init__(self, outcome, treatment_condition, control_condition=None):
         super().__init__()
         self.name = "average treatment effect"
 
         if not isinstance(outcome, Variable):
             raise TypeError(f"outcome must be a Variable, not {type(outcome)}")
 
+        if isinstance(treatment_condition, Variable):
+            if control_condition:
+                raise ValueError("if treatment_condition is a Variable, control_condition must be None")
+            if treatment_condition.domain and not isinstance(treatment_condition.domain, BinaryDomain):
+                raise ValueError("if treatment_condition is a Variable, it must be binary")
+            control_condition = [treatment_condition.val == 0]
+            treatment_condition = [treatment_condition.val == 1]
+
         self.outcome = outcome
         self.control_condition = self._validate_condition(control_condition, "control_condition")
         self.treatment_condition = self._validate_condition(treatment_condition, "treatment_condition")
-    
+        assert True
+
     def _validate_condition(self, condition, name):
         if isinstance(condition, dict):
             new_condition = []
@@ -78,16 +88,18 @@ class ATE(AbstractCausalEstimand):
                 if isinstance(v, Variable):
                     raise TypeError(f"if dict is passed, {name} values must not be Variables")
                 new_condition.append(EqualityEvent(k, v))
-            condition = new_condition
-        else:
-            if not isinstance(condition, list):
-                try:
-                    condition = list(condition)
-                except TypeError:
-                    raise TypeError(f"{name} must be dict or iterable, not {type(condition)}")
-            for v in condition:
-                if not isinstance(v, StatisticalEvent):
-                    raise TypeError(f"if a non-dict iterable is passed, {name} must contain only StatisticalEvent, not {type(v)}")
+            return new_condition
+        elif isinstance(condition, EqualityEvent):
+            condition = [condition]
+        
+        if not isinstance(condition, list):
+            try:
+                condition = list(condition)
+            except TypeError:
+                raise TypeError(f"{name} must be dict or iterable, not {type(condition)}")
+        for v in condition:
+            if not isinstance(v, StatisticalEvent):
+                raise TypeError(f"if a non-dict iterable is passed, {name} must contain only StatisticalEvent, not {type(v)}")
         
         return condition
     
@@ -95,7 +107,7 @@ class ATE(AbstractCausalEstimand):
         return list(set(v.get_var() for v in self.treatment_condition + self.control_condition))
     
     def __repr__(self):
-        return f"<ATE treatment_vars={self._treatment_vars()}, outcome={self.outcome}>"
+        return f"ATE(outcome={repr(self.outcome)}, treatment={self._treatment_vars()})"
     
     def expression(self):
         return Expectation(self.outcome, P(self.outcome, given=[do(c) for c in self.treatment_condition])) -\

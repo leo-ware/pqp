@@ -68,7 +68,7 @@ class Data(Result):
 
         if validate_domain:
             self._validate_domain()
-    
+
     def _make_domain(self, name, domain_type, values=None):
         if not self._silence_inferred_domain_warning:
             raise InferredDomainWarning(f'Inferred domain for variable "{name}"')

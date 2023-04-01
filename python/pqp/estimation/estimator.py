@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from pqp.symbols import *
 from pqp.refutation import entrypoint, Result, Step
+from pqp.identification.estimands import AbstractCausalEstimand
 
 
 class EstimationResult(Result):
@@ -10,6 +11,11 @@ class EstimationResult(Result):
         value (float): the estimated value
     """
     _keys = ["value"]
+    def __repr__(self):
+        # for dep in self.get_nested_dependencies():
+        #     if isinstance(dep, AbstractCausalEstimand):
+        #         return f"EstimationResult(value={self.value}, estimand={dep})"
+        return f"EstimationResult(value={self.value})"
 
 
 class Estimator(Result, ABC):
@@ -51,6 +57,9 @@ class Estimator(Result, ABC):
             Domain: the domain of the variable
         """
         pass
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(observed=[{', '.join(map(str, self.get_observed()))}])"
 
     def approx(self, expr, assignments=None):
         """Approximated the value of an expression

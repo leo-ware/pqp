@@ -302,6 +302,14 @@ class Product(AbstractExpression):
             return A(self.copy())
 
 class Difference(AbstractExpression):
+    """Represents the difference between two expressions
+
+    Represents the expression $a - b$. Can be creating using the infix operator '-'.
+    
+    Args:
+        a (AbstractExpression): The first expression
+        b (AbstractExpression): The second expression
+    """
     def __init__(self, a, b):
         if not isinstance(a, AbstractExpression):
             raise TypeError("Difference must be a list of instances of AbstractExpression")
@@ -430,6 +438,14 @@ class Marginal(AbstractExpression, _NamespaceModifier):
 
 
 class Expectation(AbstractExpression, _NamespaceModifier):
+    """Represents an expectation or a random variable
+
+    Equivalent to $\sum_{domain(sub)} sub * expr$
+
+    Args:
+        sub (Variable): The variable to sum over
+        expr (AbstractExpression): The expression to sum
+    """
     def __init__(self, sub, expr):
         if not isinstance(expr, AbstractExpression):
             raise TypeError("expr must be a list of instances of AbstractExpression")
@@ -463,7 +479,7 @@ class Expectation(AbstractExpression, _NamespaceModifier):
         return f"E_({self.sub}) [ {self.expr} ]"
     
     def to_latex(self):
-        return f"E_{self.sub.to_latex()} \\big[ {self.expr.to_latex()} \\big]"
+        return "E_{" + self.sub.to_latex() + "} \\big[" + self.expr.to_latex() + "\\big]"
     
     def copy(self):
         return Expectation(self.sub, self.expr.copy())

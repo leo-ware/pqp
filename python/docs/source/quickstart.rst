@@ -135,5 +135,46 @@ We can then use the ``.estimate()`` method to estimate the causal effect.
 
 .. code-block:: python
 
-    estimator.estimate(estimand)
+    effect = estimator.estimate(estimand)
+    effect
     # => EstimationResult(value=0.4433808167141502)
+
+
+Interpretability and Robustness
+++++++++++++++++++++++++++++++++
+
+One of the most important features of ``pqp`` is its ability to provide human-interpretable explanations of the workings of the code. Many of the routines make very specific assumptions about the structure of the data or the effects of interest. It's important for users to understand these assumptions so they can understand the potential limitations of an analysis.
+
+The currency of ``pqp`` is the ``Result`` class. Any calculations that draw conclusions from the data will return instances of this class. This class tracks the transformations and assumptions made by the algorithms. As ``Results`` are assembled into successively more complex analyses of the data, ``pqp`` builds a dependency graph which tracks how different ``Result`` instances relate to each other and allows the user access to a list of steps executed in an analysis and the assumptions made.
+
+To access the list of steps, we can use the ``.explain()`` and ``explain_all()`` methods, which detail the current result only or all results in the dependency graph, respectively.
+
+.. code-block:: python
+
+    estimator.estimate(estimand).explain()
+
+Output:
+
+.. code-block::
+
+    Data Processing
+        Assume: x is on BinaryDomain()
+        Assume: z is on BinaryDomain()
+        Assume: y is on BinaryDomain()
+    Identification
+        We will identify the average treatment effect using IDC.
+        Assume: Noncontradictory evidence
+        Assume: Acyclicity
+        Assume: Positivty
+        IDC
+            Input:
+            P(y| do(x))
+            Output:
+            Σ_(z) [ [Σ_(x) [ [P(x) * P(x, z, y) / P(x, z)] ] * P(x, z) / P(x)] ]
+        Derived: identified_estimand = E_(y) [ Σ_(z) [ [Σ_(x) [ [P(x) * P(x, z, y) / P(x, z)] ] * P(x = 1, z) / P(x = 1)] ] ] - E_(y) [ Σ_(z) [ [Σ_(x) [ [P(x) * P(x, z, y) / P(x, z)] ] * P(x = 0, z) / P(x = 0)] ] ]
+    Fit MultinomialEstimator
+        Assume: Multinomial likelihood
+        Assume: Dirichlet prior
+    Estimation
+        Performing brute force estimation using a multinomial likelihood and dirichlet prior.
+        Derived: value = 0.4433808167141502

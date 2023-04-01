@@ -64,8 +64,8 @@ class IntegerDomain(DiscreteDomain):
         except TypeError:
             raise ValueError("values must be an iterable")
         
-        self.min = np.min(values)
-        self.max = np.max(values)
+        self.min = int(np.min(values))
+        self.max = int(np.max(values))
     
     def describe_assumptions(self):
         return (
@@ -83,6 +83,11 @@ class IntegerDomain(DiscreteDomain):
     
     def __repr__(self):
         return f"IntegerDomain([{self.min}, {self.max}])"
+    
+    def __str__(self):
+        if self.max - self.min < 4:
+            return "{" + ", ".join([str(val) for val in self.get_values()]) + "}"
+        return "{" + f"{self.min}...{self.max}" + "}"
     
     def __contains__(self, value):
         return self.check_int(value) and self.min <= value <= self.max
@@ -130,6 +135,9 @@ class CategoricalDomain(DiscreteDomain):
             return f"CategoricalDomain(cardinality={self.get_cardinality()})"
         else:
             return f"CategoricalDomain({repr(self.values)})"
+    
+    def __str__(self):
+        return "{" + ", ".join([str(val) for val in self.values]) + "}"
 
 class BinaryDomain(CategoricalDomain):
     """Domain for a binary variable"""
@@ -141,6 +149,9 @@ class BinaryDomain(CategoricalDomain):
     
     def describe_assumptions(self):
         return "We assume the variable is binary"
+    
+    def __str__(self):
+        return "{0, 1}"
 
 class ContinuousDomain(Domain):
     """Abstract base class for continuous domains"""
@@ -168,6 +179,9 @@ class RealDomain(ContinuousDomain):
     
     def __repr__(self):
         return f"RealDomain([{self.min}, {self.max}])"
+    
+    def __str__(self):
+        return "[" + f"{self.min}...{self.max}" + "]"
     
     def __contains__(self, value):
         return self.min <= value <= self.max

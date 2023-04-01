@@ -34,6 +34,9 @@ class Variable(AbstractMath):
     """
     def __init__(self, name, domain=None):
         from pqp.data.domain import Domain
+
+        assert name != "m, z"
+        assert name != "z, m"
         
         if type(name) != str:
             raise TypeError(f"name must be a string, not {type(name)}")

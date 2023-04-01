@@ -1,8 +1,11 @@
 import pandas as pd
 from pqp.identification.graph import Graph
 from pqp.estimation import MultinomialEstimator
+from pqp.estimation.multinomial_estimator import _extract_assignments_expr
 from pqp.data.data import Data
 from pqp.symbols import *
+from pqp.utils.exceptions import PositivityException
+from pytest import raises
 
 def test_approx_p_no_prior():
     df = pd.DataFrame({"x": [0, 1, 1], "y": [0, 1, 0]})
@@ -14,6 +17,25 @@ def test_approx_p_no_prior():
 
     y1_given_x0 = dist.estimate(P([data.vars.y.val == 1], given=[data.vars.x.val == 0]))
     assert y1_given_x0.value == 0.0
+
+def test_approx_p_no_prior_again():
+    df = pd.DataFrame({
+        "x": [0, 1, 0, 1],
+        "z": [1, 1, 0, 1],
+        "y": [1, 1, 0, 1],
+    })
+    dist = MultinomialEstimator(Data(df, {"x": "binary", "y": "binary", "z": "binary"}), prior=0)
+    x, y, z = make_vars("xyz")
+
+    assert dist.estimate(P(y.val == 1, given=z.val == 1)).value == 1
+    assert dist.estimate(P(y.val == 1, given=z.val == 0)).value == 0
+    assert dist.estimate(P(y.val == 0, given=x.val == 1)).value == 0
+    assert dist.estimate(P(y.val == 0, given=x.val == 0)).value == 0.5
+
+    assert dist.estimate(P(y.val == 1, given=x.val == 1)).value == 1
+    assert dist.estimate(P(y.val == 1, given=x.val == 0)).value == 0.5
+    assert dist.estimate(P(y.val == 0, given=x.val == 1)).value == 0
+    assert dist.estimate(P(y.val == 0, given=x.val == 0)).value == 0.5
 
 def test_approx_p_prior():
     df = pd.DataFrame({"x": [0, 1, 1], "y": [0, 1, 0]})
@@ -114,3 +136,75 @@ def test_approx_nested():
         {"y": 0, "x": 0}
         )
     assert y0.value == 0.5*(0.25 / 0.5)
+
+def test_positivity_exception():
+    df = pd.DataFrame({"x": [0, 1], "y": [1, 1]})
+    data = Data(df, {"x": "binary", "y": "binary"})
+    x, y = make_vars("xy")
+    dist = MultinomialEstimator(data)
+    with raises(PositivityException):
+        print(dist.estimate(Expectation(x, P(x, given=y.val == 0))))
+
+def test_where_conditions():
+    df = pd.DataFrame({
+        "x": [0, 1, 0, 1],
+        "z": [1, 1, 0, 1],
+        "y": [1, 1, 0, 1],
+    })
+    data = Data(df, {"x": "binary", "y": "binary", "z": "binary"})
+    dist = MultinomialEstimator(data, prior=0)
+    x, y, z = make_vars("xyz")
+
+    subset = dist._df_where_conditions({x: 1})
+    assert subset.shape[0] == 2
+    assert set(subset.columns.tolist()) == {"y", "z"}
+    assert subset.y.tolist() == [1, 1]
+    assert subset.z.tolist() == [1, 1]
+
+    subset = dist._df_where_conditions({x: 1, y: 1})
+    assert subset.shape[0] == 2
+    assert set(subset.columns.tolist()) == {"z"}
+    assert subset.z.tolist() == [1, 1]
+
+    subset = dist._df_where_conditions({x: 0, z: 1})
+    assert subset.shape[0] == 1
+    assert set(subset.columns.tolist()) == {"y"}
+    assert subset.y.tolist() == [1]
+
+def test_count_where_conditions():
+    df = pd.DataFrame({
+        "x": [0, 1, 0, 1],
+        "z": [1, 1, 0, 1],
+        "y": [1, 1, 0, 1],
+    })
+    data = Data(df, {"x": "binary", "y": "binary", "z": "binary"})
+    dist = MultinomialEstimator(data, prior=0)
+    x, y, z = make_vars("xyz")
+
+    assert dist._count_where_conditions({x: 1}, df) == 2
+    assert dist._count_where_conditions({y: 1}, df) == 3
+    assert dist._count_where_conditions({z: 1}, df) == 3
+    assert dist._count_where_conditions({x: 1, y: 1}, df) == 2
+    assert dist._count_where_conditions({x: 1, z: 1}, df) == 2
+    assert dist._count_where_conditions({y: 1, z: 1}, df) == 3
+    assert dist._count_where_conditions({y: 0, z: 1}, df) == 0
+    assert dist._count_where_conditions({z: 0, y: 1}, df) == 0
+    assert dist._count_where_conditions({x: 1, y: 1, z: 1}, df) == 2
+    assert dist._count_where_conditions({x: 0, y: 1, z: 1}, df) == 1
+    assert dist._count_where_conditions({x: 0, y: 0, z: 1}, df) == 0
+
+def test_extract():
+    x, y, z = make_vars("xyz")
+
+    expr, context = _extract_assignments_expr(P(y.val == 1, given=z.val == 1))
+    assert expr == P(y, given=z)
+    assert context == {"y": 1, "z": 1}
+
+    with raises(ValueError):
+        print(_extract_assignments_expr(P(y.val == 1, given=do(x.val == 1))))
+    
+    with raises(ValueError):
+        print(_extract_assignments_expr(P(y.val == 1, given=[z.val == 1, do(x.val == 1)])))
+    
+    with raises(ValueError):
+        print(_extract_assignments_expr(P(y.val == 1, given=x)))

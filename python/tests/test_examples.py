@@ -85,6 +85,25 @@ def test_bd_estimation():
     effect = parametric_model.estimate(identified_estimand)
     assert abs(effect.value - 1) < 0.05
 
+def test_writeup_demo():
+    x, y, z, m = make_vars("xyzm")
+
+    df = pd.DataFrame()
+    df["z"] = np.random.choice([0, 1], size=1000)
+    df["x"] = (0.5*df.z + np.random.random(size=1000) > 0.75).astype(int)
+    df["m"] = (0.5*df.x + np.random.random(size=1000) > 0.75).astype(int)
+    df["y"] = df.m + df.z
+
+    god_graph = Graph([
+        x <= z,
+        m <= x,
+        y <= [z, m]
+    ])
+    model = MultinomialEstimator(df)
+    ate = ATE(y, x)
+    estimand = god_graph.identify(ate)
+    model.estimate(estimand)
+
 
 # def test_fd_estimation():
 #     severity = np.array([0, 1])

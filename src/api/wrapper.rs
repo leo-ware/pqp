@@ -18,9 +18,10 @@ impl FormWrapper {
     pub fn to_json(&self) -> String {
         match self {
             FormWrapper::Marginal(sub, exp) => {
+                let sub_vec: Vec<String> = sub.iter().cloned().collect();
                 format!(
                     "{{\"type\": \"Marginal\", \"sub\": [{:?}], \"exp\": {}}}",
-                    sub.iter().format_default(", ").to_string(),
+                    sub_vec.iter().format_default(", "),
                     exp.to_json()
                 )
             },

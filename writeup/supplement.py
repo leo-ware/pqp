@@ -1,6 +1,7 @@
-from pqp.variable import make_vars
-from pqp.graph import Graph
+from pqp.symbols import make_vars
+from pqp.identification import Graph
 import matplotlib.pyplot as plt
+
 
 x, y, z, z1, z2, z3 = make_vars(["x", "y", "z", "z1", "z2", "z3"])
 

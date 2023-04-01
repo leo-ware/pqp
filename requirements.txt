@@ -4,3 +4,5 @@ sphinx-autobuild
 sphinx_automodapi
 toml
 pytest
+numpy
+pandas
