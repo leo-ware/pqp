@@ -1,3 +1,5 @@
+
+use std::ops;
 use core::num;
 use cute::c;
 
@@ -22,29 +24,36 @@ pub enum AbstractForm<T: Eq + std::hash::Hash> {
     Hedge
 }
 
+/// symbolic representation of forms sued by the library
 pub type Form = AbstractForm<Node>;
 
 impl Form {
+    /// shorthand function
     pub fn marginal(over: Set<Node>, exp: Form) -> Form {
         Form::Marginal(over, Box::new(exp))
     }
 
+    /// shorthand function
     pub fn product(forms: Vec<Form>) -> Form {
         Form::Product(forms)
     }
 
+    /// shorthand function
     pub fn quotient(num: Form, denom: Form) -> Form {
         Form::Quotient(Box::new(num), Box::new(denom))
     }
 
+    /// shorthand function
     pub fn prob(vars: Vec<Node>) -> Form {
         Form::P(vars, vec![])
     }
 
+    /// shorthand function
     pub fn cond_prob(vars: Vec<Node>, given: Vec<Node>) -> Form {
         Form::P(vars, given)
     }
 
+    /// Returns the free variables in a form
     pub fn free<'b>(form: &'b Form) -> Set<Node> {
         match form {
             Form::Marginal(sub, exp) => 
@@ -91,9 +100,10 @@ impl Form {
         return Form::product(terms);
     }
 
-    /// Factorize a form with respect to a given order
+    /// Factorize a form with respect to a given order.
+    /// E.g. for order {x_1, x_2...x_n}, returns P()
     pub fn factorize(order: Vec<Node>, p: Form) -> Form {
-        let subset = make_set(order.iter().map(|e| *e));
+        let subset = make_set(order.iter().copied());
         Form::factorize_subset(order, p, &subset)
     }
 
@@ -208,6 +218,7 @@ impl Form {
         }
     }
 
+    /// transforms a conditional probability expression into an equivalent quotient
     pub fn cond_expand(&self) -> Form {
         self.map(|f| {
             match f {
@@ -224,6 +235,7 @@ impl Form {
         })
     }
 
+    /// object equality evaluated after sorting -- copies both forms
     pub fn structural_eq(&self, other: &Form) -> bool {
         self.sorted() == other.sorted()
     }
@@ -232,6 +244,30 @@ impl Form {
     pub fn simplify(&self) -> Form {
         simplify(&self.sorted())
     }
+}
+
+/// Returns a empty probability expression, representing the probability 1.
+pub fn one () -> Form {
+    Form::prob(vec![])
+}
+
+/// Magic P macro
+#[macro_export]
+macro_rules! P {
+    ($($x:ident),*) => {
+        Form::prob(vec![$($x),*])
+    };
+
+    ($($x:ident),+ | $($y:ident),*) => {
+        {
+            let mut vars = vec![];
+            {$(vars.push($x);)*}
+            let mut cond = vec![];
+            {$(cond.push($y);)*}
+            Form::cond_prob(vars, cond)
+        }
+    };
+
 }
 
 impl PartialOrd for Form {
@@ -246,6 +282,32 @@ impl Ord for Form {
     }   
 }
 
-pub fn one () -> Form {
-    Form::prob(vec![])
+impl ops::Mul<Form> for Form {
+    type Output = Form;
+
+    fn mul(self, rhs: Form) -> Form {
+        let mut new_exprs = vec![];
+
+        if let Form::Product(self_exprs) = self {
+            new_exprs.extend(self_exprs);
+        } else {
+            new_exprs.push(self);
+        }
+
+        if let Form::Product(rhs_exprs) = rhs {
+            new_exprs.extend(rhs_exprs);
+        } else {
+            new_exprs.push(rhs);
+        }
+
+        Form::product(new_exprs)
+    }
+}
+
+impl ops::Div<Form> for Form {
+    type Output = Form;
+
+    fn div(self, rhs: Form) -> Form {
+        Form::quotient(self, rhs)
+    }
 }

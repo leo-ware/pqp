@@ -6,7 +6,8 @@ use crate::{
         Model,
         examples::frontdoor_model
     },
-    utils::defaults::{set, Set}, form::{Form, HEDGE},
+    utils::defaults::{set, Set},
+    form::{Form, HEDGE},
 };
 
 #[test]
