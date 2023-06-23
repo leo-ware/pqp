@@ -19,9 +19,26 @@ class AbstractCausalEstimand:
             AbstractExpression: the expression for the causal estimand
         """
         raise NotImplementedError()
+    
+    @abstractmethod
+    def literal(self):
+        """The estimand represented as a function call, as an Expression
+        
+        Returns:
+            AbstractExpression: the literal for the causal estimand
+        """
+        raise NotImplementedError()
+    
+    def display(self):
+        """Display the causal estimand"""
+        from IPython.display import display, Math
+        tex = self.literal().to_latex() + " = " + self.expression().to_latex()
+        return display(Math(tex))
 
 class CausalEstimand(AbstractCausalEstimand):
     """Subclass of AbstractCausalEstimand which carries its expression as a literal"""
+    LITERAL_CLASS = create_literal("CausalEstimand")
+
     def __init__(self, exp):
         super().__init__()
         self.exp = exp
@@ -31,6 +48,9 @@ class CausalEstimand(AbstractCausalEstimand):
     
     def expression(self):
         return self.exp
+    
+    def literal(self):
+        return self.__class__.LITERAL_CLASS(self.exp)
 
 class ATE(AbstractCausalEstimand):
     """Causal estimand for the average treatment effect
@@ -56,6 +76,8 @@ class ATE(AbstractCausalEstimand):
         treatment_condition (dict or list): the treatment condition
         control_condition (dict or list): the control condition
     """
+    LITERAL_CLASS = create_literal("ATE", arity=2, sep=" | ", name_tex="\\text{ATE}", sep_tex=" \\mid ")
+
     def __init__(self, outcome, treatment_condition, control_condition=None):
         super().__init__()
         self.name = "average treatment effect"
@@ -112,6 +134,10 @@ class ATE(AbstractCausalEstimand):
     def expression(self):
         return Expectation(self.outcome, P(self.outcome, given=[do(c) for c in self.treatment_condition])) -\
             Expectation(self.outcome, P(self.outcome, given=[do(c) for c in self.control_condition]))
+    
+    def literal(self):
+        vset = VarSet(self._treatment_vars(), left="", right="")
+        return self.__class__.LITERAL_CLASS(self.outcome, vset)
 
 class CATE(ATE):
     """Causal estimand for the conditional average treatment effect
@@ -152,6 +178,7 @@ class CATE(ATE):
         control_condition (dict or list): the control condition
         subpopulation (dict or list): the subpopulation in which to measure the effect
     """
+    LITERAL_CLASS = create_literal("CATE", arity=3, sep=" | ", name_tex="\\text{CATE}", sep_tex=" \\mid ")
     def __init__(self, outcome, treatment_condition, control_condition, subpopulation):
         super().__init__(outcome, treatment_condition, control_condition)
         self.name = "conditional average treatment effect"
@@ -168,3 +195,8 @@ class CATE(ATE):
         oc = [do(c) for c in self.control_condition]
         return Expectation(self.outcome, P(self.outcome, given=tc + self.subpopulation)) -\
             Expectation(self.outcome, P(self.outcome, given=oc + self.subpopulation))
+    
+    def literal(self):
+        intervention_set = VarSet(self._treatment_vars(), left="", right="")
+        control_set = VarSet(self._control_vars(), left="", right="")
+        return self.__class__.LITERAL_CLASS(self.outcome, intervention_set, control_set)

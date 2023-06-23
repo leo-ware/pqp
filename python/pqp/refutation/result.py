@@ -139,6 +139,27 @@ class Result:
         self.explain(nested=True)
 
 def entrypoint(step_name, result_class=Result):
+    """Wrapper for logical steps in the assumption management system
+
+    Args:
+        step_name (str): the name of the step (human readable)
+        result_class (class): used to store results of the step, must be a subclass of `Result`
+    Returns:
+        decorator: wrapper for functions implementing logical steps in an analysis
+    
+    This function returns a a decorator which can be used to wrap a method implementing a step, a 
+    `Step` instance is passed as a keyword argument ("step") to the method and should 
+    be used to record substeps, assumptions, and results. The method should not return a value.
+
+    The three core constructs of the assumption management system are `Assumption`a, `Step`s, and 
+    `Result`s. A step is a logical unit of work encapsulated in a single method, which may be 
+    composed of multiple substeps. During the process of calculation, the method can report 
+    logical substeps, assumptions it is making, results as they are computed, and notes for 
+    the user. This information is consolidated into the `Step` object, which stores references
+    to previous steps in the analysis in a graph representing the entire computation. This way,
+    metadata about the computation is available at all times and can be used by both the user and
+    automated sensitivity analysis tools.
+    """
     def decorator(func):
         def wrapper(*args, **kwargs):
             step = Step(step_name)

@@ -55,3 +55,20 @@ def test_free_variables():
     assert (P(x) * P(y)).assign(x, 3).free_variables() == {y}
     assert (P(x) * Marginal(y, P(x) * P(y))).free_variables() == {x}
     assert (P(x) * Marginal(y, P(x) * P(y))).assign(x, 3).free_variables() == set()
+
+def test_create_literal():
+    F = create_literal("f")
+    x = Variable("x")
+    y = Variable("y")
+
+    F(x)
+
+    assert F(x) == F(x)
+    # assert F(x) != F(y)
+    assert F(x).__repr__() == "f(Variable(x))"
+    assert F(x).free_variables() == {x}
+
+    G = create_literal("g", arity=2, sep="|", name_tex="\\mathcal{G}", sep_tex="\\mid ")
+    assert G(x, y) != G(y, x)
+    assert G(x, y).__repr__() == "g(Variable(x)|Variable(y))"
+    assert G(x, y).to_latex() == "\\mathcal{G}(x\\mid y)"

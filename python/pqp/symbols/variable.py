@@ -96,6 +96,30 @@ class Variable(AbstractMath):
     #     A, B = func(self)
     #     return A(self)
 
+class VarSet(AbstractMath):
+    def __init__(self, variables, left="(", right=")"):
+        if not isinstance(variables, (list, tuple)):
+            raise TypeError(f"variables must be a list or tuple of Variables, not {type(variables)}")
+
+        for v in variables:
+            if not isinstance(v, Variable):
+                raise TypeError(f"variables must be a list or tuple of Variables, not {type(v)}")
+        
+        if type(left) != str:
+            raise TypeError(f"left must be a string, not {type(left)}")
+        if type(right) != str:
+            raise TypeError(f"right must be a string, not {type(right)}")
+        
+        self.vars = list(variables)
+        self.left = left
+        self.right = right
+    
+    def __repr__(self):
+        return f"VarSet({self.vars})"
+    
+    def to_latex(self):
+        return f"{self.left}{', '.join([v.to_latex() for v in self.vars])}{self.right}"
+
 
 def make_vars(names):
     """Creates a list of variables from a list of names

@@ -120,7 +120,7 @@ impl Model {
         }
     }
 
-    /// Sets variables as not observed in the model. Inverse of `cond`.
+    /// Sets variables as not observed in the model. Inverse of `cond`. (Todo: what does this mean?)
     pub fn hide(&self, observed: &Set<Node>) -> Model {
         Model {
             dag: self.dag.to_owned(),

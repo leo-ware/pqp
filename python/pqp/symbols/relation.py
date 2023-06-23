@@ -63,6 +63,8 @@ class AbstractExpression(AbstractMath, ABC):
     def r_adapt_map(self, func):
         """Recursive map where the func decides callables used to transform children
 
+        DO NOT USE! This is a powerful and necessary method but it results in almost unreadable code.
+
         So, `func` takes an `AbstractExpression` and needs to return a `tuple` of two things. First, 
         a function `A` which maps from `AbstractExpression` to `AbstractExpression`. Second, a function `B` 
         of the same time as `func`.
@@ -517,3 +519,116 @@ class Hedge(AbstractExpression):
     def r_adapt_map(self, func):
         A, B = func(self)
         return A(self)
+    
+    def copy(self):
+        return Hedge()
+    
+    def __repr__(self):
+        return "FAIL"
+
+def create_literal(name, arity=1, sep=", ", name_tex=None, sep_tex=None):
+    """Class factory for creating expression literals
+
+    Suppose you have a function `f` that takes a single expression as an argument and you 
+    want to use this function in a symbolic expression.
+
+    >>> F = create_literal("f")
+    >>> x = Variable("x")
+    >>> F(x)
+    f(x)
+    >>> F(x).to_latex()
+    $f(x)$
+
+    Args:
+        name (str): The name of the new class
+        arity (int, optional): The arity of the new class. Defaults to 1. Zero is allowed.
+        sep (str, optional): The separator to use when printing the expression. Defaults to ", ".
+        name_tex (str, optional): The name of the new class in LaTeX. Defaults to name.
+        sep_tex (str, optional): The separator to use when printing the expression in LaTeX. Defaults to sep.
+    Returns:
+        A new subclass of `AbstractExpression`
+
+    """
+
+    # I ❤️ closures
+    if name_tex is None:
+        name_tex = name
+    if sep_tex is None:
+        sep_tex = sep
+
+    class NewLiteral(AbstractExpression):
+        def __init__(self, *args):
+            if len(args) != arity:
+                raise ValueError(f"Expected {arity} arguments, got {len(args)}")
+            
+            for arg in list(args):
+                if not isinstance(arg, AbstractMath):
+                    raise TypeError(f"Expected {AbstractMath.__name__}, got {type(arg)}")
+            
+            self.args = args
+        
+        def __repr__(self):
+            if arity == 0:
+                return name
+            return f"{name}({sep.join(a.__repr__() for a in self.args)})"
+        
+        def copy(self):
+            new_args = tuple(a.copy() for a in self.args)
+            return self.__class__(new_args)
+        
+        def sorted(self):
+            def arg_sorter(arg):
+                if hasattr(arg, "sorted"):
+                    return arg.sorted()
+                elif isinstance(arg, Variable):
+                    return arg
+                else:
+                    raise TypeError(f"Cannot sort {arg}")
+
+            new_args = tuple(arg_sorter(a) for a in self.args)
+            return self.__class__(*new_args)
+        
+        def syntactic_eq(self, other):
+            def arg_eq(a, b):
+                if hasattr(a, "syntactic_eq"):
+                    return a.syntactic_eq(b)
+                else:
+                    return a == b
+            
+            return (
+                (isinstance(other, self.__class__)) and
+                (len(self.args) == len(other.args)) and
+                all(arg_eq(a, b) for a, b in zip(self.args, other.args))
+            )
+        
+        def r_map(self, func):
+            new_args = tuple(args.r_map(func) for args in self.args)
+            return func(self.__class__(*new_args))
+        
+        def r_adapt_map(self, func):
+            A, B = func(self)
+            if B is not None:
+                new_args = [
+                    arg.r_adapt_map(B) if hasattr(arg, "r_adapt_map")
+                    else arg
+                    for arg in self.args
+                ]
+                return A(self.__class__(*new_args))
+            else:
+                return A(self.copy())
+        
+        def free_variables(self):
+            def free(obj):
+                if hasattr(obj, "free_variables"):
+                    return obj.free_variables()
+                elif isinstance(obj, Variable):
+                    return {obj}
+                else:
+                    return set()
+            return set().union(*(free(arg) for arg in self.args))
+        
+        def to_latex(self):
+            return f"{name_tex}({sep_tex.join(a.to_latex() for a in self.args)})"
+    
+    NewLiteral.__name__ = name
+    return NewLiteral

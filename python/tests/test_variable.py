@@ -21,3 +21,14 @@ def test_event_infix():
         x.val == y
     with pytest.raises(ValueError):
         x.val == y.val
+
+def test_var_set():
+    x, y, z = make_vars("xyz")
+
+    v = VarSet([x, y, z])
+    assert v.vars == [x, y, z]
+    assert v.to_latex() == "(x, y, z)"
+
+    v = VarSet([x], left="", right="")
+    assert v.vars == [x]
+    assert v.to_latex() == "x"

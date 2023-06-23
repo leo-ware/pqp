@@ -2,6 +2,10 @@ from pqp.symbols import Variable, Expectation, parse_json, P, EqualityEvent, Int
 from pqp.identification.estimands import ATE, CATE, AbstractCausalEstimand, CausalEstimand
 from pqp.refutation import entrypoint, Result
 from pqp.pqp import id as rust_id
+
+from collections import defaultdict
+from dataclasses import dataclass
+from typing import Optional, Any
 import json
 from itertools import chain
 
@@ -12,6 +16,22 @@ class IdentificationResult(Result):
         identified_estimand (AbstractExpression): the identified causal estimand
     """
     _keys = ["identified_estimand"]
+
+
+@dataclass(frozen=True)
+class SearchNode:
+    prev: Optional["SearchNode"]
+    graph_node: Any
+
+    def unpack(self, _path=None):
+        if _path is None:
+            p = []
+            self.unpack(_path=p)
+            return list(reversed(p))
+        
+        _path.append(self.graph_node)
+        if self.prev is not None:
+            self.prev.unpack(_path=_path)
 
 
 class Graph:
@@ -54,7 +74,24 @@ class Graph:
     def __init__(self, edges=[]):
         self.bi_edges = []
         self.directed_edges = []
+        self.nodes = set()
         self.add_edges(edges)
+    
+    def add_node(self, node):
+        """Adds a node to the graph
+        
+        Args:
+            node (Variable): the node to add
+        """
+        self.nodes.add(node)
+    
+    def add_nodes(self, nodes):
+        """Adds multiple nodes to the graph
+        
+        Args:
+            nodes (list of Variable): the nodes to add
+        """
+        self.nodes.update(nodes)
     
     def add_edges(self, edges):
         """Add multiple edges to the graph
@@ -79,8 +116,10 @@ class Graph:
         """
         if isinstance(edge, BidirectedEdge):
             self.bi_edges.append(edge)
+            self.add_nodes([edge.a, edge.b])
         elif isinstance(edge, DirectedEdge):
             self.directed_edges.append(edge)
+            self.add_nodes([edge.start, edge.end])
         else:
             raise TypeError(f"Cannot add edge of type {type(edge)}")
     
@@ -241,7 +280,44 @@ class Graph:
     
     def __str__(self):
         return f"<Graph n_edges={len(self.bi_edges + self.directed_edges)}>"
-
+    
+    def dir_edge_dict(self):
+        """Returns a dict mapping each node to its children in the graph"""
+        edges = defaultdict(list)
+        for edge in self.directed_edges:
+            edges[edge.start].append(edge.end)
+        return dict(edges)
+    
+    def _dfs(self, start, end):
+        if start == end:
+            yield [start]
+        else:
+            edges = self.dir_edge_dict()
+            stack = [SearchNode(None, start)]
+            while stack:
+                node = stack.pop()
+                for nxt in edges.get(node.graph_node, []):
+                    nxt_node = SearchNode(node, nxt)
+                    if nxt == end:
+                        yield nxt_node.unpack()
+                    else:
+                        stack.append(nxt_node)
+    
+    def dfs(self, start, end):
+        """Performs a depth-first search over directed edges in the graph, returning a generator over paths
+        
+        Args:
+            start (Variable): the start of the search
+            end (Variable): the end of the search
+        
+        Returns:
+            Generator[List[DirectedEdge]]: the path from start to end
+        """
+        if start not in self.nodes:
+            raise ValueError(f"{start} is not in the graph")
+        if end not in self.nodes:
+            raise ValueError(f"{end} is not in the graph")
+        return self._dfs(start, end)
 
 class DirectedEdge:
     """A directed edge between two variables, represents a causal relationship

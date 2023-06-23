@@ -9,7 +9,8 @@ use crate::{
     utils::{
         defaults::{Set, Map},
         set_utils::make_set,
-    }, set
+    },
+    set, P
 };
 
 use super::{order::Order, examples::frontdoor_model};
