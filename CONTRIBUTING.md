@@ -28,11 +28,11 @@ source test.sh
 
 ## Documentation
 
-To build the documentation, use the makefile in the `docs` directory:
+To build the documentation, use the makefile in the `docs` directory. Make sure you have installed the dev dependencies.
 
 ```bash
 # run in root of repo
-cd python/pqp/docs
+cd python/docs
 
 # regenerate documentation source (only run when adding new modules)
 make autodoc

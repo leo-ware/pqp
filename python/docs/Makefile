@@ -22,7 +22,7 @@ help:
 
 
 livehtml:
-	sphinx-autobuild "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	sphinx-autobuild "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O) --port 7000
 
 autodoc:
 	sphinx-apidoc -f -o "$(SOURCEDIR)" "$(PACKAGEDIR)"

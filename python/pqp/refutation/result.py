@@ -2,6 +2,11 @@ from collections import deque
 from pqp.utils import order_graph
 
 class Assumption:
+    """Class representing a modeling assumption
+    
+    Attributes:
+        name (``str``): the name of the assumption
+    """
     def __init__(self, name):
         self.name = name
     
@@ -9,6 +14,12 @@ class Assumption:
         return f"Assume: {self.name}"
 
 class Derived:
+    """Class representing a derived value or expression
+
+    Attributes:
+        name (``str``): the name of the derived value
+        value (``Any``): the derived value
+    """
     def __init__(self, name, value):
         self.name = name
         self.value = value
@@ -18,7 +29,14 @@ class Derived:
 
 # human interpretability
 class Step:
-    """Human-interpretable notes on how a result was derived"""
+    """Human-interpretable notes on how a result was derived
+    
+    Subroutes in the library should use this class to record the steps taken to 
+    derive a result. This class is not intended to be used by end-users.
+
+    Args:
+        name (``str``): the name of the step
+    """
     def __init__(self, name):
         self._name = name
         self._log = [] # list of strings, substeps, assumption, expression
@@ -26,20 +44,49 @@ class Step:
         self._results = {}
     
     def substep(self, name):
+        """Add a substep to the derivation
+
+        Args:
+            name (``str``): the name of the substep
+        Returns:
+            ``Step``: the substep
+        """
         s = Step(name)
         self._log.append(s)
         return s
 
     def write(self, msg):
+        """Add a note about the derivation
+
+        Args:
+            msg (``str``): the message to add
+        Returns:
+            ``None``
+        """
         self._log.append(msg)
     
     def assume(self, assumption):
+        """Add an assumption to the derivation
+
+        Args:
+            assumption (``Assumption`` or ``str``): the assumption to add
+        Returns:
+            ``None``
+        """
         if not isinstance(assumption, Assumption):
             assumption = Assumption(assumption)
         self._assumptions.append(assumption)
         self._log.append(assumption)
     
     def result(self, key, value):
+        """Record the value derived during the step
+
+        Args:
+            key (``str``): the name of the derived value
+            value (``Any``): the derived value
+        Returns:
+            ``None``
+        """
         self._log.append(Derived(key, value))
         self._results[key] = value
     
@@ -62,9 +109,9 @@ class Operation:
     """Class used to track the computational graph of function calls which led to a result
 
     Attributes:
-        op (function): the function which was called
-        args (list): the arguments passed to the function
-        kwargs (dict): the keyword arguments passed to the function
+        op (``Callable``): the function which was called
+        args (``list``): the arguments passed to the function
+        kwargs (``dict``): the keyword arguments passed to the function
     """
     def __init__(self, op, args, kwargs):
         self.op = op
@@ -98,6 +145,11 @@ class Result:
         return hash(str(self))
     
     def get_dependencies(self):
+        """Returns a list of all results which this result directly depends on
+        
+        Returns:
+            ``List[Result]``: the list of dependencies
+        """
         dependencies = []
         for args in self.operation.args:
             if isinstance(args, Result):
@@ -108,6 +160,11 @@ class Result:
         return dependencies
     
     def get_nested_dependencies(self):
+        """Returns a list of all results which this result depends on, including indirect dependencies
+
+        Returns:
+            ``List[Result]``: the list of dependencies
+        """
         d = deque([self])
         all_results = {}
         while d:
@@ -142,17 +199,17 @@ def entrypoint(step_name, result_class=Result):
     """Wrapper for logical steps in the assumption management system
 
     Args:
-        step_name (str): the name of the step (human readable)
-        result_class (class): used to store results of the step, must be a subclass of `Result`
+        step_name (``str``): the name of the ``Step`` (human readable)
+        result_class (``class``): used to store results of the ``Step``, must be a subclass of ``Result``
     Returns:
         decorator: wrapper for functions implementing logical steps in an analysis
     
     This function returns a a decorator which can be used to wrap a method implementing a step, a 
-    `Step` instance is passed as a keyword argument ("step") to the method and should 
+    ``Step`` instance is passed as a keyword argument ("step") to the method and should 
     be used to record substeps, assumptions, and results. The method should not return a value.
 
-    The three core constructs of the assumption management system are `Assumption`a, `Step`s, and 
-    `Result`s. A step is a logical unit of work encapsulated in a single method, which may be 
+    The three core constructs of the assumption management system are ``Assumption`` s, ``Step`` s, and 
+    ``Result`` s. A step is a logical unit of work encapsulated in a single method, which may be 
     composed of multiple substeps. During the process of calculation, the method can report 
     logical substeps, assumptions it is making, results as they are computed, and notes for 
     the user. This information is consolidated into the `Step` object, which stores references

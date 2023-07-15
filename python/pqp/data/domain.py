@@ -13,22 +13,29 @@ class Domain(abc.ABC):
     
     @abc.abstractmethod
     def __contains__(self, value):
-        """Returns whether a value is in the domain"""
+        """Returns whether a value is in the domain
+        
+        Args:
+            value: the value to check
+        
+        Returns:
+            ``bool``: True if the value is in the domain, False otherwise
+        """
         raise NotImplementedError
     
     @abc.abstractmethod
     def describe_assumptions(self):
-        """Describes any assumptions made about the domain"""
+        """Returns a human readable description of assumptions made about the domain"""
         pass
     
     def validate(self, values):
         """Validates that a list of values is in the domain
 
         Args:
-            values (list): a list of values to validate
+            values (``list``): a list of values to validate
 
         Returns:
-            bool: True if all values are in the domain, False otherwise
+            ``bool``: ``True`` if all values are in the domain, ``False`` otherwise
         """
         return all([value in self for value in values])
     
@@ -36,10 +43,10 @@ class Domain(abc.ABC):
         """Validates that a list of values is in the domain, throws an error if not
 
         Args:
-            values (list): a list of values to validate
+            values (``list``): a list of values to validate
 
         Raises:
-            ValueError: if any value is not in the domain
+            ``ValueError``: if any value is not in the domain
         """
         for val in values:
             if not val in self:
@@ -49,7 +56,20 @@ class DiscreteDomain(Domain, abc.ABC):
     """Abstract base class for discrete domains"""
     @abc.abstractmethod
     def get_values(self):
-        """Returns a list of all possible values in the domain"""
+        """Returns a list of all possible values in the domain
+        
+        Returns:
+            ``list``: all possible values in the domain
+        """
+        raise NotImplementedError
+    
+    @abc.abstractmethod
+    def get_cardinality(self):
+        """Calculates the cardinality of the domain
+
+        Returns:
+            ``int``: the number of possible values in the domain
+        """
         raise NotImplementedError
 
 class IntegerDomain(DiscreteDomain):
@@ -57,7 +77,11 @@ class IntegerDomain(DiscreteDomain):
         """Domain for which a variable is an integer in an (inclusive) range
 
         Args:
-            values (list): a list of integers, max and min of which are bounds of the range
+            values (``list``): a list of integers, max and min of which are bounds of the range
+        
+        Attributes:
+            min (``int``): the minimum value in the domain (inclusive)
+            max (``int``): the maximum value in the domain (inclusive)
         """
         try:
             values = list(values)
@@ -76,6 +100,7 @@ class IntegerDomain(DiscreteDomain):
         return list(range(self.min, self.max + 1))
     
     def check_int(self, val):
+        """Checks whether a value is an integer"""
         return int(val) == val
     
     def get_cardinality(self):
@@ -98,7 +123,7 @@ class CategoricalDomain(DiscreteDomain):
         """Represents a categorical domain for a variable, specified by a list of values
 
         Args:
-            values (list): a list, unique elements of which are possible values for the variable
+            values (``list``): a ``list``, unique elements of which are possible values for the variable
         """
         try:
             values = list(values)
@@ -162,7 +187,7 @@ class RealDomain(ContinuousDomain):
     """A continuous domain for a variable, delimited by min and max values
 
     Args:
-        values (list): the min and max of this list are taken as the min and max of the domain
+        values (``list``): the min and max of this list are taken as the min and max of the domain
     """
     def __init__(self, values):
         try:
@@ -226,11 +251,11 @@ def _infer_domain_type_array(array):
 def infer_domain_type(vals):
     """Attempts to infer the best domain type to use of a list of values
 
-    The rules for determining this are somewhat complicated. You should run this and
+    The heuristics are somewhat complicated. You should run this and
     inspect the result before use.
 
     Args:
-        vals (iterable): a list of values to infer the domain type of
+        vals (``Iterable``): a ``list`` of values to infer the domain type of
     """
     try:
         iter(vals)
@@ -246,15 +271,15 @@ def make_domain(domain_type, values=None):
     """Generates a domain object from a string and optional values
 
     Options:
-        discrete: values must be specified
-        continuous: min and max of `values` used to specify domain
-        binary: values are ignored
-        integer: min and max of `values` used to specify domain
-        infer: attempt to guess
+        * ``"discrete"``: values must be specified
+        * ``"continuous"``: min and max of ``values`` used to specify domain
+        * ``"binary"``: values are ignored
+        * ``"integer"``: min and max of ``values`` used to specify domain
+        * ``"infer"``: attempt to guess
     
     Args:
-        domain_type (str): one of 'discrete', 'continuous', 'integer', 'binary' or 'infer'
-        values (list): the values of the domain
+        domain_type (``str``): one of ``"discrete"``, ``"continuous"``, ``"binary"``, ``"integer"``, or ``"infer"``
+        values (``list``): the values of the domain
 
     """
     if domain_type == "discrete":
@@ -268,4 +293,4 @@ def make_domain(domain_type, values=None):
     elif domain_type == "infer":
         return make_domain(infer_domain_type(values), values)
     else:
-        raise ValueError(f"Invalid domain type {domain_type}, must be one of 'discrete', 'continuous', or 'binary'")
+        raise ValueError(f"Invalid domain type {domain_type}")

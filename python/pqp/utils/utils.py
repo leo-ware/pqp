@@ -1,7 +1,9 @@
 from collections import defaultdict
+from pqp.utils.exceptions import CyclicGraphError
 
 
 def recursive_sort(d):
+    """Recursive sorting of nested dicts, lists, and tuples--useful for semantic comparison"""
     if isinstance(d, dict):
         return {k: recursive_sort(v) for k, v in sorted(d.items())}
     elif isinstance(d, list):
@@ -12,6 +14,7 @@ def recursive_sort(d):
         return d
 
 class attrdict(dict):
+    """Dictionary subclass which allows access to keys as attributes"""
     def __getattr__(self, key):
         return self[key]
 
@@ -49,4 +52,4 @@ def order_graph(g):
                             incoming_counts[el] -= 1
             if not n:
                 return ls
-    raise Exception("Cycle detected")
+    raise CyclicGraphError

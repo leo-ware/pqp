@@ -13,7 +13,7 @@ class IdentificationResult(Result):
     """Stores the result of identification
 
     Attributes:
-        identified_estimand (AbstractExpression): the identified causal estimand
+        identified_estimand (``AbstractExpression``): the identified causal estimand
     """
     _keys = ["identified_estimand"]
 
@@ -37,8 +37,8 @@ class SearchNode:
 class Graph:
     """A causal graph
 
-    The best way to create a `Graph` is using the `<=` and `&` infix operators. When you use
-    these operators between `Variable`s, they create a `DirectedEdge` or `BidirectedEdge` respectively.
+    The best way to create a ``Graph`` is using the ``<=`` and ``&`` infix operators. When you use
+    these operators between ``Variable`` s, they create a ``DirectedEdge`` or ``BidirectedEdge`` respectively.
 
     Example: The Front-Door Model
         >>> x, y, m = make_vars("xym")
@@ -55,9 +55,9 @@ class Graph:
         ...     x <= z,
         ... ])
 
-    You can use the `identify` method to identify a causal estimand. The estimand can either
-    be passed as an expression or as an instance of `AbstractCausalEstimand`, such as `ATE` or
-    `CATE`.
+    You can use the ``identify`` method to identify a causal estimand. The estimand can either
+    be passed as an expression or as an instance of ``AbstractCausalEstimand``, such as ``ATE`` or
+    ``CATE``.
 
     Example:
         >>> x = Variable("X")
@@ -69,7 +69,7 @@ class Graph:
         P(y | x)
     
     Args:
-        edges (list of DirectedEdge or BidirectedEdge): the edges in the graph
+        edges (``list`` of ``DirectedEdge`` or ``BidirectedEdge``): the edges in the graph
     """
     def __init__(self, edges=[]):
         self.bi_edges = []
@@ -81,7 +81,7 @@ class Graph:
         """Adds a node to the graph
         
         Args:
-            node (Variable): the node to add
+            node (``Variable``): the node to add
         """
         self.nodes.add(node)
     
@@ -89,7 +89,7 @@ class Graph:
         """Adds multiple nodes to the graph
         
         Args:
-            nodes (list of Variable): the nodes to add
+            nodes (``list`` of ``Variable``): the nodes to add
         """
         self.nodes.update(nodes)
     
@@ -97,7 +97,7 @@ class Graph:
         """Add multiple edges to the graph
         
         Args:
-            edges (list of DirectedEdge or BidirectedEdge): the edges to add
+            edges (``list`` of ``DirectedEdge`` or ``BidirectedEdge``): the edges to add
         """
         while edges:
             edge = edges.pop()
@@ -112,7 +112,7 @@ class Graph:
         """Adds an edge to the graph
         
         Args:
-            edge (DirectedEdge or BidirectedEdge): the edge to add
+            edge (``DirectedEdge`` or ``BidirectedEdge``): the edge to add
         """
         if isinstance(edge, BidirectedEdge):
             self.bi_edges.append(edge)
@@ -133,12 +133,12 @@ class Graph:
         """Identification of conditional interventional distribution.
 
         Args:
-            x (list of Variable): intervention variables
-            y (list of Variable): outcome variables
-            z (list of Variable): conditioning variables (optional)
+            x (``list`` of ``Variable``): intervention variables
+            y (``list`` of ``Variable``): outcome variables
+            z (``list`` of ``Variable``): conditioning variables (optional)
         
         Returns:
-            AbstractExpression: the expression for the interventional distribution
+            ``AbstractExpression``: the expression for the interventional distribution
         """
         
         def purify_vars(vs):
@@ -181,10 +181,10 @@ class Graph:
         them with equivalent conditional probability expressions using IDC.
 
         Args:
-            estimand (Expression): the estimand to identify
+            estimand (``Expression``): the estimand to identify
         
         Returns:
-            AbstractExpression: the identified estimand, containing no do-operators
+            ``AbstractExpression``: the identified estimand, containing no do-operators
         """
         if isinstance(estimand, AbstractCausalEstimand):
             causal_estimand = estimand
@@ -233,12 +233,12 @@ class Graph:
         """Identifies the average treatment effect
 
         Args:
-            outcome (Variable): the outcome variable
-            treatment_condition (dict): the treatment condition
-            control_condition (dict): the control condition
+            outcome (``Variable``): the outcome variable
+            treatment_condition (``dict``): the treatment condition
+            control_condition (``dict``): the control condition
         
         Returns:
-            AbstractExpression: the identified average treatment effect
+            ``AbstractExpression``: the identified average treatment effect
         """
         return self.identify(ATE(outcome, treatment_condition, control_condition).expression())
     
@@ -246,18 +246,18 @@ class Graph:
         """Identifies the conditional average treatment effect
 
         Args:
-            outcome (Variable): the outcome variable
-            treatment_condition (dict): the treatment condition
-            control_condition (dict): the control condition
-            subpopulation (dict): the subpopulation condition
+            outcome (``Variable``): the outcome variable
+            treatment_condition (``dict``): the treatment condition
+            control_condition (``dict``): the control condition
+            subpopulation (``dict``): the subpopulation condition
         
         Returns:
-            AbstractExpression: the identified conditional average treatment effect
+            ``AbstractExpression``: the identified conditional average treatment effect
         """
         return self.identify(CATE(outcome, treatment_condition, control_condition, subpopulation).expression())
     
     def draw(self):
-        """Draws the causal diagram using networkx"""
+        """Draws the causal diagram using networkx (must be installed)."""
         import networkx as nx
 
         layout_graph = nx.Graph()
@@ -307,11 +307,11 @@ class Graph:
         """Performs a depth-first search over directed edges in the graph, returning a generator over paths
         
         Args:
-            start (Variable): the start of the search
-            end (Variable): the end of the search
+            start (``Variable``): the start of the search
+            end (``Variable``): the end of the search
         
         Returns:
-            Generator[List[DirectedEdge]]: the path from start to end
+            Generator[``List[DirectedEdge]``]: the path from start to end
         """
         if start not in self.nodes:
             raise ValueError(f"{start} is not in the graph")
@@ -323,8 +323,8 @@ class DirectedEdge:
     """A directed edge between two variables, represents a causal relationship
     
     Args:
-        start (Variable): the start of the edge
-        end (Variable): the end of the edge
+        start (``Variable``): the start of the edge
+        end (``Variable``): the end of the edge
     """
     def __init__(self, start, end):
         self.start = start
@@ -357,8 +357,8 @@ class BidirectedEdge:
     """A bidirected edge between two variables, represents confounding in the causal model
     
     Args:
-        a (Variable): one of the variables
-        b (Variable): the other variable
+        a (``Variable``): one of the variables
+        b (``Variable``): the other variable
     """
     def __init__(self, a, b):
         self.a = a

@@ -23,7 +23,7 @@ Setup
 
 To get started, we will spoof some data to run our analysis on.
 
-.. code-block:: python
+.. testcode::
 
     import pandas as pd
 
@@ -33,9 +33,12 @@ To get started, we will spoof some data to run our analysis on.
         "y": [0, 1, 0, 1, 1, 0],
     })
 
+.. testoutput::
+    print(5)
+
 We can use the ``make_vars`` function to create a list of variables.
 
-.. code-block:: python
+.. testcode::
 
     from pqp.symbols import make_vars
     x, y, z = make_vars("xyz")
@@ -52,7 +55,7 @@ Infix operators are used to construct causal relationships.  The ``<=`` operator
 indicate causal influence from right to left, while the ``&`` operator is used to indicate
 confounding.
 
-.. code-block:: python
+.. testcode::
 
     from pqp.identification import Graph
     g = Graph([
@@ -63,7 +66,7 @@ confounding.
 
 We can use the ``.draw()`` method to visualize the causal diagram.
 
-.. code-block:: python
+.. testcode::
 
     g.draw()
 
@@ -77,7 +80,7 @@ Parametric Assumptions
 For the purposes of this article, we will assume that the data is drawn from a multinomial
 distribution. We can use the ``MultinomialEstimator`` class to specify the parametric assumptions.
 
-.. code-block:: python
+.. testcode::
 
     from pqp.estimation import MultinomialEstimator
     estimator = MultinomialEstimator(df, prior=1)
@@ -96,16 +99,16 @@ Causal Estimand
 For this example, we will estimate the average treatment effect of ``x`` on ``y``. First, 
 we need to define the treatment and control conditions.
 
-.. code-block:: python
+.. testcode::
 
     treatment_condition = [x.val == 1]
     control_condition = [x.val == 0]
 
 Then, we can use the ``ATE`` class to define the causal estimand.
 
-.. code-block:: python
+.. testcode::
 
-    from pqp.estimation import ATE
+    from pqp.identification import ATE
     causal_estimand = ATE(y, treatment_condition, control_condition)
     
     #inspect the expression
@@ -123,7 +126,7 @@ parametric assumptions to estimate the causal effect.
 To identify the causal relationships in the causal diagram, we can use the ``.identify()`` method.
 For example, to identify the causal relationship between ``x`` and ``y``, we can use the following:
 
-.. code-block:: python
+.. testcode::
 
     estimand = g.identify(causal_estimand).identified_estimand
     estimand.display()
@@ -133,7 +136,7 @@ For example, to identify the causal relationship between ``x`` and ``y``, we can
 
 We can then use the ``.estimate()`` method to estimate the causal effect.
 
-.. code-block:: python
+.. testcode::
 
     effect = estimator.estimate(estimand)
     effect
@@ -149,7 +152,7 @@ The currency of ``pqp`` is the ``Result`` class. Any calculations that draw conc
 
 To access the list of steps, we can use the ``.explain()`` and ``explain_all()`` methods, which detail the current result only or all results in the dependency graph, respectively.
 
-.. code-block:: python
+.. testcode::
 
     estimator.estimate(estimand).explain()
 

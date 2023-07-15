@@ -8,45 +8,47 @@ from pqp.utils.exceptions import InferredDomainWarning, UnitDomainWarning
 from pqp.refutation import Result, Operation, Step
 
 class Data(Result):
-    def __init__(self, df, vars=None, validate_domain=True, **kwargs):
-        """Class representing datasets, wraps a pandas DataFrame and contains some metadata
+    """Class representing datasets, wraps a pandas DataFrame and contains some metadata
 
         The main job of this class is to validate/create a set of symbolic variables that 
-        align with the columns names on `df`.
+        align with the columns names on ``df``.
 
         Examples:
 
-        >> df = pd.DataFrame({"x": [1, 2, 3], "y": [4, 5, 6]})
-        >> # it can infer a discrete domain for the variables
-        >> Data(df, vars=[Variable("x"), Variable("y")])
-        >> Data(df, vars={"x": Variable("X"), "y": Variable("Y")}) # capitalizes names
+        >>> df = pd.DataFrame({"x": [1, 2, 3], "y": [4, 5, 6]})
+        >>> # it can infer a discrete domain for the variables
+        >>> Data(df, vars=[Variable("x"), Variable("y")])
+        >>> Data(df, vars={"x": Variable("X"), "y": Variable("Y")})
 
-        >> # or you can specify the domain explicitly
-        >> Data(df, vars={"x": DiscreteDomain([1, 2, 3, 4, 6]), "y": ContinuousDomain([1, 10])})
-        >> Data(df, vars={"x": "discrete", "y": "continuous"})
-        >> Data(df, vars={"x": None, "y": None}) # specifies an unknown domain
-
-        >> # examples of invalid calls
-        >> Data(df, vars={"x": Variable("x"), "z": Variable("z")}) # z not in df
-        >> Data(df, vars={"x": Variable("x"), "y": "some name"}) # "some name" is interpreted as a domain type
+        >>> # or you can specify the domain explicitly
+        >>> Data(df, vars={"x": DiscreteDomain([1, 2, 3, 4, 6]), "y": ContinuousDomain([1, 10])})
+        >>> Data(df, vars={"x": "discrete", "y": "continuous"})
+        >>> Data(df, vars={"x": None, "y": None}) # specifies a domain of unknown type
+        
+        >>> # examples of invalid calls
+        >>> Data(df, vars={"x": Variable("x"), "z": Variable("z")}) # z not in df
+        >>> Data(df, vars={"x": Variable("x"), "y": "some name"}) # "some name" is interpreted as a domain type
 
 
         Args:
-            df (pandas.DataFrame): the dataset
-            vars (list or dict): the variables in the dataset, either a list of `Variable` (names
-                must match columns in `df`) or a `dict` mapping column names in `df` to `Variable` 
-                or str specifying the type of the variable's domain
-            validate_domain (bool): if False, do not validate that the data conforms to the domains 
-                specified, defaults to True
-            silence_inferred_domain_warning (bool): if True, silences the default warning when
+            df (``pandas.DataFrame``): the dataset
+            vars (``list`` or ``dict``): the variables in the dataset, either a list of ``Variable`` (names
+                must match columns in ``df``) or a ``dict`` mapping column names in ``df`` to ``Variable`` 
+                or ``str`` specifying the type of the variable's domain
+            validate_domain (``bool``): if ``False``, do not validate that the data conforms to the domains 
+                specified, defaults to ``True``
+            silence_inferred_domain_warning (``bool``): if ``True``, silences the default warning when
                 the domain of a variable is inferred
-            silence_unit_domain_warning (bool): if True, silences the default warning when an inferred
+            silence_unit_domain_warning (``bool``): if ``True``, silences the default warning when an inferred
                 domain for a variable has only a single possible value
         
         Attributes:
-            df (pandas.DataFrame): the dataset
-            vars (dict): a dict mapping variable names to `Variable` objects
+            df (``pandas.DataFrame``): The dataset
+            vars (``dict``): ``dict`` mapping variable names to ``Variable`` objects
         """
+    
+    def __init__(self, df, vars=None, validate_domain=True, **kwargs):
+        
         self.step = Step("Data Processing")
         self.operation = Operation(self.__init__, [df], {"vars": vars, "validate_domain": validate_domain, **kwargs})
 
@@ -141,9 +143,18 @@ class Data(Result):
     
     @property
     def n(self):
+        """The number of rows in the dataset"""
         return self.df.shape[0]
     
     def domain_of(self, var):
+        """Get the domain of a variable
+
+        Args:
+            var (``str`` or ``Variable``): the variable whose domain to get
+        
+        Returns:
+            ``Domain``: the domain of the variable
+        """
         if isinstance(var, Variable):
             var = var.name
         try:
@@ -155,6 +166,17 @@ class Data(Result):
         return {var: var.domain for var in self.vars.values()}
     
     def quantize(self, var, n_bins=2):
+        """Quantize a variable in place
+
+        Turns a continuous variable into a categorical variable by binning it into ``n_bins`` bins.
+
+        Args:
+            var (``str`` or ``Variable``): the variable to quantize
+            n_bins (``int``): the number of bins to quantize into
+        
+        Returns:
+            ``None``
+        """
         step = self.step.substep(f'Quantizing {var} into {n_bins} bins')
         if isinstance(var, Variable):
             var = var.name        

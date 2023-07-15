@@ -16,7 +16,7 @@ class AbstractCausalEstimand:
         """Derive the expression for the causal estimand
         
         Returns:
-            AbstractExpression: the expression for the causal estimand
+            ``AbstractExpression``: the expression for the causal estimand
         """
         raise NotImplementedError()
     
@@ -25,7 +25,7 @@ class AbstractCausalEstimand:
         """The estimand represented as a function call, as an Expression
         
         Returns:
-            AbstractExpression: the literal for the causal estimand
+            ``AbstractExpression``: the literal for the causal estimand
         """
         raise NotImplementedError()
     
@@ -57,10 +57,10 @@ class ATE(AbstractCausalEstimand):
 
     To define the average treatment effect, it's necessary to specify what is meant
     by "treatment" and "control" in this context. You can do this by passing either
-    a dict or a list of StatisticalEvent objects to each of the treatment_condition
-    and control_condition arguments. If a dict is passed, the keys must be Variable
-    or string, and the values must not be Variable. If a list is passed, it must 
-    contain only instances of StatisticalEvent.
+    a ``dict`` or a list of ``StatisticalEvent`` objects to each of the ``treatment_condition``
+    and ``control_condition`` arguments. If a ``dict`` is passed, the keys must be ``Variable``
+    or ``str``, and the values must not be ``Variable``. If a ``list`` is passed, it must 
+    contain only instances of ``StatisticalEvent``.
 
     Example:
         >>> # treatment condition is x = 1, control condition is x = 0 in both of these
@@ -72,9 +72,9 @@ class ATE(AbstractCausalEstimand):
         
     
     Args:
-        outcome (Variable): the outcome variable
-        treatment_condition (dict or list): the treatment condition
-        control_condition (dict or list): the control condition
+        outcome (``Variable``): the outcome variable
+        treatment_condition (``dict`` or ``list``): the treatment condition
+        control_condition (``dict`` or ``list``): the control condition
     """
     LITERAL_CLASS = create_literal("ATE", arity=2, sep=" | ", name_tex="\\text{ATE}", sep_tex=" \\mid ")
 
@@ -145,11 +145,11 @@ class CATE(ATE):
     To define the conditional average treatment effect, it's necessary to specify 
     what is meant by treatment and control in this context, and you need to specify the
     subpopulation in which to measure the effect. You can 
-    do this by passing either a dict or a list of StatisticalEvent objects to 
-    each of the treatment_condition and control_condition arguments. If a dict 
-    is passed, the keys must be Variable or string, and the values must not 
-    be Variable. If a list is passed, it must contain only instances of 
-    StatisticalEvent.
+    do this by passing either a ``dict`` or a list of ``StatisticalEvent`` objects to 
+    each of the ``treatment_condition`` and ``control_condition`` arguments. If a ``dict`` 
+    is passed, the keys must be ``Variable`` or ``string``, and the values must not 
+    be ``Variable``. If a ``list`` is passed, it must contain only instances of 
+    ``StatisticalEvent``.
 
     Example:
         >>> # treatment condition is x = 1, control condition is x = 0 in both of these
@@ -173,10 +173,10 @@ class CATE(ATE):
         
     
     Args:
-        outcome (Variable): the outcome variable
-        treatment_condition (dict or list): the treatment condition
-        control_condition (dict or list): the control condition
-        subpopulation (dict or list): the subpopulation in which to measure the effect
+        outcome (``Variable``): the outcome variable
+        treatment_condition (``dict`` or ``list``): the treatment condition
+        control_condition (``dict`` or ``list``): the control condition
+        subpopulation (``dict`` or ``list``): the subpopulation in which to measure the effect
     """
     LITERAL_CLASS = create_literal("CATE", arity=3, sep=" | ", name_tex="\\text{CATE}", sep_tex=" \\mid ")
     def __init__(self, outcome, treatment_condition, control_condition, subpopulation):

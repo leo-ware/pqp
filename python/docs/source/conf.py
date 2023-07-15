@@ -7,7 +7,7 @@ import os
 import sys
 import toml
 import datetime
-sys.path.insert(0, os.path.abspath('../..'))
+sys.path.insert(0, os.path.abspath('../pqp'))
 
 # -- Project information -----------------------------------------------------
 # DO NOT EDIT!!! This information is automatically generated from pyproject.toml
@@ -30,7 +30,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.githubpages',
-    'sphinx_automodapi.automodapi'
+    'sphinx_automodapi.automodapi',
+    'sphinx.ext.doctest'
 ]
 
 templates_path = ['_templates']
