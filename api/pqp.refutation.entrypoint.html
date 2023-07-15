@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>entrypoint &#8212; pqp 0.3.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Operation" href="pqp.refutation.Operation.html" />
+    <link rel="prev" title="pqp.refutation Package" href="../module_maps/refutation.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="entrypoint">
+<h1>entrypoint<a class="headerlink" href="#entrypoint" title="Permalink to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pqp.refutation.entrypoint">
+<span class="sig-prename descclassname"><span class="pre">pqp.refutation.</span></span><span class="sig-name descname"><span class="pre">entrypoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">step_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_class=&lt;class</span> <span class="pre">'pqp.refutation.result.Result'&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.refutation.entrypoint" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper for logical steps in the assumption management system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>step_name</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – the name of the <code class="docutils literal notranslate"><span class="pre">Step</span></code> (human readable)</p></li>
+<li><p><strong>result_class</strong> (<code class="docutils literal notranslate"><span class="pre">class</span></code>) – used to store results of the <code class="docutils literal notranslate"><span class="pre">Step</span></code>, must be a subclass of <code class="docutils literal notranslate"><span class="pre">Result</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>wrapper for functions implementing logical steps in an analysis</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>decorator</p>
+</dd>
+</dl>
+<p>This function returns a a decorator which can be used to wrap a method implementing a step, a
+<code class="docutils literal notranslate"><span class="pre">Step</span></code> instance is passed as a keyword argument (“step”) to the method and should
+be used to record substeps, assumptions, and results. The method should not return a value.</p>
+<p>The three core constructs of the assumption management system are <code class="docutils literal notranslate"><span class="pre">Assumption</span></code> s, <code class="docutils literal notranslate"><span class="pre">Step</span></code> s, and
+<code class="docutils literal notranslate"><span class="pre">Result</span></code> s. A step is a logical unit of work encapsulated in a single method, which may be
+composed of multiple substeps. During the process of calculation, the method can report
+logical substeps, assumptions it is making, results as they are computed, and notes for
+the user. This information is consolidated into the <cite>Step</cite> object, which stores references
+to previous steps in the analysis in a graph representing the entire computation. This way,
+metadata about the computation is available at all times and can be used by both the user and
+automated sensitivity analysis tools.</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pqp</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/data.html">pqp.data Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/estimation.html">pqp.estimation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/identification.html">pqp.identification Package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../module_maps/refutation.html">pqp.refutation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/symbols.html">pqp.symbols Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/exceptions.html">pqp.utils.exceptions Module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../module_maps/refutation.html">pqp.refutation Package</a><ul>
+      <li>Previous: <a href="../module_maps/refutation.html" title="previous chapter">pqp.refutation Package</a></li>
+      <li>Next: <a href="pqp.refutation.Operation.html" title="next chapter">Operation</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Leo Ware.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/api/pqp.refutation.entrypoint.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

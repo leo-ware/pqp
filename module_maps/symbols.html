@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pqp.symbols Package &#8212; pqp 0.3.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="create_literal" href="../api/pqp.symbols.create_literal.html" />
+    <link rel="prev" title="Step" href="../api/pqp.refutation.Step.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-pqp.symbols">
+<span id="pqp-symbols-package"></span><h1>pqp.symbols Package<a class="headerlink" href="#module-pqp.symbols" title="Permalink to this heading">¶</a></h1>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/pqp.symbols.create_literal.html#pqp.symbols.create_literal" title="pqp.symbols.create_literal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_literal</span></code></a>(name[, arity, sep, name_tex, ...])</p></td>
+<td><p>Class factory for creating expression literals</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/pqp.symbols.do.html#pqp.symbols.do" title="pqp.symbols.do"><code class="xref py py-obj docutils literal notranslate"><span class="pre">do</span></code></a>(v)</p></td>
+<td><p>Convenience function for creating an InterventionEvent</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/pqp.symbols.make_vars.html#pqp.symbols.make_vars" title="pqp.symbols.make_vars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_vars</span></code></a>(names)</p></td>
+<td><p>Creates a list of variables from a list of names</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/pqp.symbols.parse_json.html#pqp.symbols.parse_json" title="pqp.symbols.parse_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_json</span></code></a>(exp)</p></td>
+<td><p>Parses JSON returned from backend.id() into an Expression object.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/pqp.symbols.AbstractExpression.html#pqp.symbols.AbstractExpression" title="pqp.symbols.AbstractExpression"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractExpression</span></code></a>()</p></td>
+<td><p>Abstract class defining needed recursive operations for relations</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/pqp.symbols.AbstractMath.html#pqp.symbols.AbstractMath" title="pqp.symbols.AbstractMath"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AbstractMath</span></code></a>()</p></td>
+<td><p>Abstract class for things that can be displayed as math</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/pqp.symbols.Difference.html#pqp.symbols.Difference" title="pqp.symbols.Difference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Difference</span></code></a>(a, b)</p></td>
+<td><p>Represents the difference between two expressions</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">DomainValidationError</span></code></p></td>
+<td><p>Exception raised when domain is used with invalid values</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/pqp.symbols.EqualityEvent.html#pqp.symbols.EqualityEvent" title="pqp.symbols.EqualityEvent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EqualityEvent</span></code></a>(var, val)</p></td>
+<td><p>Represents setting a variable to a value</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/pqp.symbols.Event.html#pqp.symbols.Event" title="pqp.symbols.Event"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Event</span></code></a>()</p></td>
+<td><p>Abstract base class for events</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/pqp.symbols.Expectation.html#pqp.symbols.Expectation" title="pqp.symbols.Expectation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Expectation</span></code></a>(sub, expr)</p></td>
+<td><p>Represents an expectation or a random variable</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/pqp.symbols.Hedge.html#pqp.symbols.Hedge" title="pqp.symbols.Hedge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Hedge</span></code></a>()</p></td>
+<td><p>Represents a failure to identify the query</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/pqp.symbols.InterventionEvent.html#pqp.symbols.InterventionEvent" title="pqp.symbols.InterventionEvent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InterventionEvent</span></code></a>(v)</p></td>
+<td><p>Represents intervening on a variable</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/pqp.symbols.Marginal.html#pqp.symbols.Marginal" title="pqp.symbols.Marginal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Marginal</span></code></a>(sub, expr)</p></td>
+<td><p>Represents a sum</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/pqp.symbols.P.html#pqp.symbols.P" title="pqp.symbols.P"><code class="xref py py-obj docutils literal notranslate"><span class="pre">P</span></code></a>(vars[, given])</p></td>
+<td><p>Expression representing a probability or conditional probability</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/pqp.symbols.Product.html#pqp.symbols.Product" title="pqp.symbols.Product"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Product</span></code></a>(expr)</p></td>
+<td><p>Represents a product of expressions</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/pqp.symbols.Quotient.html#pqp.symbols.Quotient" title="pqp.symbols.Quotient"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Quotient</span></code></a>(numer, denom)</p></td>
+<td><p>Represents a quotient of expressions</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/pqp.symbols.StatisticalEvent.html#pqp.symbols.StatisticalEvent" title="pqp.symbols.StatisticalEvent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">StatisticalEvent</span></code></a>()</p></td>
+<td><p>Abstract base class for events which are statistical events</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/pqp.symbols.Value.html#pqp.symbols.Value" title="pqp.symbols.Value"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Value</span></code></a>(var)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/pqp.symbols.VarSet.html#pqp.symbols.VarSet" title="pqp.symbols.VarSet"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VarSet</span></code></a>(variables[, left, right])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/pqp.symbols.Variable.html#pqp.symbols.Variable" title="pqp.symbols.Variable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Variable</span></code></a>(name[, domain])</p></td>
+<td><p>A variable in the causal model</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="class-inheritance-diagram">
+<h2>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this heading">¶</a></h2>
+<div class="graphviz"><img src="../_images/inheritance-237cfbdf7c7647f43df38d88d0fa91a1f033682f.png" alt="Inheritance diagram of pqp.symbols.relation.AbstractExpression, pqp.symbols.abstract_math.AbstractMath, pqp.symbols.relation.Difference, pqp.symbols.event.EqualityEvent, pqp.symbols.event.Event, pqp.symbols.relation.Expectation, pqp.symbols.relation.Hedge, pqp.symbols.event.InterventionEvent, pqp.symbols.relation.Marginal, pqp.symbols.p.P, pqp.symbols.relation.Product, pqp.symbols.relation.Quotient, pqp.symbols.event.StatisticalEvent, pqp.symbols.relation.Value, pqp.symbols.variable.VarSet, pqp.symbols.variable.Variable" usemap="#inheritancef3b2c4ac4d" class="inheritance graphviz" /></div>
+<map id="inheritancef3b2c4ac4d" name="inheritancef3b2c4ac4d">
+<area shape="rect" id="node2" href="../pqp.symbols.html#pqp.symbols.relation.AbstractExpression" target="_top" title="Abstract class defining needed recursive operations for relations" alt="" coords="278,203,414,228"/>
+<area shape="rect" id="node3" href="../pqp.symbols.html#pqp.symbols.abstract_math.AbstractMath" target="_top" title="Abstract class for things that can be displayed as math" alt="" coords="125,253,225,279"/>
+<area shape="rect" id="node7" href="../pqp.symbols.html#pqp.symbols.event.Event" target="_top" title="Abstract base class for events" alt="" coords="310,375,382,400"/>
+<area shape="rect" id="node4" href="../pqp.symbols.html#pqp.symbols.relation.Difference" target="_top" title="Represents the difference between two expressions" alt="" coords="488,104,569,129"/>
+<area shape="rect" id="node8" href="../pqp.symbols.html#pqp.symbols.relation.Expectation" target="_top" title="Represents an expectation or a random variable" alt="" coords="483,5,574,31"/>
+<area shape="rect" id="node10" href="../pqp.symbols.html#pqp.symbols.relation.Hedge" target="_top" title="Represents a failure to identify the query" alt="" coords="493,153,565,179"/>
+<area shape="rect" id="node12" href="../pqp.symbols.html#pqp.symbols.relation.Marginal" target="_top" title="Represents a sum" alt="" coords="493,55,565,80"/>
+<area shape="rect" id="node13" href="../pqp.symbols.html#pqp.symbols.p.P" target="_top" title="Expression representing a probability or conditional probability" alt="" coords="493,203,565,228"/>
+<area shape="rect" id="node14" href="../pqp.symbols.html#pqp.symbols.relation.Product" target="_top" title="Represents a product of expressions" alt="" coords="493,252,565,277"/>
+<area shape="rect" id="node15" href="../pqp.symbols.html#pqp.symbols.relation.Quotient" target="_top" title="Represents a quotient of expressions" alt="" coords="493,301,565,327"/>
+<area shape="rect" id="node16" href="../pqp.symbols.html#pqp.symbols.relation.Value" target="_top" title="Value" alt="" coords="493,351,565,376"/>
+<area shape="rect" id="node17" href="../pqp.symbols.html#pqp.symbols.variable.VarSet" target="_top" title="VarSet" alt="" coords="310,301,382,327"/>
+<area shape="rect" id="node18" href="../pqp.symbols.html#pqp.symbols.variable.Variable" target="_top" title="A variable in the causal model" alt="" coords="310,252,382,277"/>
+<area shape="rect" id="node5" href="../pqp.symbols.html#pqp.symbols.event.EqualityEvent" target="_top" title="Represents setting a variable to a value" alt="" coords="639,400,741,425"/>
+<area shape="rect" id="node6" href="../pqp.symbols.html#pqp.symbols.event.StatisticalEvent" target="_top" title="Abstract base class for events which are statistical events" alt="" coords="471,400,586,425"/>
+<area shape="rect" id="node11" href="../pqp.symbols.html#pqp.symbols.event.InterventionEvent" target="_top" title="Represents intervening on a variable" alt="" coords="467,449,591,475"/>
+</map></section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pqp</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="data.html">pqp.data Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="estimation.html">pqp.estimation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="identification.html">pqp.identification Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="refutation.html">pqp.refutation Package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pqp.symbols Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">pqp.utils.exceptions Module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../api/pqp.refutation.Step.html" title="previous chapter">Step</a></li>
+      <li>Next: <a href="../api/pqp.symbols.create_literal.html" title="next chapter">create_literal</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Leo Ware.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/module_maps/symbols.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

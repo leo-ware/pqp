@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pqp.utils.exceptions Module &#8212; pqp 0.3.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CyclicGraphError" href="../api/pqp.utils.exceptions.CyclicGraphError.html" />
+    <link rel="prev" title="Variable" href="../api/pqp.symbols.Variable.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-pqp.utils.exceptions">
+<span id="pqp-utils-exceptions-module"></span><h1>pqp.utils.exceptions Module<a class="headerlink" href="#module-pqp.utils.exceptions" title="Permalink to this heading">¶</a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../pqp.utils.html#pqp.utils.exceptions.CyclicGraphError" title="pqp.utils.exceptions.CyclicGraphError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CyclicGraphError</span></code></a></p></td>
+<td><p>Exception raised when a graph is cyclic</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../pqp.utils.html#pqp.utils.exceptions.DomainValidationError" title="pqp.utils.exceptions.DomainValidationError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DomainValidationError</span></code></a></p></td>
+<td><p>Exception raised when domain is used with invalid values</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../pqp.utils.html#pqp.utils.exceptions.InferredDomainWarning" title="pqp.utils.exceptions.InferredDomainWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">InferredDomainWarning</span></code></a></p></td>
+<td><p>Warning raised when the domain of a variable is inferred from provided examples</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../pqp.utils.html#pqp.utils.exceptions.NumericalError" title="pqp.utils.exceptions.NumericalError"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NumericalError</span></code></a></p></td>
+<td><p>Exception raised when numerical methods fail</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../pqp.utils.html#pqp.utils.exceptions.PQPException" title="pqp.utils.exceptions.PQPException"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PQPException</span></code></a></p></td>
+<td><p>Base class for exceptions in this module.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../pqp.utils.html#pqp.utils.exceptions.PositivityException" title="pqp.utils.exceptions.PositivityException"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PositivityException</span></code></a></p></td>
+<td><p>Exception raised when a nonpositive distribution is used</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../pqp.utils.html#pqp.utils.exceptions.UnitDomainWarning" title="pqp.utils.exceptions.UnitDomainWarning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnitDomainWarning</span></code></a></p></td>
+<td><p>Warning raised when the domain of a variable has cardinality &lt;= 1</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="class-inheritance-diagram">
+<h2>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this heading">¶</a></h2>
+<div class="graphviz"><img src="../_images/inheritance-caa49acdc32fa974ffe44fe0a5840c26629e3c4b.png" alt="Inheritance diagram of pqp.utils.exceptions.CyclicGraphError, pqp.utils.exceptions.DomainValidationError, pqp.utils.exceptions.InferredDomainWarning, pqp.utils.exceptions.NumericalError, pqp.utils.exceptions.PQPException, pqp.utils.exceptions.PositivityException, pqp.utils.exceptions.UnitDomainWarning" usemap="#inheritanceb856602edf" class="inheritance graphviz" /></div>
+<map id="inheritanceb856602edf" name="inheritanceb856602edf">
+<area shape="rect" id="node1" href="../pqp.utils.html#pqp.utils.exceptions.CyclicGraphError" target="_top" title="Exception raised when a graph is cyclic" alt="" coords="179,5,302,31"/>
+<area shape="rect" id="node2" href="../pqp.utils.html#pqp.utils.exceptions.PQPException" target="_top" title="Base class for exceptions in this module." alt="" coords="5,129,113,155"/>
+<area shape="rect" id="node3" href="../pqp.utils.html#pqp.utils.exceptions.DomainValidationError" target="_top" title="Exception raised when domain is used with invalid values" alt="" coords="165,55,316,80"/>
+<area shape="rect" id="node4" href="../pqp.utils.html#pqp.utils.exceptions.InferredDomainWarning" target="_top" title="Warning raised when the domain of a variable is inferred from provided examples" alt="" coords="161,104,320,129"/>
+<area shape="rect" id="node5" href="../pqp.utils.html#pqp.utils.exceptions.NumericalError" target="_top" title="Exception raised when numerical methods fail" alt="" coords="186,153,295,179"/>
+<area shape="rect" id="node6" href="../pqp.utils.html#pqp.utils.exceptions.PositivityException" target="_top" title="Exception raised when a nonpositive distribution is used" alt="" coords="173,203,308,228"/>
+<area shape="rect" id="node7" href="../pqp.utils.html#pqp.utils.exceptions.UnitDomainWarning" target="_top" title="Warning raised when the domain of a variable has cardinality &lt;= 1" alt="" coords="171,252,310,277"/>
+</map></section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pqp</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="data.html">pqp.data Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="estimation.html">pqp.estimation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="identification.html">pqp.identification Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="refutation.html">pqp.refutation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symbols.html">pqp.symbols Package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pqp.utils.exceptions Module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../api/pqp.symbols.Variable.html" title="previous chapter">Variable</a></li>
+      <li>Next: <a href="../api/pqp.utils.exceptions.CyclicGraphError.html" title="next chapter">CyclicGraphError</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Leo Ware.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/module_maps/exceptions.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

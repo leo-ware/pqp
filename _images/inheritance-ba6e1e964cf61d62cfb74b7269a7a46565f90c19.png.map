@@ -1,0 +1,12 @@
+<map id="inheritanceaa016d4bc2" name="inheritanceaa016d4bc2">
+<area shape="rect" id="node1" title="Helper class that provides a standard way to create an ABC using" alt="" coords="5,81,77,107"/>
+<area shape="rect" id="node4" href="../pqp.data.html#pqp.data.domain.DiscreteDomain" target="_top" title="Abstract base class for discrete domains" alt="" coords="254,57,370,83"/>
+<area shape="rect" id="node6" href="../pqp.data.html#pqp.data.domain.Domain" target="_top" title="Manages the possible values that a Variable can take on" alt="" coords="125,107,197,132"/>
+<area shape="rect" id="node2" href="../pqp.data.html#pqp.data.domain.BinaryDomain" target="_top" title="Domain for a binary variable" alt="" coords="608,8,712,33"/>
+<area shape="rect" id="node3" href="../pqp.data.html#pqp.data.domain.CategoricalDomain" target="_top" title="Domain of a categorical variable" alt="" coords="427,8,560,33"/>
+<area shape="rect" id="node9" href="../pqp.data.html#pqp.data.domain.IntegerDomain" target="_top" title="IntegerDomain" alt="" coords="440,57,547,83"/>
+<area shape="rect" id="node5" href="../pqp.data.html#pqp.data.domain.ContinuousDomain" target="_top" title="Abstract base class for continuous domains" alt="" coords="245,107,379,132"/>
+<area shape="rect" id="node10" href="../pqp.data.html#pqp.data.domain.RealDomain" target="_top" title="A continuous domain for a variable, delimited by min and max values" alt="" coords="446,107,541,132"/>
+<area shape="rect" id="node7" href="../pqp.data.html#pqp.data.data.Data" target="_top" title="Data" alt="" coords="125,5,197,31"/>
+<area shape="rect" id="node8" href="../pqp.refutation.html#pqp.refutation.result.Result" target="_top" title="Class to store results of computation and store dependencies in a graph" alt="" coords="5,5,77,31"/>
+</map>

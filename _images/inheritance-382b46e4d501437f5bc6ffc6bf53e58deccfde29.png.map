@@ -1,0 +1,11 @@
+<map id="inheritance74896d166a" name="inheritance74896d166a">
+<area shape="rect" id="node1" href="../pqp.identification.html#pqp.identification.estimands.ATE" target="_top" title="Causal estimand for the average treatment effect" alt="" coords="251,177,323,203"/>
+<area shape="rect" id="node4" href="../pqp.identification.html#pqp.identification.estimands.CATE" target="_top" title="Causal estimand for the conditional average treatment effect" alt="" coords="403,177,475,203"/>
+<area shape="rect" id="node2" href="../pqp.identification.html#pqp.identification.estimands.AbstractCausalEstimand" target="_top" title="Abstract base class for causal estimands" alt="" coords="5,203,172,228"/>
+<area shape="rect" id="node5" href="../pqp.identification.html#pqp.identification.estimands.CausalEstimand" target="_top" title="Subclass of AbstractCausalEstimand which carries its expression as a literal" alt="" coords="228,227,347,252"/>
+<area shape="rect" id="node3" href="../pqp.identification.html#pqp.identification.graph.BidirectedEdge" target="_top" title="A bidirected edge between two variables, represents confounding in the causal model" alt="" coords="33,153,144,179"/>
+<area shape="rect" id="node6" href="../pqp.identification.html#pqp.identification.graph.DirectedEdge" target="_top" title="A directed edge between two variables, represents a causal relationship" alt="" coords="38,104,139,129"/>
+<area shape="rect" id="node7" href="../pqp.identification.html#pqp.identification.graph.Graph" target="_top" title="A causal graph" alt="" coords="53,55,125,80"/>
+<area shape="rect" id="node8" href="../pqp.identification.html#pqp.identification.graph.IdentificationResult" target="_top" title="Stores the result of identification" alt="" coords="220,5,355,31"/>
+<area shape="rect" id="node9" href="../pqp.refutation.html#pqp.refutation.result.Result" target="_top" title="Class to store results of computation and store dependencies in a graph" alt="" coords="53,5,125,31"/>
+</map>
