@@ -1,4 +1,4 @@
-from pqp.utils import *
+from pqp.utils import staticproperty, order_graph
 from pytest import raises
 
 def test_order_graph():
@@ -30,3 +30,13 @@ def test_order_graph():
             3: [1],
         }
         order_graph(g)
+
+
+def test_static_property():
+    class A:
+        @staticproperty
+        def x():
+            return 1
+
+    assert A.x == 1
+    assert A().x == 1

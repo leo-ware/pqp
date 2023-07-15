@@ -14,7 +14,7 @@ class P(AbstractExpression):
         ValueError: if a variable is repeated in vars or given
         TypeError: if vars or given are not a list of Variable or Event
     """
-    _unassigned = object()
+    unassigned = object()
 
     def __init__(self, vars, given=None):
         if isinstance(vars, Variable) or isinstance(vars, Event):
@@ -52,11 +52,11 @@ class P(AbstractExpression):
         self.vars = vars
         self.given = given or []
     
-    @staticproperty
-    @staticmethod
-    def unassigned():
-        """Special object marker for unassigned variables, used in certain routines"""
-        return P._unassigned
+    # @staticproperty
+    # @staticmethod
+    # def unassigned():
+    #     """Special object marker for unassigned variables, used in certain routines"""
+    #     return P._unassigned
     
     def sorted(self):
         return P(
