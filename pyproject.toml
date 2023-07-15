@@ -7,8 +7,7 @@ authors = [{name = "Leo Ware"}]
 dependencies = [
     "pandas",
     "numpy",
-    "tomli",
-    "matplotlib"
+    "tomli"
 ]
 requires-python = ">=3.8"
 classifiers = [
@@ -19,10 +18,15 @@ classifiers = [
 keywords = ["causal inference", "causal identification"]
 
 [project.optional-dependencies]
+dataviz = [
+    "matplotlib",
+    "networkx"
+]
 dev = [
     "sphinx",
     "maturin",
     "sphinx-autobuild",
+    "sphinx_automodapi",
     "pytest",
     "networkx",
 ]

@@ -29,8 +29,8 @@ class Estimator(Result, ABC):
         """Estimate the value of an expression
 
         Args:
-            expr (AbstractExpression): The expression to estimate
-            assignments (dict): dict of variable assignments (optional)
+            expr (``AbstractExpression``): The expression to estimate
+            assignments (``dict``): ``dict`` of variable assignments (optional)
         
         Returns:
             EstimationResult: the result of the estimation
@@ -42,19 +42,19 @@ class Estimator(Result, ABC):
         """Return the set of Variables that are considered observed in the model
         
         Returns:
-            set: the set of observed variables
+            ``set``: the observed variables
         """
         pass
 
     @abstractmethod
     def domain_of(self, var):
-        """Return the domain of a variable
+        """Return the domain of a Variable
         
         Args:
-            var (Variable or str): The variable to get the domain of
+            var (``Variable`` or ``str``): The variable to get the domain of
         
         Returns:
-            Domain: the domain of the variable
+            ``Domain``: the domain of the variable
         """
         pass
 
@@ -62,14 +62,14 @@ class Estimator(Result, ABC):
         return f"{self.__class__.__name__}(observed=[{', '.join(map(str, self.get_observed()))}])"
 
     def approx(self, expr, assignments=None):
-        """Approximated the value of an expression
+        """Approximates the value of an expression
 
         Args:
-            expr (AbstractExpression): The expression to approximate
-            assignments (dict): dict of variable assignments (optional)
+            expr (``AbstractExpression``): The expression to approximate
+            assignments (``dict``): variable assignments (optional)
         
         Returns:
-            float: the approximate value of the expression
+            ``float``: the approximate value of the expression
         """
         if not isinstance(expr, AbstractExpression) and not (isinstance(expr, Result) and hasattr(expr, "statistical_estimand")):
             raise TypeError("expr must be an AbstractExpression object or Result")
