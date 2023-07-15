@@ -1,6 +1,6 @@
 # PQP
 
-The name `pqp` is short for *Pourquoi pas?*. This phrase is French for *why not?*, because "Why not?" was the question we asked ourselves when we found there was no maintained, open-source package for causal identification in Python. With this package, we provide a correct, performant, and intuitive implementation of Shpitser's ID algorithm for causal graphs, and we hope soon to provide more useful functionality to support causal inference in the structural causal modeling framework.
+The name `pqp` is short for *Pourquoi pas?*. This phrase is French for *why not?*, because "Why not?" was the question we asked ourselves when we found there was no maintained, open-source package for structural causal modeling in Python. The package provides a convenient interface for causal modeling along with routines for identification, estimation, and visualization.
 
 ## Installation
 
@@ -28,10 +28,11 @@ g = Graph([
 ])
 
 # identification
-estimand = g.idc([y], [x])
-print(estimand)
+causal_estimand = ATE(y, {x: 1}, {x: 0})
+estimator = g.identify(causal_estimand)
+print(estimator)
 
-# >>> Σ_(z) [ [P(z) * P(z, x, y) / P(z, x)] ]
+# >>> E_(y) [ Σ_(z) [ [P(x = 1, y, z) * P(z) / P(x = 1, z)] ] ] - E_(y) [ Σ_(z) [ [P(x = 0, y, z) * P(z) / P(x = 0, z)] ] ]
 
 ```
 
