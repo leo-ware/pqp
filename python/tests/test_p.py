@@ -67,3 +67,7 @@ def test_intervene():
     assert p._intervene(x) == P(x, given=[y, z])
     assert p._intervene(y) == P(x, given=[do(y), z])
     assert p.intervene(y)._intervene(z) == P(x, given=[do(y), do(z)])
+
+
+def test_unassigned():
+    assert P.unassigned
