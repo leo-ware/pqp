@@ -1,0 +1,5 @@
+<map id="inheritance00cc331dc2" name="inheritance00cc331dc2">
+<area shape="rect" id="node1" href="../pqp.refutation.html#pqp.refutation.result.Operation" target="_top" title="Class used to track the computational graph of function calls which led to a result" alt="" coords="5,104,84,129"/>
+<area shape="rect" id="node2" href="../pqp.refutation.html#pqp.refutation.result.Result" target="_top" title="Class to store results of computation and store dependencies in a graph" alt="" coords="9,55,81,80"/>
+<area shape="rect" id="node3" href="../pqp.refutation.html#pqp.refutation.result.Step" target="_top" title="Human&#45;interpretable notes on how a result was derived" alt="" coords="9,5,81,31"/>
+</map>

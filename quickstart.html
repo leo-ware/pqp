@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Quickstart &#8212; pqp 0.3.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pqp.data Package" href="module_maps/data.html" />
+    <link rel="prev" title="Welcome to pqp’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this heading">¶</a></h1>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
+<p>Install <code class="docutils literal notranslate"><span class="pre">pqp</span></code> using <code class="docutils literal notranslate"><span class="pre">pip</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pqp
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
+<p>To characterize a causal effect, we need to specify three things:</p>
+<ol class="arabic simple">
+<li><p><strong>Causal Assumptions</strong>: a graph representing the causal structural relationships between variables</p></li>
+<li><p><strong>Parametric Assumptions</strong>: a parametric model of the joint distribution of the data</p></li>
+<li><p><strong>Causal Estimand</strong>: an algebraic expression representing the causal effect of interest</p></li>
+</ol>
+<section id="setup">
+<h3>Setup<a class="headerlink" href="#setup" title="Permalink to this heading">¶</a></h3>
+<p>To get started, we will spoof some data to run our analysis on.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>We can use the <code class="docutils literal notranslate"><span class="pre">make_vars</span></code> function to create a list of variables.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pqp.symbols</span> <span class="kn">import</span> <span class="n">make_vars</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">make_vars</span><span class="p">(</span><span class="s2">&quot;xyz&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the names of these variables match the column names in the data frame.</p>
+</section>
+<section id="causal-assumptions">
+<h3>Causal Assumptions<a class="headerlink" href="#causal-assumptions" title="Permalink to this heading">¶</a></h3>
+<p>We can then assemble these variables into a causal diagram using the <code class="docutils literal notranslate"><span class="pre">Graph</span></code> class. Here we will
+build the famous front-door model.</p>
+<p>Infix operators are used to construct causal relationships.  The <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code> operator is used to
+indicate causal influence from right to left, while the <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> operator is used to indicate
+confounding.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pqp.identification</span> <span class="kn">import</span> <span class="n">Graph</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">([</span>
+    <span class="n">x</span> <span class="o">&amp;</span> <span class="n">y</span><span class="p">,</span>
+    <span class="n">z</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">,</span>
+    <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">z</span><span class="p">,</span>
+<span class="p">])</span>
+</pre></div>
+</div>
+<p>We can use the <code class="docutils literal notranslate"><span class="pre">.draw()</span></code> method to visualize the causal diagram.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">g</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/frontdoor_viz.png"><img alt="_images/frontdoor_viz.png" src="_images/frontdoor_viz.png" style="width: 400px;" /></a>
+</section>
+<section id="parametric-assumptions">
+<h3>Parametric Assumptions<a class="headerlink" href="#parametric-assumptions" title="Permalink to this heading">¶</a></h3>
+<p>For the purposes of this article, we will assume that the data is drawn from a multinomial
+distribution. We can use the <code class="docutils literal notranslate"><span class="pre">MultinomialEstimator</span></code> class to specify the parametric assumptions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pqp.estimation</span> <span class="kn">import</span> <span class="n">MultinomialEstimator</span>
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">MultinomialEstimator</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">prior</span></code> argument specifies the prior strength of the model.  The default is
+zero, in which case the model fits through maximum likelihood. We are using a nonzero
+value here because if you don’t specify a prior, the model will not always give positive
+probability estimates to events, which can cause problems when estimating causal effects.</p>
+<p>If you don’t specify a prior, don’t worry though. If the estimator runs into a problem,
+it will throw an exception and tell you what to do.</p>
+</section>
+<section id="causal-estimand">
+<h3>Causal Estimand<a class="headerlink" href="#causal-estimand" title="Permalink to this heading">¶</a></h3>
+<p>For this example, we will estimate the average treatment effect of <code class="docutils literal notranslate"><span class="pre">x</span></code> on <code class="docutils literal notranslate"><span class="pre">y</span></code>. First,
+we need to define the treatment and control conditions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">treatment_condition</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">control_condition</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Then, we can use the <code class="docutils literal notranslate"><span class="pre">ATE</span></code> class to define the causal estimand.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pqp.identification</span> <span class="kn">import</span> <span class="n">ATE</span>
+<span class="n">causal_estimand</span> <span class="o">=</span> <span class="n">ATE</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">treatment_condition</span><span class="p">,</span> <span class="n">control_condition</span><span class="p">)</span>
+
+<span class="c1">#inspect the expression</span>
+<span class="n">causal_estimand</span><span class="o">.</span><span class="n">expression</span><span class="p">()</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/qs_causal_estimand.png"><img alt="_images/qs_causal_estimand.png" src="_images/qs_causal_estimand.png" style="width: 500px;" /></a>
+</section>
+<section id="identification-and-estimation">
+<h3>Identification and Estimation<a class="headerlink" href="#identification-and-estimation" title="Permalink to this heading">¶</a></h3>
+<p>Now, we can first use the causal assumptions to identify the causal estimand, and then we can use the
+parametric assumptions to estimate the causal effect.</p>
+<p>To identify the causal relationships in the causal diagram, we can use the <code class="docutils literal notranslate"><span class="pre">.identify()</span></code> method.
+For example, to identify the causal relationship between <code class="docutils literal notranslate"><span class="pre">x</span></code> and <code class="docutils literal notranslate"><span class="pre">y</span></code>, we can use the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">estimand</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">identify</span><span class="p">(</span><span class="n">causal_estimand</span><span class="p">)</span><span class="o">.</span><span class="n">identified_estimand</span>
+<span class="n">estimand</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/qs_stat_estimand.png"><img alt="_images/qs_stat_estimand.png" src="_images/qs_stat_estimand.png" style="width: 600px;" /></a>
+<p>We can then use the <code class="docutils literal notranslate"><span class="pre">.estimate()</span></code> method to estimate the causal effect.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">effect</span> <span class="o">=</span> <span class="n">estimator</span><span class="o">.</span><span class="n">estimate</span><span class="p">(</span><span class="n">estimand</span><span class="p">)</span>
+<span class="n">effect</span>
+<span class="c1"># =&gt; EstimationResult(value=0.4433808167141502)</span>
+</pre></div>
+</div>
+</section>
+<section id="interpretability-and-robustness">
+<h3>Interpretability and Robustness<a class="headerlink" href="#interpretability-and-robustness" title="Permalink to this heading">¶</a></h3>
+<p>One of the most important features of <code class="docutils literal notranslate"><span class="pre">pqp</span></code> is its ability to provide human-interpretable explanations of the workings of the code. Many of the routines make very specific assumptions about the structure of the data or the effects of interest. It’s important for users to understand these assumptions so they can understand the potential limitations of an analysis.</p>
+<p>The currency of <code class="docutils literal notranslate"><span class="pre">pqp</span></code> is the <code class="docutils literal notranslate"><span class="pre">Result</span></code> class. Any calculations that draw conclusions from the data will return instances of this class. This class tracks the transformations and assumptions made by the algorithms. As <code class="docutils literal notranslate"><span class="pre">Results</span></code> are assembled into successively more complex analyses of the data, <code class="docutils literal notranslate"><span class="pre">pqp</span></code> builds a dependency graph which tracks how different <code class="docutils literal notranslate"><span class="pre">Result</span></code> instances relate to each other and allows the user access to a list of steps executed in an analysis and the assumptions made.</p>
+<p>To access the list of steps, we can use the <code class="docutils literal notranslate"><span class="pre">.explain()</span></code> and <code class="docutils literal notranslate"><span class="pre">explain_all()</span></code> methods, which detail the current result only or all results in the dependency graph, respectively.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">effect</span><span class="o">.</span><span class="n">explain_all</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Data</span> <span class="n">Processing</span>
+    <span class="n">Assume</span><span class="p">:</span> <span class="n">x</span> <span class="ow">is</span> <span class="n">on</span> <span class="n">BinaryDomain</span><span class="p">()</span>
+    <span class="n">Assume</span><span class="p">:</span> <span class="n">z</span> <span class="ow">is</span> <span class="n">on</span> <span class="n">BinaryDomain</span><span class="p">()</span>
+    <span class="n">Assume</span><span class="p">:</span> <span class="n">y</span> <span class="ow">is</span> <span class="n">on</span> <span class="n">BinaryDomain</span><span class="p">()</span>
+<span class="n">Identification</span>
+    <span class="n">We</span> <span class="n">will</span> <span class="n">identify</span> <span class="n">the</span> <span class="n">average</span> <span class="n">treatment</span> <span class="n">effect</span> <span class="n">using</span> <span class="n">IDC</span><span class="o">.</span>
+    <span class="n">Assume</span><span class="p">:</span> <span class="n">Noncontradictory</span> <span class="n">evidence</span>
+    <span class="n">Assume</span><span class="p">:</span> <span class="n">Acyclicity</span>
+    <span class="n">Assume</span><span class="p">:</span> <span class="n">Positivty</span>
+    <span class="n">IDC</span>
+        <span class="n">Input</span><span class="p">:</span>
+        <span class="n">P</span><span class="p">(</span><span class="n">y</span><span class="o">|</span> <span class="n">do</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">Output</span><span class="p">:</span>
+        <span class="n">Σ_</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="p">[</span> <span class="p">[</span><span class="n">Σ_</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">[</span> <span class="p">[</span><span class="n">P</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">P</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">P</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">)]</span> <span class="p">]</span> <span class="o">*</span> <span class="n">P</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="o">/</span> <span class="n">P</span><span class="p">(</span><span class="n">x</span><span class="p">)]</span> <span class="p">]</span>
+    <span class="n">Derived</span><span class="p">:</span> <span class="n">identified_estimand</span> <span class="o">=</span> <span class="n">E_</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="p">[</span> <span class="n">Σ_</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="p">[</span> <span class="p">[</span><span class="n">Σ_</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">[</span> <span class="p">[</span><span class="n">P</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">P</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">P</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">)]</span> <span class="p">]</span> <span class="o">*</span> <span class="n">P</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="o">/</span> <span class="n">P</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)]</span> <span class="p">]</span> <span class="p">]</span> <span class="o">-</span> <span class="n">E_</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="p">[</span> <span class="n">Σ_</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="p">[</span> <span class="p">[</span><span class="n">Σ_</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">[</span> <span class="p">[</span><span class="n">P</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">P</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">P</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">)]</span> <span class="p">]</span> <span class="o">*</span> <span class="n">P</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span> <span class="o">/</span> <span class="n">P</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)]</span> <span class="p">]</span> <span class="p">]</span>
+<span class="n">Fit</span> <span class="n">MultinomialEstimator</span>
+    <span class="n">Assume</span><span class="p">:</span> <span class="n">Multinomial</span> <span class="n">likelihood</span>
+    <span class="n">Assume</span><span class="p">:</span> <span class="n">Dirichlet</span> <span class="n">prior</span>
+<span class="n">Estimation</span>
+    <span class="n">Performing</span> <span class="n">brute</span> <span class="n">force</span> <span class="n">estimation</span> <span class="n">using</span> <span class="n">a</span> <span class="n">multinomial</span> <span class="n">likelihood</span> <span class="ow">and</span> <span class="n">dirichlet</span> <span class="n">prior</span><span class="o">.</span>
+    <span class="n">Derived</span><span class="p">:</span> <span class="n">value</span> <span class="o">=</span> <span class="mf">0.4433808167141502</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pqp</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/data.html">pqp.data Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/estimation.html">pqp.estimation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/identification.html">pqp.identification Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/refutation.html">pqp.refutation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/symbols.html">pqp.symbols Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/exceptions.html">pqp.utils.exceptions Module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to <code class="docutils literal notranslate"><span class="pre">pqp</span></code>’s documentation!</a></li>
+      <li>Next: <a href="module_maps/data.html" title="next chapter">pqp.data Package</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Leo Ware.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/quickstart.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

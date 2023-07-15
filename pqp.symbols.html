@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pqp.symbols package &#8212; pqp 0.3.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="pqp-symbols-package">
+<h1>pqp.symbols package<a class="headerlink" href="#pqp-symbols-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-pqp.symbols.abstract_math">
+<span id="pqp-symbols-abstract-math-module"></span><h2>pqp.symbols.abstract_math module<a class="headerlink" href="#module-pqp.symbols.abstract_math" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.abstract_math.AbstractMath">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.abstract_math.</span></span><span class="sig-name descname"><span class="pre">AbstractMath</span></span><a class="headerlink" href="#pqp.symbols.abstract_math.AbstractMath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract class for things that can be displayed as math</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.abstract_math.AbstractMath.display">
+<span class="sig-name descname"><span class="pre">display</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.abstract_math.AbstractMath.display" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders an expression as Latex using IPython.display</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.abstract_math.AbstractMath.to_latex">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">to_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.abstract_math.AbstractMath.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pqp.symbols.event">
+<span id="pqp-symbols-event-module"></span><h2>pqp.symbols.event module<a class="headerlink" href="#module-pqp.symbols.event" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.event.EqualityEvent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.event.</span></span><span class="sig-name descname"><span class="pre">EqualityEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.event.EqualityEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.event.StatisticalEvent" title="pqp.symbols.event.StatisticalEvent"><code class="xref py py-class docutils literal notranslate"><span class="pre">StatisticalEvent</span></code></a></p>
+<p>Represents setting a variable to a value</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqp.symbols.event.EqualityEvent.var">
+<span class="sig-name descname"><span class="pre">var</span></span><a class="headerlink" href="#pqp.symbols.event.EqualityEvent.var" title="Permalink to this definition">¶</a></dt>
+<dd><p>The variable to set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="api/pqp.symbols.Variable.html#pqp.symbols.Variable" title="pqp.symbols.Variable">Variable</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqp.symbols.event.EqualityEvent.val">
+<span class="sig-name descname"><span class="pre">val</span></span><a class="headerlink" href="#pqp.symbols.event.EqualityEvent.val" title="Permalink to this definition">¶</a></dt>
+<dd><p>The value to set the variable to (cannot be a Variable)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.event.EqualityEvent.get_var">
+<span class="sig-name descname"><span class="pre">get_var</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.event.EqualityEvent.get_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the variable which is constrained by the event</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.event.EqualityEvent.to_latex">
+<span class="sig-name descname"><span class="pre">to_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.event.EqualityEvent.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.event.Event">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.event.</span></span><span class="sig-name descname"><span class="pre">Event</span></span><a class="headerlink" href="#pqp.symbols.event.Event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.abstract_math.AbstractMath" title="pqp.symbols.abstract_math.AbstractMath"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractMath</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class for events</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="pqp.symbols.event.Event.get_var">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_var</span></span><a class="headerlink" href="#pqp.symbols.event.Event.get_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the variable which is constrained by the event</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.event.InterventionEvent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.event.</span></span><span class="sig-name descname"><span class="pre">InterventionEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.event.InterventionEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.event.Event" title="pqp.symbols.event.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">Event</span></code></a></p>
+<p>Represents intervening on a variable</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.event.InterventionEvent.assign">
+<span class="sig-name descname"><span class="pre">assign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.event.InterventionEvent.assign" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.event.InterventionEvent.get_var">
+<span class="sig-name descname"><span class="pre">get_var</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.event.InterventionEvent.get_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the variable which is constrained by the event</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.event.InterventionEvent.to_latex">
+<span class="sig-name descname"><span class="pre">to_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.event.InterventionEvent.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.event.StatisticalEvent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.event.</span></span><span class="sig-name descname"><span class="pre">StatisticalEvent</span></span><a class="headerlink" href="#pqp.symbols.event.StatisticalEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.event.Event" title="pqp.symbols.event.Event"><code class="xref py py-class docutils literal notranslate"><span class="pre">Event</span></code></a></p>
+<p>Abstract base class for events which are statistical events</p>
+<p>StatisticalEvents represent constraints on the possible values of a Variable, including
+taking on a specific value. They go in probability expressions.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pqp.symbols.event.do">
+<span class="sig-prename descclassname"><span class="pre">pqp.symbols.event.</span></span><span class="sig-name descname"><span class="pre">do</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.event.do" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convenience function for creating an InterventionEvent</p>
+</dd></dl>
+
+</section>
+<section id="module-pqp.symbols.p">
+<span id="pqp-symbols-p-module"></span><h2>pqp.symbols.p module<a class="headerlink" href="#module-pqp.symbols.p" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.p.P">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.p.</span></span><span class="sig-name descname"><span class="pre">P</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">given</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.p.P" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractExpression</span></code></a></p>
+<p>Expression representing a probability or conditional probability</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vars</strong> (<em>list</em><em> of </em><a class="reference internal" href="api/pqp.symbols.Variable.html#pqp.symbols.Variable" title="pqp.symbols.Variable"><em>Variable</em></a>) – probability variables</p></li>
+<li><p><strong>given</strong> (<em>list</em><em> of </em><a class="reference internal" href="api/pqp.symbols.Variable.html#pqp.symbols.Variable" title="pqp.symbols.Variable"><em>Variable</em></a>) – conditioned variables</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – if a variable is repeated in vars or given</p></li>
+<li><p><strong>TypeError</strong> – if vars or given are not a list of Variable or Event</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.p.P.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.p.P.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of the expression (variables are not copied).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.p.P.get_conditioned_vars">
+<span class="sig-name descname"><span class="pre">get_conditioned_vars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.p.P.get_conditioned_vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the set of variables which are conditioned on in this P</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>TypeError</strong> – if self.given contains an element which is not Variable, EqualityEvent or InterventionEvent</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict of Variable -&gt; value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.p.P.get_intervened_vars">
+<span class="sig-name descname"><span class="pre">get_intervened_vars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.p.P.get_intervened_vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the set of variables which are intervened on in this P</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict of Variable -&gt; value</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – if self.given contains an InterventionEvent which contains neither Variable nor EqualityEvent</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.p.P.get_vars">
+<span class="sig-name descname"><span class="pre">get_vars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.p.P.get_vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the set of variables to the left of the conditioning bar in this P</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>set of Variable</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – if self.vars contains an element which is neither Variable nor EqualityEvent</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.p.P.r_adapt_map">
+<span class="sig-name descname"><span class="pre">r_adapt_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.p.P.r_adapt_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursive map where the func decides callables used to transform children</p>
+<p>DO NOT USE! This is a powerful and necessary method but it results in almost unreadable code.</p>
+<p>So, <cite>func</cite> takes an <cite>AbstractExpression</cite> and needs to return a <cite>tuple</cite> of two things. First,
+a function <cite>A</cite> which maps from <cite>AbstractExpression</cite> to <cite>AbstractExpression</cite>. Second, a function <cite>B</cite>
+of the same time as <cite>func</cite>.</p>
+<p>At each level of recursion, <cite>func</cite> will be called on an expression <cite>E</cite> to get <cite>A</cite> and <cite>B</cite>.
+This method, <cite>r_adapt_map</cite> will then be called on the children of <cite>E</cite>
+with <cite>B</cite> as input (if <cite>B</cite> is <cite>None</cite>, recursion terminates). An expression of the same
+type as <cite>E</cite> is then constructed with the results of the recursive calls using <cite>B</cite>, and <cite>A</cite> is
+applied to the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> (<em>function</em>) – A function that takes an AbstractExpression and returns two functions (see desc)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.p.P.r_map">
+<span class="sig-name descname"><span class="pre">r_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.p.P.r_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively maps a function over the expression tree</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.p.P.sorted">
+<span class="sig-name descname"><span class="pre">sorted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.p.P.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sorted copy of an expression for structural comparison.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.p.P.syntactic_eq">
+<span class="sig-name descname"><span class="pre">syntactic_eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.p.P.syntactic_eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether two Expressions are syntactically identical (structural compare without sorting first)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.p.P.to_latex">
+<span class="sig-name descname"><span class="pre">to_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.p.P.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqp.symbols.p.P.unassigned">
+<span class="sig-name descname"><span class="pre">unassigned</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;object</span> <span class="pre">object&gt;</span></em><a class="headerlink" href="#pqp.symbols.p.P.unassigned" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pqp.symbols.parse">
+<span id="pqp-symbols-parse-module"></span><h2>pqp.symbols.parse module<a class="headerlink" href="#module-pqp.symbols.parse" title="Permalink to this heading">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pqp.symbols.parse.parse_json">
+<span class="sig-prename descclassname"><span class="pre">pqp.symbols.parse.</span></span><span class="sig-name descname"><span class="pre">parse_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.parse.parse_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses JSON returned from backend.id() into an Expression object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>exp</strong> (<em>str</em><em> or </em><em>dict</em>) – The JSON string or parsed JSON object.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The parsed expression.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Expression</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-pqp.symbols.relation">
+<span id="pqp-symbols-relation-module"></span><h2>pqp.symbols.relation module<a class="headerlink" href="#module-pqp.symbols.relation" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.relation.AbstractExpression">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.relation.</span></span><span class="sig-name descname"><span class="pre">AbstractExpression</span></span><a class="headerlink" href="#pqp.symbols.relation.AbstractExpression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.abstract_math.AbstractMath" title="pqp.symbols.abstract_math.AbstractMath"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractMath</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract class defining needed recursive operations for relations</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.AbstractExpression.assign">
+<span class="sig-name descname"><span class="pre">assign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.AbstractExpression.assign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assigns a value to a variable in an expression.</p>
+<p>Note that assignment will not propogate downwards through a sum over a variable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var</strong> (<a class="reference internal" href="api/pqp.symbols.Variable.html#pqp.symbols.Variable" title="pqp.symbols.Variable"><em>Variable</em></a>) – The variable to assign to</p></li>
+<li><p><strong>val</strong> (<a class="reference internal" href="api/pqp.symbols.AbstractMath.html#pqp.symbols.AbstractMath" title="pqp.symbols.AbstractMath"><em>AbstractMath</em></a>) – The value to assign, if this is P.unassigned, the expression is copied and returned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a new expression where the assignment has occured</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression">AbstractExpression</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.AbstractExpression.copy">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.AbstractExpression.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of the expression (variables are not copied).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.AbstractExpression.free_variables">
+<span class="sig-name descname"><span class="pre">free_variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.AbstractExpression.free_variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the set of free variables in an expression.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.AbstractExpression.intervene">
+<span class="sig-name descname"><span class="pre">intervene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.AbstractExpression.intervene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intervenes on a variable in an expression.</p>
+<p>Note that intervention will not propogate downwards through a sum over a variable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>var</strong> (<a class="reference internal" href="api/pqp.symbols.Variable.html#pqp.symbols.Variable" title="pqp.symbols.Variable"><em>Variable</em></a><em> or </em><em>list</em>) – The variable(s) to intervene on</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a new expression where the intervention has occured</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression">AbstractExpression</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.AbstractExpression.r_adapt_map">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_adapt_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.AbstractExpression.r_adapt_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursive map where the func decides callables used to transform children</p>
+<p>DO NOT USE! This is a powerful and necessary method but it results in almost unreadable code.</p>
+<p>So, <cite>func</cite> takes an <cite>AbstractExpression</cite> and needs to return a <cite>tuple</cite> of two things. First,
+a function <cite>A</cite> which maps from <cite>AbstractExpression</cite> to <cite>AbstractExpression</cite>. Second, a function <cite>B</cite>
+of the same time as <cite>func</cite>.</p>
+<p>At each level of recursion, <cite>func</cite> will be called on an expression <cite>E</cite> to get <cite>A</cite> and <cite>B</cite>.
+This method, <cite>r_adapt_map</cite> will then be called on the children of <cite>E</cite>
+with <cite>B</cite> as input (if <cite>B</cite> is <cite>None</cite>, recursion terminates). An expression of the same
+type as <cite>E</cite> is then constructed with the results of the recursive calls using <cite>B</cite>, and <cite>A</cite> is
+applied to the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> (<em>function</em>) – A function that takes an AbstractExpression and returns two functions (see desc)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.AbstractExpression.r_map">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.AbstractExpression.r_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively maps a function over the expression tree</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.AbstractExpression.sorted">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sorted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.AbstractExpression.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sorted copy of an expression for structural comparison.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.AbstractExpression.syntactic_eq">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">syntactic_eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.AbstractExpression.syntactic_eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether two Expressions are syntactically identical (structural compare without sorting first)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Difference">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.relation.</span></span><span class="sig-name descname"><span class="pre">Difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Difference" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractExpression</span></code></a></p>
+<p>Represents the difference between two expressions</p>
+<p>Represents the expression $a - b$. Can be creating using the infix operator ‘-‘.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><em>AbstractExpression</em></a>) – The first expression</p></li>
+<li><p><strong>b</strong> (<a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><em>AbstractExpression</em></a>) – The second expression</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Difference.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Difference.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of the expression (variables are not copied).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Difference.r_adapt_map">
+<span class="sig-name descname"><span class="pre">r_adapt_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Difference.r_adapt_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursive map where the func decides callables used to transform children</p>
+<p>DO NOT USE! This is a powerful and necessary method but it results in almost unreadable code.</p>
+<p>So, <cite>func</cite> takes an <cite>AbstractExpression</cite> and needs to return a <cite>tuple</cite> of two things. First,
+a function <cite>A</cite> which maps from <cite>AbstractExpression</cite> to <cite>AbstractExpression</cite>. Second, a function <cite>B</cite>
+of the same time as <cite>func</cite>.</p>
+<p>At each level of recursion, <cite>func</cite> will be called on an expression <cite>E</cite> to get <cite>A</cite> and <cite>B</cite>.
+This method, <cite>r_adapt_map</cite> will then be called on the children of <cite>E</cite>
+with <cite>B</cite> as input (if <cite>B</cite> is <cite>None</cite>, recursion terminates). An expression of the same
+type as <cite>E</cite> is then constructed with the results of the recursive calls using <cite>B</cite>, and <cite>A</cite> is
+applied to the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> (<em>function</em>) – A function that takes an AbstractExpression and returns two functions (see desc)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Difference.r_map">
+<span class="sig-name descname"><span class="pre">r_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Difference.r_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively maps a function over the expression tree</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Difference.sorted">
+<span class="sig-name descname"><span class="pre">sorted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Difference.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sorted copy of an expression for structural comparison.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Difference.syntactic_eq">
+<span class="sig-name descname"><span class="pre">syntactic_eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Difference.syntactic_eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether two Expressions are syntactically identical (structural compare without sorting first)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Difference.to_latex">
+<span class="sig-name descname"><span class="pre">to_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Difference.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Expectation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.relation.</span></span><span class="sig-name descname"><span class="pre">Expectation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Expectation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractExpression</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">_NamespaceModifier</span></code></p>
+<p>Represents an expectation or a random variable</p>
+<p>Equivalent to $sum_{domain(sub)} sub * expr$</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sub</strong> (<a class="reference internal" href="api/pqp.symbols.Variable.html#pqp.symbols.Variable" title="pqp.symbols.Variable"><em>Variable</em></a>) – The variable to sum over</p></li>
+<li><p><strong>expr</strong> (<a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><em>AbstractExpression</em></a>) – The expression to sum</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Expectation.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Expectation.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of the expression (variables are not copied).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Expectation.r_adapt_map">
+<span class="sig-name descname"><span class="pre">r_adapt_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Expectation.r_adapt_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursive map where the func decides callables used to transform children</p>
+<p>DO NOT USE! This is a powerful and necessary method but it results in almost unreadable code.</p>
+<p>So, <cite>func</cite> takes an <cite>AbstractExpression</cite> and needs to return a <cite>tuple</cite> of two things. First,
+a function <cite>A</cite> which maps from <cite>AbstractExpression</cite> to <cite>AbstractExpression</cite>. Second, a function <cite>B</cite>
+of the same time as <cite>func</cite>.</p>
+<p>At each level of recursion, <cite>func</cite> will be called on an expression <cite>E</cite> to get <cite>A</cite> and <cite>B</cite>.
+This method, <cite>r_adapt_map</cite> will then be called on the children of <cite>E</cite>
+with <cite>B</cite> as input (if <cite>B</cite> is <cite>None</cite>, recursion terminates). An expression of the same
+type as <cite>E</cite> is then constructed with the results of the recursive calls using <cite>B</cite>, and <cite>A</cite> is
+applied to the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> (<em>function</em>) – A function that takes an AbstractExpression and returns two functions (see desc)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Expectation.r_map">
+<span class="sig-name descname"><span class="pre">r_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Expectation.r_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively maps a function over the expression tree</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Expectation.sorted">
+<span class="sig-name descname"><span class="pre">sorted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Expectation.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sorted copy of an expression for structural comparison.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Expectation.syntactic_eq">
+<span class="sig-name descname"><span class="pre">syntactic_eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Expectation.syntactic_eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether two Expressions are syntactically identical (structural compare without sorting first)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Expectation.to_latex">
+<span class="sig-name descname"><span class="pre">to_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Expectation.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Hedge">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.relation.</span></span><span class="sig-name descname"><span class="pre">Hedge</span></span><a class="headerlink" href="#pqp.symbols.relation.Hedge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractExpression</span></code></a></p>
+<p>Represents a failure to identify the query</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Hedge.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Hedge.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of the expression (variables are not copied).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Hedge.r_adapt_map">
+<span class="sig-name descname"><span class="pre">r_adapt_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Hedge.r_adapt_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursive map where the func decides callables used to transform children</p>
+<p>DO NOT USE! This is a powerful and necessary method but it results in almost unreadable code.</p>
+<p>So, <cite>func</cite> takes an <cite>AbstractExpression</cite> and needs to return a <cite>tuple</cite> of two things. First,
+a function <cite>A</cite> which maps from <cite>AbstractExpression</cite> to <cite>AbstractExpression</cite>. Second, a function <cite>B</cite>
+of the same time as <cite>func</cite>.</p>
+<p>At each level of recursion, <cite>func</cite> will be called on an expression <cite>E</cite> to get <cite>A</cite> and <cite>B</cite>.
+This method, <cite>r_adapt_map</cite> will then be called on the children of <cite>E</cite>
+with <cite>B</cite> as input (if <cite>B</cite> is <cite>None</cite>, recursion terminates). An expression of the same
+type as <cite>E</cite> is then constructed with the results of the recursive calls using <cite>B</cite>, and <cite>A</cite> is
+applied to the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> (<em>function</em>) – A function that takes an AbstractExpression and returns two functions (see desc)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Hedge.r_map">
+<span class="sig-name descname"><span class="pre">r_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Hedge.r_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively maps a function over the expression tree</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Hedge.sorted">
+<span class="sig-name descname"><span class="pre">sorted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Hedge.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sorted copy of an expression for structural comparison.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Hedge.syntactic_eq">
+<span class="sig-name descname"><span class="pre">syntactic_eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Hedge.syntactic_eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether two Expressions are syntactically identical (structural compare without sorting first)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Hedge.to_latex">
+<span class="sig-name descname"><span class="pre">to_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Hedge.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Marginal">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.relation.</span></span><span class="sig-name descname"><span class="pre">Marginal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sub</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Marginal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractExpression</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">_NamespaceModifier</span></code></p>
+<p>Represents a sum</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sub</strong> (<em>list</em><em> of </em><a class="reference internal" href="api/pqp.symbols.Variable.html#pqp.symbols.Variable" title="pqp.symbols.Variable"><em>Variable</em></a>) – The variables to sum over</p></li>
+<li><p><strong>expr</strong> (<a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><em>AbstractExpression</em></a>) – The expression to sum</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Marginal.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Marginal.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of the expression (variables are not copied).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Marginal.r_adapt_map">
+<span class="sig-name descname"><span class="pre">r_adapt_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Marginal.r_adapt_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursive map where the func decides callables used to transform children</p>
+<p>DO NOT USE! This is a powerful and necessary method but it results in almost unreadable code.</p>
+<p>So, <cite>func</cite> takes an <cite>AbstractExpression</cite> and needs to return a <cite>tuple</cite> of two things. First,
+a function <cite>A</cite> which maps from <cite>AbstractExpression</cite> to <cite>AbstractExpression</cite>. Second, a function <cite>B</cite>
+of the same time as <cite>func</cite>.</p>
+<p>At each level of recursion, <cite>func</cite> will be called on an expression <cite>E</cite> to get <cite>A</cite> and <cite>B</cite>.
+This method, <cite>r_adapt_map</cite> will then be called on the children of <cite>E</cite>
+with <cite>B</cite> as input (if <cite>B</cite> is <cite>None</cite>, recursion terminates). An expression of the same
+type as <cite>E</cite> is then constructed with the results of the recursive calls using <cite>B</cite>, and <cite>A</cite> is
+applied to the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> (<em>function</em>) – A function that takes an AbstractExpression and returns two functions (see desc)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Marginal.r_map">
+<span class="sig-name descname"><span class="pre">r_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Marginal.r_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively maps a function over the expression tree</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Marginal.sorted">
+<span class="sig-name descname"><span class="pre">sorted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Marginal.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sorted copy of an expression for structural comparison.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Marginal.syntactic_eq">
+<span class="sig-name descname"><span class="pre">syntactic_eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Marginal.syntactic_eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether two Expressions are syntactically identical (structural compare without sorting first)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Marginal.to_latex">
+<span class="sig-name descname"><span class="pre">to_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Marginal.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Product">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.relation.</span></span><span class="sig-name descname"><span class="pre">Product</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Product" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractExpression</span></code></a></p>
+<p>Represents a product of expressions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>expr</strong> (<em>list</em><em> of </em><a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><em>AbstractExpression</em></a>) – The expressions to multiply</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Product.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Product.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of the expression (variables are not copied).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Product.r_adapt_map">
+<span class="sig-name descname"><span class="pre">r_adapt_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Product.r_adapt_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursive map where the func decides callables used to transform children</p>
+<p>DO NOT USE! This is a powerful and necessary method but it results in almost unreadable code.</p>
+<p>So, <cite>func</cite> takes an <cite>AbstractExpression</cite> and needs to return a <cite>tuple</cite> of two things. First,
+a function <cite>A</cite> which maps from <cite>AbstractExpression</cite> to <cite>AbstractExpression</cite>. Second, a function <cite>B</cite>
+of the same time as <cite>func</cite>.</p>
+<p>At each level of recursion, <cite>func</cite> will be called on an expression <cite>E</cite> to get <cite>A</cite> and <cite>B</cite>.
+This method, <cite>r_adapt_map</cite> will then be called on the children of <cite>E</cite>
+with <cite>B</cite> as input (if <cite>B</cite> is <cite>None</cite>, recursion terminates). An expression of the same
+type as <cite>E</cite> is then constructed with the results of the recursive calls using <cite>B</cite>, and <cite>A</cite> is
+applied to the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> (<em>function</em>) – A function that takes an AbstractExpression and returns two functions (see desc)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Product.r_map">
+<span class="sig-name descname"><span class="pre">r_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Product.r_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively maps a function over the expression tree</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Product.sorted">
+<span class="sig-name descname"><span class="pre">sorted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Product.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sorted copy of an expression for structural comparison.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Product.syntactic_eq">
+<span class="sig-name descname"><span class="pre">syntactic_eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Product.syntactic_eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether two Expressions are syntactically identical (structural compare without sorting first)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Product.to_latex">
+<span class="sig-name descname"><span class="pre">to_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Product.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Quotient">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.relation.</span></span><span class="sig-name descname"><span class="pre">Quotient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">numer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">denom</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Quotient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractExpression</span></code></a></p>
+<p>Represents a quotient of expressions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>numer</strong> (<a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><em>AbstractExpression</em></a>) – The numerator</p></li>
+<li><p><strong>denom</strong> (<a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><em>AbstractExpression</em></a>) – The denominator</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Quotient.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Quotient.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of the expression (variables are not copied).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Quotient.r_adapt_map">
+<span class="sig-name descname"><span class="pre">r_adapt_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Quotient.r_adapt_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursive map where the func decides callables used to transform children</p>
+<p>DO NOT USE! This is a powerful and necessary method but it results in almost unreadable code.</p>
+<p>So, <cite>func</cite> takes an <cite>AbstractExpression</cite> and needs to return a <cite>tuple</cite> of two things. First,
+a function <cite>A</cite> which maps from <cite>AbstractExpression</cite> to <cite>AbstractExpression</cite>. Second, a function <cite>B</cite>
+of the same time as <cite>func</cite>.</p>
+<p>At each level of recursion, <cite>func</cite> will be called on an expression <cite>E</cite> to get <cite>A</cite> and <cite>B</cite>.
+This method, <cite>r_adapt_map</cite> will then be called on the children of <cite>E</cite>
+with <cite>B</cite> as input (if <cite>B</cite> is <cite>None</cite>, recursion terminates). An expression of the same
+type as <cite>E</cite> is then constructed with the results of the recursive calls using <cite>B</cite>, and <cite>A</cite> is
+applied to the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> (<em>function</em>) – A function that takes an AbstractExpression and returns two functions (see desc)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Quotient.r_map">
+<span class="sig-name descname"><span class="pre">r_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Quotient.r_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively maps a function over the expression tree</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Quotient.sorted">
+<span class="sig-name descname"><span class="pre">sorted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Quotient.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sorted copy of an expression for structural comparison.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Quotient.syntactic_eq">
+<span class="sig-name descname"><span class="pre">syntactic_eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Quotient.syntactic_eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether two Expressions are syntactically identical (structural compare without sorting first)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Quotient.to_latex">
+<span class="sig-name descname"><span class="pre">to_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Quotient.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Value">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.relation.</span></span><span class="sig-name descname"><span class="pre">Value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pqp.symbols.variable.Variable" title="pqp.symbols.variable.Variable"><span class="pre">Variable</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractExpression</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Value.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Value.copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a copy of the expression (variables are not copied).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Value.r_adapt_map">
+<span class="sig-name descname"><span class="pre">r_adapt_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Value.r_adapt_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursive map where the func decides callables used to transform children</p>
+<p>DO NOT USE! This is a powerful and necessary method but it results in almost unreadable code.</p>
+<p>So, <cite>func</cite> takes an <cite>AbstractExpression</cite> and needs to return a <cite>tuple</cite> of two things. First,
+a function <cite>A</cite> which maps from <cite>AbstractExpression</cite> to <cite>AbstractExpression</cite>. Second, a function <cite>B</cite>
+of the same time as <cite>func</cite>.</p>
+<p>At each level of recursion, <cite>func</cite> will be called on an expression <cite>E</cite> to get <cite>A</cite> and <cite>B</cite>.
+This method, <cite>r_adapt_map</cite> will then be called on the children of <cite>E</cite>
+with <cite>B</cite> as input (if <cite>B</cite> is <cite>None</cite>, recursion terminates). An expression of the same
+type as <cite>E</cite> is then constructed with the results of the recursive calls using <cite>B</cite>, and <cite>A</cite> is
+applied to the result.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>func</strong> (<em>function</em>) – A function that takes an AbstractExpression and returns two functions (see desc)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Value.r_map">
+<span class="sig-name descname"><span class="pre">r_map</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Value.r_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively maps a function over the expression tree</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Value.sorted">
+<span class="sig-name descname"><span class="pre">sorted</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Value.sorted" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a sorted copy of an expression for structural comparison.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Value.syntactic_eq">
+<span class="sig-name descname"><span class="pre">syntactic_eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Value.syntactic_eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test whether two Expressions are syntactically identical (structural compare without sorting first)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.relation.Value.to_latex">
+<span class="sig-name descname"><span class="pre">to_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.Value.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pqp.symbols.relation.create_literal">
+<span class="sig-prename descclassname"><span class="pre">pqp.symbols.relation.</span></span><span class="sig-name descname"><span class="pre">create_literal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">',</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_tex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep_tex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.relation.create_literal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class factory for creating expression literals</p>
+<p>Suppose you have a function <cite>f</cite> that takes a single expression as an argument and you
+want to use this function in a symbolic expression.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">F</span> <span class="o">=</span> <span class="n">create_literal</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">F</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">f(x)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">F</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">to_latex</span><span class="p">()</span>
+<span class="go">$f(x)$</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the new class</p></li>
+<li><p><strong>arity</strong> (<em>int</em><em>, </em><em>optional</em>) – The arity of the new class. Defaults to 1. Zero is allowed.</p></li>
+<li><p><strong>sep</strong> (<em>str</em><em>, </em><em>optional</em>) – The separator to use when printing the expression. Defaults to “, “.</p></li>
+<li><p><strong>name_tex</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the new class in LaTeX. Defaults to name.</p></li>
+<li><p><strong>sep_tex</strong> (<em>str</em><em>, </em><em>optional</em>) – The separator to use when printing the expression in LaTeX. Defaults to sep.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A new subclass of <cite>AbstractExpression</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-pqp.symbols.variable">
+<span id="pqp-symbols-variable-module"></span><h2>pqp.symbols.variable module<a class="headerlink" href="#module-pqp.symbols.variable" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.variable.VarSet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.variable.</span></span><span class="sig-name descname"><span class="pre">VarSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variables</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'('</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">')'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.variable.VarSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.abstract_math.AbstractMath" title="pqp.symbols.abstract_math.AbstractMath"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractMath</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.variable.VarSet.to_latex">
+<span class="sig-name descname"><span class="pre">to_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.variable.VarSet.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.symbols.variable.Variable">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.symbols.variable.</span></span><span class="sig-name descname"><span class="pre">Variable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.variable.Variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.symbols.abstract_math.AbstractMath" title="pqp.symbols.abstract_math.AbstractMath"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractMath</span></code></a></p>
+<p>A variable in the causal model</p>
+<p>Dunder methods allow for convenient syntax for creating causal graphs.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">&lt;=</span> <span class="n">y</span>
+<span class="go">DirectedEdge(Variable(&quot;x&quot;), Variable(&quot;y&quot;))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">&amp;</span> <span class="n">y</span>
+<span class="go">BidirectedEdge(Variable(&quot;x&quot;), Variable(&quot;y&quot;))</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – the name of the variable</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.symbols.variable.Variable.to_latex">
+<span class="sig-name descname"><span class="pre">to_latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.variable.Variable.to_latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pqp.symbols.variable.make_vars">
+<span class="sig-prename descclassname"><span class="pre">pqp.symbols.variable.</span></span><span class="sig-name descname"><span class="pre">make_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.symbols.variable.make_vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a list of variables from a list of names</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">make_vars</span><span class="p">([</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">])</span>
+<span class="go">[Variable(&quot;x&quot;), Variable(&quot;y&quot;), Variable(&quot;z&quot;)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">make_vars</span><span class="p">(</span><span class="s2">&quot;xyz&quot;</span><span class="p">)</span>
+<span class="go">[Variable(&quot;x&quot;), Variable(&quot;y&quot;), Variable(&quot;z&quot;)]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="module-pqp.symbols">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pqp.symbols" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pqp</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/data.html">pqp.data Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/estimation.html">pqp.estimation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/identification.html">pqp.identification Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/refutation.html">pqp.refutation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/symbols.html">pqp.symbols Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/exceptions.html">pqp.utils.exceptions Module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Leo Ware.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/pqp.symbols.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

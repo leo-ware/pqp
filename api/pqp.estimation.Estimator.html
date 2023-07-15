@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Estimator &#8212; pqp 0.3.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MultinomialEstimator" href="pqp.estimation.MultinomialEstimator.html" />
+    <link rel="prev" title="EstimationResult" href="pqp.estimation.EstimationResult.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="estimator">
+<h1>Estimator<a class="headerlink" href="#estimator" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.estimation.Estimator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.estimation.</span></span><span class="sig-name descname"><span class="pre">Estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.estimation.Estimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="../pqp.refutation.html#pqp.refutation.result.Result" title="pqp.refutation.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class for estimators</p>
+<p class="rubric">Methods Summary</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pqp.estimation.Estimator.approx" title="pqp.estimation.Estimator.approx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">approx</span></code></a>(expr[, assignments])</p></td>
+<td><p>Approximates the value of an expression</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pqp.estimation.Estimator.estimate" title="pqp.estimation.Estimator.estimate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">estimate</span></code></a>(expr[, assignments])</p></td>
+<td><p>Estimate the value of an expression</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pqp.estimation.Estimator.get_observed" title="pqp.estimation.Estimator.get_observed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_observed</span></code></a>()</p></td>
+<td><p>Return the set of Variables that are considered observed in the model</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.estimation.Estimator.approx">
+<span class="sig-name descname"><span class="pre">approx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assignments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.estimation.Estimator.approx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Approximates the value of an expression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expr</strong> (<code class="docutils literal notranslate"><span class="pre">AbstractExpression</span></code>) – The expression to approximate</p></li>
+<li><p><strong>assignments</strong> (<code class="docutils literal notranslate"><span class="pre">dict</span></code>) – variable assignments (optional)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the approximate value of the expression</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.estimation.Estimator.estimate">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">estimate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../pqp.symbols.html#pqp.symbols.relation.AbstractExpression" title="pqp.symbols.relation.AbstractExpression"><span class="pre">AbstractExpression</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">assignments</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.estimation.Estimator.estimate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimate the value of an expression</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expr</strong> (<code class="docutils literal notranslate"><span class="pre">AbstractExpression</span></code>) – The expression to estimate</p></li>
+<li><p><strong>assignments</strong> (<code class="docutils literal notranslate"><span class="pre">dict</span></code>) – <code class="docutils literal notranslate"><span class="pre">dict</span></code> of variable assignments (optional)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the result of the estimation</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="pqp.estimation.EstimationResult.html#pqp.estimation.EstimationResult" title="pqp.estimation.EstimationResult">EstimationResult</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.estimation.Estimator.get_observed">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_observed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.estimation.Estimator.get_observed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the set of Variables that are considered observed in the model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the observed variables</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">set</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pqp</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/data.html">pqp.data Package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../module_maps/estimation.html">pqp.estimation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/identification.html">pqp.identification Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/refutation.html">pqp.refutation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/symbols.html">pqp.symbols Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/exceptions.html">pqp.utils.exceptions Module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../module_maps/estimation.html">pqp.estimation Package</a><ul>
+      <li>Previous: <a href="pqp.estimation.EstimationResult.html" title="previous chapter">EstimationResult</a></li>
+      <li>Next: <a href="pqp.estimation.MultinomialEstimator.html" title="next chapter">MultinomialEstimator</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Leo Ware.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/api/pqp.estimation.Estimator.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

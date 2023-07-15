@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pqp.data package &#8212; pqp 0.3.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="pqp-data-package">
+<h1>pqp.data package<a class="headerlink" href="#pqp-data-package" title="Permalink to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-pqp.data.data">
+<span id="pqp-data-data-module"></span><h2>pqp.data.data module<a class="headerlink" href="#module-pqp.data.data" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.data.data.Data">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.data.data.</span></span><span class="sig-name descname"><span class="pre">Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate_domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.data.Data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pqp.refutation.html#pqp.refutation.result.Result" title="pqp.refutation.result.Result"><code class="xref py py-class docutils literal notranslate"><span class="pre">Result</span></code></a></p>
+<p>Class representing datasets, wraps a pandas DataFrame and contains some metadata</p>
+<p>The main job of this class is to validate/create a set of symbolic variables that
+align with the columns names on <code class="docutils literal notranslate"><span class="pre">df</span></code>.</p>
+<p>Examples:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># it can infer a discrete domain for the variables</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">[</span><span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">),</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">),</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;Y&quot;</span><span class="p">)})</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># or you can specify the domain explicitly</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">DiscreteDomain</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">]),</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="n">ContinuousDomain</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">])})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="s2">&quot;discrete&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;continuous&quot;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span> <span class="c1"># specifies a domain of unknown type</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># examples of invalid calls</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">),</span> <span class="s2">&quot;z&quot;</span><span class="p">:</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">)})</span> <span class="c1"># z not in df</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="nb">vars</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">Variable</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">),</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="s2">&quot;some name&quot;</span><span class="p">})</span> <span class="c1"># &quot;some name&quot; is interpreted as a domain type</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>) – the dataset</p></li>
+<li><p><strong>vars</strong> (<code class="docutils literal notranslate"><span class="pre">list</span></code> or <code class="docutils literal notranslate"><span class="pre">dict</span></code>) – the variables in the dataset, either a list of <code class="docutils literal notranslate"><span class="pre">Variable</span></code> (names
+must match columns in <code class="docutils literal notranslate"><span class="pre">df</span></code>) or a <code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping column names in <code class="docutils literal notranslate"><span class="pre">df</span></code> to <code class="docutils literal notranslate"><span class="pre">Variable</span></code>
+or <code class="docutils literal notranslate"><span class="pre">str</span></code> specifying the type of the variable’s domain</p></li>
+<li><p><strong>validate_domain</strong> (<code class="docutils literal notranslate"><span class="pre">bool</span></code>) – if <code class="docutils literal notranslate"><span class="pre">False</span></code>, do not validate that the data conforms to the domains
+specified, defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code></p></li>
+<li><p><strong>silence_inferred_domain_warning</strong> (<code class="docutils literal notranslate"><span class="pre">bool</span></code>) – if <code class="docutils literal notranslate"><span class="pre">True</span></code>, silences the default warning when
+the domain of a variable is inferred</p></li>
+<li><p><strong>silence_unit_domain_warning</strong> (<code class="docutils literal notranslate"><span class="pre">bool</span></code>) – if <code class="docutils literal notranslate"><span class="pre">True</span></code>, silences the default warning when an inferred
+domain for a variable has only a single possible value</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqp.data.data.Data.df">
+<span class="sig-name descname"><span class="pre">df</span></span><a class="headerlink" href="#pqp.data.data.Data.df" title="Permalink to this definition">¶</a></dt>
+<dd><p>The dataset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pqp.data.data.Data.vars">
+<span class="sig-name descname"><span class="pre">vars</span></span><a class="headerlink" href="#pqp.data.data.Data.vars" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">dict</span></code> mapping variable names to <code class="docutils literal notranslate"><span class="pre">Variable</span></code> objects</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">dict</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.data.Data.domain_of">
+<span class="sig-name descname"><span class="pre">domain_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.data.Data.domain_of" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the domain of a variable</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>var</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Variable</span></code>) – the variable whose domain to get</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the domain of the variable</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">Domain</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pqp.data.data.Data.n">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">n</span></span><a class="headerlink" href="#pqp.data.data.Data.n" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of rows in the dataset</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.data.Data.quantize">
+<span class="sig-name descname"><span class="pre">quantize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.data.Data.quantize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Quantize a variable in place</p>
+<p>Turns a continuous variable into a categorical variable by binning it into <code class="docutils literal notranslate"><span class="pre">n_bins</span></code> bins.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code> or <code class="docutils literal notranslate"><span class="pre">Variable</span></code>) – the variable to quantize</p></li>
+<li><p><strong>n_bins</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code>) – the number of bins to quantize into</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-pqp.data.domain">
+<span id="pqp-data-domain-module"></span><h2>pqp.data.domain module<a class="headerlink" href="#module-pqp.data.domain" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.data.domain.BinaryDomain">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.data.domain.</span></span><span class="sig-name descname"><span class="pre">BinaryDomain</span></span><a class="headerlink" href="#pqp.data.domain.BinaryDomain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.data.domain.CategoricalDomain" title="pqp.data.domain.CategoricalDomain"><code class="xref py py-class docutils literal notranslate"><span class="pre">CategoricalDomain</span></code></a></p>
+<p>Domain for a binary variable</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.BinaryDomain.describe_assumptions">
+<span class="sig-name descname"><span class="pre">describe_assumptions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.BinaryDomain.describe_assumptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a human readable description of assumptions made about the domain</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.data.domain.CategoricalDomain">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.data.domain.</span></span><span class="sig-name descname"><span class="pre">CategoricalDomain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.CategoricalDomain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.data.domain.DiscreteDomain" title="pqp.data.domain.DiscreteDomain"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteDomain</span></code></a></p>
+<p>Domain of a categorical variable</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.CategoricalDomain.describe_assumptions">
+<span class="sig-name descname"><span class="pre">describe_assumptions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.CategoricalDomain.describe_assumptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a human readable description of assumptions made about the domain</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.CategoricalDomain.get_cardinality">
+<span class="sig-name descname"><span class="pre">get_cardinality</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.CategoricalDomain.get_cardinality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the cardinality of the domain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the number of possible values in the domain</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.CategoricalDomain.get_values">
+<span class="sig-name descname"><span class="pre">get_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.CategoricalDomain.get_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all possible values in the domain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>all possible values in the domain</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">list</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.data.domain.ContinuousDomain">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.data.domain.</span></span><span class="sig-name descname"><span class="pre">ContinuousDomain</span></span><a class="headerlink" href="#pqp.data.domain.ContinuousDomain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.data.domain.Domain" title="pqp.data.domain.Domain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Domain</span></code></a></p>
+<p>Abstract base class for continuous domains</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.ContinuousDomain.get_cardinality">
+<span class="sig-name descname"><span class="pre">get_cardinality</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.ContinuousDomain.get_cardinality" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of possible values a variable can take on</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.data.domain.DiscreteDomain">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.data.domain.</span></span><span class="sig-name descname"><span class="pre">DiscreteDomain</span></span><a class="headerlink" href="#pqp.data.domain.DiscreteDomain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.data.domain.Domain" title="pqp.data.domain.Domain"><code class="xref py py-class docutils literal notranslate"><span class="pre">Domain</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Abstract base class for discrete domains</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.DiscreteDomain.get_cardinality">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_cardinality</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.DiscreteDomain.get_cardinality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the cardinality of the domain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the number of possible values in the domain</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.DiscreteDomain.get_values">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.DiscreteDomain.get_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all possible values in the domain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>all possible values in the domain</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">list</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.data.domain.Domain">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.data.domain.</span></span><span class="sig-name descname"><span class="pre">Domain</span></span><a class="headerlink" href="#pqp.data.domain.Domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Manages the possible values that a Variable can take on</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.Domain.describe_assumptions">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">describe_assumptions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.Domain.describe_assumptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a human readable description of assumptions made about the domain</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.Domain.get_cardinality">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_cardinality</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.Domain.get_cardinality" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of possible values a variable can take on</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.Domain.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.Domain.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a list of values is in the domain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>values</strong> (<code class="docutils literal notranslate"><span class="pre">list</span></code>) – a list of values to validate</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">True</span></code> if all values are in the domain, <code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">bool</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.Domain.validate_or_throw">
+<span class="sig-name descname"><span class="pre">validate_or_throw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.Domain.validate_or_throw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates that a list of values is in the domain, throws an error if not</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>values</strong> (<code class="docutils literal notranslate"><span class="pre">list</span></code>) – a list of values to validate</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – if any value is not in the domain</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.data.domain.IntegerDomain">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.data.domain.</span></span><span class="sig-name descname"><span class="pre">IntegerDomain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.IntegerDomain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.data.domain.DiscreteDomain" title="pqp.data.domain.DiscreteDomain"><code class="xref py py-class docutils literal notranslate"><span class="pre">DiscreteDomain</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.IntegerDomain.check_int">
+<span class="sig-name descname"><span class="pre">check_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.IntegerDomain.check_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether a value is an integer</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.IntegerDomain.describe_assumptions">
+<span class="sig-name descname"><span class="pre">describe_assumptions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.IntegerDomain.describe_assumptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a human readable description of assumptions made about the domain</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.IntegerDomain.get_cardinality">
+<span class="sig-name descname"><span class="pre">get_cardinality</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.IntegerDomain.get_cardinality" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the cardinality of the domain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the number of possible values in the domain</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.IntegerDomain.get_values">
+<span class="sig-name descname"><span class="pre">get_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.IntegerDomain.get_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all possible values in the domain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>all possible values in the domain</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">list</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.data.domain.RealDomain">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.data.domain.</span></span><span class="sig-name descname"><span class="pre">RealDomain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.RealDomain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pqp.data.domain.ContinuousDomain" title="pqp.data.domain.ContinuousDomain"><code class="xref py py-class docutils literal notranslate"><span class="pre">ContinuousDomain</span></code></a></p>
+<p>A continuous domain for a variable, delimited by min and max values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>values</strong> (<code class="docutils literal notranslate"><span class="pre">list</span></code>) – the min and max of this list are taken as the min and max of the domain</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.data.domain.RealDomain.describe_assumptions">
+<span class="sig-name descname"><span class="pre">describe_assumptions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.RealDomain.describe_assumptions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a human readable description of assumptions made about the domain</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pqp.data.domain.infer_domain_type">
+<span class="sig-prename descclassname"><span class="pre">pqp.data.domain.</span></span><span class="sig-name descname"><span class="pre">infer_domain_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vals</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.infer_domain_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to infer the best domain type to use of a list of values</p>
+<p>The heuristics are somewhat complicated. You should run this and
+inspect the result before use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>vals</strong> (<code class="docutils literal notranslate"><span class="pre">Iterable</span></code>) – a <code class="docutils literal notranslate"><span class="pre">list</span></code> of values to infer the domain type of</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pqp.data.domain.make_domain">
+<span class="sig-prename descclassname"><span class="pre">pqp.data.domain.</span></span><span class="sig-name descname"><span class="pre">make_domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.data.domain.make_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a domain object from a string and optional values</p>
+<dl class="simple">
+<dt>Options:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;discrete&quot;</span></code>: values must be specified</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;continuous&quot;</span></code>: min and max of <code class="docutils literal notranslate"><span class="pre">values</span></code> used to specify domain</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;binary&quot;</span></code>: values are ignored</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;integer&quot;</span></code>: min and max of <code class="docutils literal notranslate"><span class="pre">values</span></code> used to specify domain</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;infer&quot;</span></code>: attempt to guess</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>domain_type</strong> (<code class="docutils literal notranslate"><span class="pre">str</span></code>) – one of <code class="docutils literal notranslate"><span class="pre">&quot;discrete&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;continuous&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;binary&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;integer&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;infer&quot;</span></code></p></li>
+<li><p><strong>values</strong> (<code class="docutils literal notranslate"><span class="pre">list</span></code>) – the values of the domain</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-pqp.data">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pqp.data" title="Permalink to this heading">¶</a></h2>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pqp</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/data.html">pqp.data Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/estimation.html">pqp.estimation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/identification.html">pqp.identification Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/refutation.html">pqp.refutation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/symbols.html">pqp.symbols Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_maps/exceptions.html">pqp.utils.exceptions Module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Leo Ware.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/pqp.data.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

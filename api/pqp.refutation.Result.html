@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Result &#8212; pqp 0.3.5 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Step" href="pqp.refutation.Step.html" />
+    <link rel="prev" title="Operation" href="pqp.refutation.Operation.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="result">
+<h1>Result<a class="headerlink" href="#result" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pqp.refutation.Result">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pqp.refutation.</span></span><span class="sig-name descname"><span class="pre">Result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.refutation.Result" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class to store results of computation and store dependencies in a graph</p>
+<p class="rubric">Attributes Summary</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+</tbody>
+</table>
+<p class="rubric">Methods Summary</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pqp.refutation.Result.explain" title="pqp.refutation.Result.explain"><code class="xref py py-obj docutils literal notranslate"><span class="pre">explain</span></code></a>([nested])</p></td>
+<td><p>Prints a human-readable explanation of the result to the console.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pqp.refutation.Result.explain_all" title="pqp.refutation.Result.explain_all"><code class="xref py py-obj docutils literal notranslate"><span class="pre">explain_all</span></code></a>()</p></td>
+<td><p>Prints a human-readable explanation of the result to the console, including all prior steps.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#pqp.refutation.Result.get_dependencies" title="pqp.refutation.Result.get_dependencies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_dependencies</span></code></a>()</p></td>
+<td><p>Returns a list of all results which this result directly depends on</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#pqp.refutation.Result.get_nested_dependencies" title="pqp.refutation.Result.get_nested_dependencies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_nested_dependencies</span></code></a>()</p></td>
+<td><p>Returns a list of all results which this result depends on, including indirect dependencies</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes Documentation</p>
+<p class="rubric">Methods Documentation</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.refutation.Result.explain">
+<span class="sig-name descname"><span class="pre">explain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nested</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pqp.refutation.Result.explain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints a human-readable explanation of the result to the console.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>nested</strong> (<em>bool</em>) – if True, will print the explanation of all prior steps as well</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.refutation.Result.explain_all">
+<span class="sig-name descname"><span class="pre">explain_all</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.refutation.Result.explain_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints a human-readable explanation of the result to the console, including all prior steps.
+Equivalent to calling self.explain(nested=True)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.refutation.Result.get_dependencies">
+<span class="sig-name descname"><span class="pre">get_dependencies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.refutation.Result.get_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all results which this result directly depends on</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the list of dependencies</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">List[Result]</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pqp.refutation.Result.get_nested_dependencies">
+<span class="sig-name descname"><span class="pre">get_nested_dependencies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pqp.refutation.Result.get_nested_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of all results which this result depends on, including indirect dependencies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the list of dependencies</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">List[Result]</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pqp</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/data.html">pqp.data Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/estimation.html">pqp.estimation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/identification.html">pqp.identification Package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../module_maps/refutation.html">pqp.refutation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/symbols.html">pqp.symbols Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../module_maps/exceptions.html">pqp.utils.exceptions Module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../module_maps/refutation.html">pqp.refutation Package</a><ul>
+      <li>Previous: <a href="pqp.refutation.Operation.html" title="previous chapter">Operation</a></li>
+      <li>Next: <a href="pqp.refutation.Step.html" title="next chapter">Step</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Leo Ware.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/api/pqp.refutation.Result.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
