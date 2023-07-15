@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>pqp.estimation Package &#8212; pqp 0.3.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="EstimationResult" href="../api/pqp.estimation.EstimationResult.html" />
+    <link rel="prev" title="RealDomain" href="../api/pqp.data.RealDomain.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-pqp.estimation">
+<span id="pqp-estimation-package"></span><h1>pqp.estimation Package<a class="headerlink" href="#module-pqp.estimation" title="Permalink to this heading">¶</a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/pqp.estimation.EstimationResult.html#pqp.estimation.EstimationResult" title="pqp.estimation.EstimationResult"><code class="xref py py-obj docutils literal notranslate"><span class="pre">EstimationResult</span></code></a>(operation, step)</p></td>
+<td><p>Stores the result of estimation</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../api/pqp.estimation.Estimator.html#pqp.estimation.Estimator" title="pqp.estimation.Estimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Estimator</span></code></a>(op)</p></td>
+<td><p>Abstract base class for estimators</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../api/pqp.estimation.MultinomialEstimator.html#pqp.estimation.MultinomialEstimator" title="pqp.estimation.MultinomialEstimator"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MultinomialEstimator</span></code></a>(data[, observed, ...])</p></td>
+<td><p>Estimates the distribution of a categorical variable using a multinomial likelihood and dirichlet prior</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="class-inheritance-diagram">
+<h2>Class Inheritance Diagram<a class="headerlink" href="#class-inheritance-diagram" title="Permalink to this heading">¶</a></h2>
+<div class="graphviz"><img src="../_images/inheritance-3809b15f06889476b14938476c9b4543752fa723.png" alt="Inheritance diagram of pqp.estimation.estimator.EstimationResult, pqp.estimation.estimator.Estimator, pqp.estimation.multinomial_estimator.MultinomialEstimator" usemap="#inheritance733854dba0" class="inheritance graphviz" /></div>
+<map id="inheritance733854dba0" name="inheritance733854dba0">
+<area shape="rect" id="node4" href="../pqp.estimation.html#pqp.estimation.estimator.Estimator" target="_top" title="Abstract base class for estimators" alt="" coords="147,5,226,31"/>
+<area shape="rect" id="node2" href="../pqp.estimation.html#pqp.estimation.estimator.EstimationResult" target="_top" title="Stores the result of estimation" alt="" coords="125,55,248,80"/>
+<area shape="rect" id="node3" href="../pqp.refutation.html#pqp.refutation.result.Result" target="_top" title="Class to store results of computation and store dependencies in a graph" alt="" coords="5,55,77,80"/>
+<area shape="rect" id="node5" href="../pqp.estimation.html#pqp.estimation.multinomial_estimator.MultinomialEstimator" target="_top" title="Estimates the distribution of a categorical variable using a multinomial likelihood and dirichlet prior" alt="" coords="296,5,440,31"/>
+</map></section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pqp</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../quickstart.html">Quickstart</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="data.html">pqp.data Package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pqp.estimation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="identification.html">pqp.identification Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="refutation.html">pqp.refutation Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="symbols.html">pqp.symbols Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exceptions.html">pqp.utils.exceptions Module</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../api/pqp.data.RealDomain.html" title="previous chapter">RealDomain</a></li>
+      <li>Next: <a href="../api/pqp.estimation.EstimationResult.html" title="next chapter">EstimationResult</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Leo Ware.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/module_maps/estimation.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

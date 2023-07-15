@@ -1,0 +1,9 @@
+<map id="inheritanceb856602edf" name="inheritanceb856602edf">
+<area shape="rect" id="node1" href="../pqp.utils.html#pqp.utils.exceptions.CyclicGraphError" target="_top" title="Exception raised when a graph is cyclic" alt="" coords="179,5,302,31"/>
+<area shape="rect" id="node2" href="../pqp.utils.html#pqp.utils.exceptions.PQPException" target="_top" title="Base class for exceptions in this module." alt="" coords="5,129,113,155"/>
+<area shape="rect" id="node3" href="../pqp.utils.html#pqp.utils.exceptions.DomainValidationError" target="_top" title="Exception raised when domain is used with invalid values" alt="" coords="165,55,316,80"/>
+<area shape="rect" id="node4" href="../pqp.utils.html#pqp.utils.exceptions.InferredDomainWarning" target="_top" title="Warning raised when the domain of a variable is inferred from provided examples" alt="" coords="161,104,320,129"/>
+<area shape="rect" id="node5" href="../pqp.utils.html#pqp.utils.exceptions.NumericalError" target="_top" title="Exception raised when numerical methods fail" alt="" coords="186,153,295,179"/>
+<area shape="rect" id="node6" href="../pqp.utils.html#pqp.utils.exceptions.PositivityException" target="_top" title="Exception raised when a nonpositive distribution is used" alt="" coords="173,203,308,228"/>
+<area shape="rect" id="node7" href="../pqp.utils.html#pqp.utils.exceptions.UnitDomainWarning" target="_top" title="Warning raised when the domain of a variable has cardinality &lt;= 1" alt="" coords="171,252,310,277"/>
+</map>
