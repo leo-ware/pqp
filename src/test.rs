@@ -7,13 +7,6 @@ use crate::{
 };
 
 #[test]
-fn foo() {
-    let a = String::from("a");
-    let b = String::from("a");
-    assert_eq!(a, b);
-}
-
-#[test]
 fn do_stuff() {
     let fd = frontdoor_model();
     println!("{:?}", fd);

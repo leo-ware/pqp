@@ -9,10 +9,10 @@ use crate::{
     }
 };
 
-pub fn id(model: &Model, y: &Set<Node>, x: &Set<Node>) -> Form {
+pub fn id_no_simplify(model: &Model, y: &Set<Node>, x: &Set<Node>) -> Form {
     let observed = model.get_observed();
     if observed.is_empty() {
-        return _id(model, y, x, model.p()).simplify();
+        return _id(model, y, x, model.p());
     } else {
         let model_hidden = &model.hide(&observed);
         let p_prime = _id(
@@ -25,8 +25,12 @@ pub fn id(model: &Model, y: &Set<Node>, x: &Set<Node>) -> Form {
             p_prime.to_owned(),
             Form::marginal(y.to_owned(), p_prime)
         );
-        return p.simplify();
+        return p;
     };
+}
+
+pub fn id(model: &Model, y: &Set<Node>, x: &Set<Node>) -> Form {
+    id_no_simplify(model, y, x).simplify()
 }
 
 fn _id(model: &Model, y: &Set<Node>, x: &Set<Node>, p: Form) -> Form {

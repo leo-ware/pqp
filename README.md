@@ -1,4 +1,6 @@
-Welcome to `pqp`! Here is a quick overview of some basic things.
+# PQP
+
+The name `pqp` is short for *Pourquoi pas?*. This phrase is French for *why not?*, because "Why not?" was the question we asked ourselves when we found there was no maintained, open-source package for structural causal modeling in Python. The package provides a convenient interface for causal modeling along with routines for identification, estimation, and visualization.
 
 ## Installation
 
@@ -8,43 +10,38 @@ The package can be installed from PyPi using `pip`:
 pip install pqp
 ```
 
-## Testing
+## Basic Usage
 
-Clone the repo and install local dependencies:
+```python
 
-```bash
-# run in root of repo
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+from pqp.graph import Graph
+from pqp.variable import make_vars
+
+# create variables
+x, y, z = make_vars("xyz")
+
+# the backdoor model
+g = Graph([
+    x <= z,
+    y <= z,
+    y <= x,
+])
+
+# identification
+causal_estimand = ATE(y, {x: 1}, {x: 0})
+estimator = g.identify(causal_estimand)
+print(estimator)
+
+# >>> E_(y) [ Σ_(z) [ [P(x = 1, y, z) * P(z) / P(x = 1, z)] ] ] - E_(y) [ Σ_(z) [ [P(x = 0, y, z) * P(z) / P(x = 0, z)] ] ]
+
 ```
 
-After activating the virtual environment, run `test.sh` using `source`. This will build the rust library and run the tests for both the rust and python code.
+## Further Reading
 
-```bash
-# run in root of repo
-source test.sh
-```
+For more information, see the documentation at [https://leo-ware.github.io/pqp/](https://leo-ware.github.io/pqp/).
 
-## Documentation
+The source code is available at [https://github.com/leo-ware/pqp](https://github.com/leo-ware/pqp).
 
-To build the documentation, use the makefile in the `docs` directory:
+## About
 
-```bash
-# run in root of repo
-cd python/pqp/docs
-
-# regenerate documentation source (only run when adding new modules)
-make autodoc
-
-# build html documentation (runs local development server)
-make livehtml
-```
-
-To deploy the documentation to github pages, run the following. This will push the docs build to the `gh-pages` branch of the repo. Github pages will serve. This will not work if you have not already built the docs.
-
-```bash
-# run in root of repo
-source venv/bin/activate
-source deployment_script.sh
-```
+This package was created by Leo Ware as part of his undergraduate capstone project at Minerva University.

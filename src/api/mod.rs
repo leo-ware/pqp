@@ -1,4 +1,4 @@
-mod wrapper;
+pub mod wrapper;
 mod functions;
 mod test;
 

@@ -12,11 +12,11 @@ sys.path.insert(0, os.path.abspath('../..'))
 # -- Project information -----------------------------------------------------
 # DO NOT EDIT!!! This information is automatically generated from pyproject.toml
 
-with open("../../../../pyproject.toml") as f:
-    pyproject = toml.load(f)
+with open("../../../pyproject.toml") as f:
+    pyproject = toml.load(f)["project"]
 
 project = pyproject["name"]
-author = pyproject["authors"][0]
+author = pyproject["authors"][0]["name"]
 release = pyproject["version"]
 copyright = f'{datetime.datetime.now().year}, {author}'
 
@@ -44,8 +44,8 @@ numpydoc_show_class_members = False
 html_theme = 'alabaster'
 html_static_path = ['_static']
 
-html_sidebars = {
-    "**": ["sbt-sidebar-nav.html"]
-}
+# html_sidebars = {
+#     "**": ["sbt-sidebar-nav.html"]
+# }
 
 html_favicon = 'favicon.ico'

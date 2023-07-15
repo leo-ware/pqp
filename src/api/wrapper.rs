@@ -18,9 +18,10 @@ impl FormWrapper {
     pub fn to_json(&self) -> String {
         match self {
             FormWrapper::Marginal(sub, exp) => {
+                let sub_vec: Vec<String> = sub.iter().cloned().collect();
                 format!(
                     "{{\"type\": \"Marginal\", \"sub\": [{:?}], \"exp\": {}}}",
-                    sub.iter().format_default(", ").to_string(),
+                    sub_vec.iter().format_default(", "),
                     exp.to_json()
                 )
             },
@@ -68,7 +69,7 @@ impl ModelWrapper {
         }
     }
 
-    fn form_sub(&self, form: Form) -> FormWrapper {
+    pub fn form_sub(&self, form: Form) -> FormWrapper {
         let reversed: Map<i32, String> = self.vars.iter()
             .map(|(k, v)| (*v, k.clone()))
             .collect();
@@ -122,7 +123,7 @@ impl ModelWrapper {
             if self.vars.contains_key(s) {
                 self.vars[s]
             } else {
-                panic!("Variable {} not found", s);
+                panic!("Variable {} not found in graph", s);
             }
         };
 
