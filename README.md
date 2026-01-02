@@ -1,3 +1,7 @@
+**Note:** I have not been actively maintaining the repository, so it is not recommended as a dependency for future projects.
+
+---
+
 # PQP
 
 The name `pqp` is short for *Pourquoi pas?*. This phrase is French for *why not?*, because "Why not?" was the question we asked ourselves when we found there was no maintained, open-source package for structural causal modeling in Python. The package provides a convenient interface for causal modeling along with routines for identification, estimation, and visualization.
